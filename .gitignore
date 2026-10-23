@@ -1,0 +1,9 @@
+bin/
+obj/
+publish/
+*.log
+.vs/
+__pycache__/
+.pytest_cache/
+tests/BlueEdit.Tests/TestResults/
+publish-linux/

@@ -1,0 +1,6819 @@
+{
+ "Gemma 3 4B": {
+  "load_s": 3.1,
+  "rows": [
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Я пошли домой вчера.",
+    "corrected": "Я пошёл домой вчера.",
+    "errors": [
+     {
+      "original": "Я пошли",
+      "replacement": "Я пошёл",
+      "explanation": "В данном контексте, поскольку речь идет о единственном лице, правильное употребление - 'Я пошёл'. (In this context, since it is about the first person singular, the correct usage is 'I went'.)"
+     }
+    ],
+    "ms": 974,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Мы был в магазине и купили хлеб.",
+    "corrected": "Мы были в магазине и купили хлеб.",
+    "errors": [
+     {
+      "original": "Мы был",
+      "replacement": "Мы были",
+      "explanation": "В русском языке глагол 'быть' во множественном числе согласуется с подлежащим в числе. 'Мы' - это множественное число, поэтому нужно использовать 'были'."
+     }
+    ],
+    "ms": 911,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Он сказал что придёт завтра.",
+    "corrected": "Он сказал, что придет завтра.",
+    "errors": [
+     {
+      "original": "Он сказал что придёт завтра.",
+      "replacement": "Он сказал, что придет завтра.",
+      "explanation": "Добавлен запятая после слова \"что\" для разделения прямой речи от основного предложения. (Russian: Добавление запятой после "
+     }
+    ],
+    "ms": 1036,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "В течении недели мы работали без выходных.",
+    "corrected": "В течение недели мы работали без выходных.",
+    "errors": [],
+    "ms": 298,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Она одела пальто и вышла на улицу.",
+    "corrected": "Она одела пальто и вышла на улицу.",
+    "errors": [],
+    "ms": 318,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Мне нравится эти книги.",
+    "corrected": "Мне нравятся эти книги.",
+    "errors": [
+     {
+      "original": "Мне нравится эти книги.",
+      "replacement": "Мне нравятся эти книги.",
+      "explanation": "В русском языке, когда речь идет о множественном числе, глагол 'нравится' изменяется на 'нравятся'."
+     }
+    ],
+    "ms": 786,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Директор попросил подготовить отчёт к пятнице, не смотря на праздники.",
+    "corrected": "Директор попросил подготовить отчёт к пятнице, несмотря на праздники.",
+    "errors": [
+     {
+      "original": "не смотря на",
+      "replacement": "несмотря на",
+      "explanation": "This is a spelling error. The correct form is 'несмотря на' (nesmotrya na) in Russian, not 'не смотря'."
+     }
+    ],
+    "ms": 878,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Я не знаю, что-бы он сказал на это.",
+    "corrected": "Я не знаю, что бы он сказал на это.",
+    "errors": [
+     {
+      "original": "Я не знаю, что-бы он сказал на это.",
+      "replacement": "Я не знаю, что бы он сказал на это.",
+      "explanation": "В русском языке после частицы 'что-бы' обычно ставится тире."
+     }
+    ],
+    "ms": 855,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Дети играли во дворе пока родители готовили ужин.",
+    "corrected": "Дети играли во дворе, пока родители готовили ужин.",
+    "errors": [
+     {
+      "original": "во дворе",
+      "replacement": "во дворе,",
+      "explanation": "Добавлен запятая после фразы, чтобы разделить два предложения.",
+      "alternatives": []
+     }
+    ],
+    "ms": 791,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "По приезду в город мы сразу пошли в гостиницу.",
+    "corrected": "По приезду в город мы сразу пошли в гостиницу.",
+    "errors": [],
+    "ms": 310,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Он ложит книги на стол.",
+    "corrected": "Он ложит книги на стол.",
+    "errors": [],
+    "ms": 282,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Компания, которая выпустили этот продукт, находится в Москве.",
+    "corrected": "Компания, которая выпустила этот продукт, находится в Москве.",
+    "errors": [
+     {
+      "original": "выпустили",
+      "replacement": "выпустила",
+      "explanation": "В данном контексте, поскольку речь идет о компании, более уместно использовать женский род глагола 'выпустить'. (V dannom kontekste, poskol'zhe reche itoy o kompanii, boleye umestno ispol'zovat' zhenskiy rod glagola 'vypustit'.)"
+     }
+    ],
+    "ms": 1255,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Он не разу не был в Париже.",
+    "corrected": "Он не был ни разу в Париже.",
+    "errors": [
+     {
+      "original": "Он не разу не был в Париже.",
+      "replacement": "Он не был ни разу в Париже.",
+      "explanation": "The correct way to express \"not ever\" in Russian is 'не ни разу'."
+     },
+     {
+      "original": "Он не был в Париже.",
+      "replacement": "Он не был ни разу в Париже.",
+      "explanation": "Adding 'ни' before 'разу' makes the sentence more natural and grammatically correct, emphasizing the lack of previous visits."
+     }
+    ],
+    "ms": 1074,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Я хотел бы поблагодарить вас за помощь которую вы оказали.",
+    "corrected": "Я хотел бы поблагодарить вас за помощь, которую вы оказали.",
+    "errors": [
+     {
+      "original": "которую",
+      "replacement": "которую",
+      "explanation": "В русском языке после предлога 'за' обычно используется единственное число, поэтому 'которую' является наиболее подходящим вариантом."
+     }
+    ],
+    "ms": 856,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "typo",
+    "text": "Надеюсь, вы прийдёте вовремя.",
+    "corrected": "Надеюсь, вы придете вовремя.",
+    "errors": [
+     {
+      "original": "прийдёте",
+      "replacement": "придете",
+      "explanation": "В данном контексте, когда речь идет о просьбе или ожидании, более уместно использовать форму повелительного наклонения 'придете' в британском английском."
+     }
+    ],
+    "ms": 857,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "typo",
+    "text": "Это решение было принятно руководством.",
+    "corrected": "Это решение было принято руководством.",
+    "errors": [
+     {
+      "original": "принятно",
+      "replacement": "принято",
+      "explanation": "В данном контексте «принято» является более подходящим и формальным словом, чем «принятно». (Russain: В данном контексте «принято» является более подходящим и формальным словом, чем «принятно».)"
+     }
+    ],
+    "ms": 983,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "typo",
+    "text": "Мы обсудили все детали проэкта.",
+    "corrected": "Мы обсудили все детали проекта.",
+    "errors": [
+     {
+      "original": "проэкта",
+      "replacement": "проекта",
+      "explanation": "В русском языке слово «проект» пишется через «е», а не через «и»."
+     }
+    ],
+    "ms": 742,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "typo",
+    "text": "Учитель обьяснил новую тему.",
+    "corrected": "Учитель объяснил новую тему.",
+    "errors": [
+     {
+      "original": "обьяснил",
+      "replacement": "объяснил",
+      "explanation": "В русском языке правильное написание слова 'объяснить' - 'объяснил'. Это ошибка в написании, связанная с неправильным использованием буквы 'о' и 'я'.",
+      "alternatives": []
+     }
+    ],
+    "ms": 972,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Вчера мы долго гуляли по парку и разговаривали о книгах.",
+    "corrected": "Вчера мы долго гуляли по парку и разговаривали о книгах.",
+    "errors": [],
+    "ms": 374,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Если будет время, я обязательно позвоню.",
+    "corrected": "Если будет время, я обязательно позвоню.",
+    "errors": [],
+    "ms": 296,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Несмотря на дождь, мы пошли гулять.",
+    "corrected": "Несмотря на дождь, мы пошли гулять.",
+    "errors": [],
+    "ms": 320,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Она надела шапку, потому что на улице было холодно.",
+    "corrected": "Она надела шапку, потому что на улице было холодно.",
+    "errors": [],
+    "ms": 339,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Книга, которую ты мне дал, оказалась интересной.",
+    "corrected": "Книга, которую ты мне дал, оказалась интересной.",
+    "errors": [],
+    "ms": 314,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Ни один из нас не знал ответа.",
+    "corrected": "Ни один из нас не знал ответа.",
+    "errors": [],
+    "ms": 255,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "He go to school every days.",
+    "corrected": "He goes to school every day.",
+    "errors": [
+     {
+      "original": "He go to school every days.",
+      "replacement": "He goes to school every day.",
+      "explanation": "The verb 'go' needs to be in the present tense, and 'days' should be 'day' to agree with the adjective 'every'. (Русский: глагол 'идти' должен быть в настоящем времени, а 'дни' должны быть 'день', чтобы соответствовать прилагательному 'каждый'.)"
+     }
+    ],
+    "ms": 1128,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Their going to the park tomorrow, weather or not it rains.",
+    "corrected": "They're going to the park tomorrow, weather or not it rains.",
+    "errors": [
+     {
+      "original": "Their",
+      "replacement": "They're",
+      "explanation": "The possessive pronoun 'Their' needs to be the contraction 'They're' which is used for 'they are' in English.",
+      "alternatives": []
+     },
+     {
+      "original": "weather or not",
+      "replacement": "whether or not",
+      "explanation": "The word 'whether' is the correct word to use in this context, expressing doubt or uncertainty. 'Weather' here is used as a conjunction, not a noun.",
+      "alternatives": []
+     }
+    ],
+    "ms": 1456,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "The results was better then we expected.",
+    "corrected": "The result was better than we expected.",
+    "errors": [
+     {
+      "original": "The results was better then we expected.",
+      "replacement": "The result was better than we expected.",
+      "explanation": "The word 'results' is grammatically masculine, so it needs 'was'. 'Then' is a misspelling of 'than'.",
+      "alternatives": []
+     }
+    ],
+    "ms": 937,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Its a nice day, isn't it?",
+    "corrected": "It’s a nice day, isn’t it?",
+    "errors": [
+     {
+      "original": "Its",
+      "replacement": "It’s",
+      "explanation": "This is a common misspelling. The correct form is ‘it is’ which is contracted to ‘it’s’."
+     },
+     {
+      "original": "isn't it?",
+      "replacement": "isn’t it?",
+      "explanation": "Correcting the contraction of ‘is not’ to ‘isn’t’."
+     }
+    ],
+    "ms": 1174,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "She don't like coffee.",
+    "corrected": "She doesn't like coffee.",
+    "errors": [
+     {
+      "original": "She don't like coffee.",
+      "replacement": "She doesn't like coffee.",
+      "explanation": "The correct form of the verb 'to do' in the negative in English is 'does not'.",
+      "alternatives": []
+     }
+    ],
+    "ms": 839,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Between you and I, the plan is risky.",
+    "corrected": "Between you and I, the plan is risky.",
+    "errors": [
+     {
+      "original": "Between you and I",
+      "replacement": "Between you and me",
+      "explanation": "The correct pronoun to use after ‘between’ is ‘me’ (informal).",
+      "alternatives": []
+     }
+    ],
+    "ms": 826,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "The team finished there work early.",
+    "corrected": "The team finished their work early.",
+    "errors": [
+     {
+      "original": "there",
+      "replacement": "their",
+      "explanation": "The word 'there' indicates a place, while 'their' shows possession. In this context, it refers to the team's work, which belongs to them."
+     }
+    ],
+    "ms": 809,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Who's book is this?",
+    "corrected": "Whose book is this?",
+    "errors": [
+     {
+      "original": "Who's",
+      "replacement": "Whose",
+      "explanation": "The correct form is 'Whose' to indicate possession in English. 'Who's' is a contraction of 'who is' or 'who has'."
+     }
+    ],
+    "ms": 829,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I have seen him yesterday.",
+    "corrected": "I saw him yesterday.",
+    "errors": [
+     {
+      "original": "I have seen him yesterday.",
+      "replacement": "I saw him yesterday.",
+      "explanation": "The present perfect tense 'have seen' is incorrect here. The simple past tense 'saw' is more appropriate for a completed action in the past.",
+      "alternatives": []
+     }
+    ],
+    "ms": 866,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "She is married with a doctor.",
+    "corrected": "She is married to a doctor.",
+    "errors": [
+     {
+      "original": "She is married with a doctor.",
+      "replacement": "She is married to a doctor.",
+      "explanation": "В английском языке после 'married' обычно используется 'to' (к, с), а не 'with'. (In English, after 'married' usually 'to' (to, with) is used, not 'with')."
+     }
+    ],
+    "ms": 968,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Each of the students have a laptop.",
+    "corrected": "Each student has a laptop.",
+    "errors": [
+     {
+      "original": "Each students",
+      "replacement": "Each student",
+      "explanation": "The word 'students' is plural, and 'each' refers to a single student. Therefore, the singular form 'student' is correct."
+     }
+    ],
+    "ms": 777,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I am agree with you.",
+    "corrected": "I agree with you.",
+    "errors": [
+     {
+      "original": "я пошёл",
+      "replacement": "I went",
+      "explanation": "The pronoun 'я' (I) requires the correct verb conjugation in English. 'I went' is the most natural and accurate translation."
+     }
+    ],
+    "ms": 779,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "He is more taller than his brother.",
+    "corrected": "He is more tall than his brother.",
+    "errors": [
+     {
+      "original": "more taller",
+      "replacement": "more tall",
+      "explanation": "В английском языке для сравнения прилагательных используется форма 'more' с существительным, а не с другим прилагательным. 'Taller' - это неправильная форма сравнительной степени.",
+      "alternatives": []
+     }
+    ],
+    "ms": 918,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "There is many reasons to stay.",
+    "corrected": "There are many reasons to stay.",
+    "errors": [
+     {
+      "original": "There is many reasons",
+      "replacement": "There are many reasons",
+      "explanation": "The verb 'to be' must agree with the plural subject 'reasons'. (Русский: глагол 'быть' должен согласовываться с множественным числом подлежащего 'причины'.)"
+     }
+    ],
+    "ms": 931,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I look forward to hear from you.",
+    "corrected": "I look forward to hearing from you.",
+    "errors": [
+     {
+      "original": "to hear",
+      "replacement": "to hearing",
+      "explanation": "В английском языке после предлогов, таких как ‘to’, обычно используется форма герундия глагола (hearing).",
+      "alternatives": []
+     }
+    ],
+    "ms": 823,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "The dog wagged it's tail.",
+    "corrected": "The dog wagged its tail.",
+    "errors": [
+     {
+      "original": "it's",
+      "replacement": "its",
+      "explanation": "The possessive form of 'it' is 'its', not 'it’s' (which is a contraction).",
+      "alternatives": []
+     }
+    ],
+    "ms": 804,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "She suggested me to go home.",
+    "corrected": "She suggested me to go home.",
+    "errors": [
+     {
+      "original": "She suggested me to go home.",
+      "replacement": "She suggested that I go home.",
+      "explanation": "В английском языке, после предлогов, таких как 'to', обычно используется местоимение в форме 'I' вместо 'me'.  Использование 'that I go' звучит более естественно и грамматически правильно.",
+      "alternatives": []
+     }
+    ],
+    "ms": 1043,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I didn't saw anything.",
+    "corrected": "I didn't see anything.",
+    "errors": [
+     {
+      "original": "saw",
+      "replacement": "see",
+      "explanation": "В английском языке после вспомогательного глагола 'did' используется форма инфинитива глагола (see)."
+     }
+    ],
+    "ms": 753,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "He has went to the shop.",
+    "corrected": "He has gone to the shop.",
+    "errors": [
+     {
+      "original": "He has went to the shop.",
+      "replacement": "He has gone to the shop.",
+      "explanation": "The correct form of the auxiliary verb 'have' with the past participle 'gone' is 'have gone'.  В данном случае нужно использовать 'gone', а не 'went'."
+     }
+    ],
+    "ms": 906,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Less people came than expected.",
+    "corrected": "Less people came than expected.",
+    "errors": [],
+    "ms": 272,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "If I would have known, I would have come.",
+    "corrected": "If I had known, I would have come.",
+    "errors": [
+     {
+      "original": "I would have known",
+      "replacement": "I had known",
+      "explanation": "This is a conditional perfect tense, requiring the past perfect form of the verb 'know' (had known) for correct grammatical structure in English.",
+      "alternatives": []
+     },
+     {
+      "original": "I would have come",
+      "replacement": "I would have come",
+      "explanation": "The original was correct, but needs to be combined with the past perfect to form a correct conditional sentence.",
+      "alternatives": []
+     }
+    ],
+    "ms": 1357,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Me and my sister went to the cinema.",
+    "corrected": "My sister and I went to the cinema.",
+    "errors": [
+     {
+      "original": "Me and my sister went to the cinema.",
+      "replacement": "My sister and I went to the cinema.",
+      "explanation": "В английском языке при обращении к нескольким людям или существительным, обычно используется 'I' вместо 'me' в качестве подлежащего предложения.  Это правило основано на грамматических нормах английского языка."
+     }
+    ],
+    "ms": 1032,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "However I disagree with the decision.",
+    "corrected": "Я пошёл в магазин, чтобы купить хлеб и молоко. Там было много людей, и я немного ждал в очереди. После этого я вернулся домой и приготовил ужин. Это был хороший день.",
+    "errors": [],
+    "ms": 602,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I went to the shop, I bought some milk.",
+    "corrected": "I went to the shop, I bought some milk.",
+    "errors": [],
+    "ms": 301,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "The informations you sent was useful.",
+    "corrected": "The information you sent was useful.",
+    "errors": [
+     {
+      "original": "The informations you sent was useful.",
+      "replacement": "The information you sent was useful.",
+      "explanation": "The word ‘information’ is a collective noun and should be uncountable. Therefore, it does not require the indefinite article ‘the’. Also, the verb ‘was’ agrees with the singular subject ‘information’."
+     }
+    ],
+    "ms": 924,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "I have recieved your letter.",
+    "corrected": "I have received your letter.",
+    "errors": [
+     {
+      "original": "recieved",
+      "replacement": "received",
+      "explanation": "This is a misspelling of the word 'received'. In English, it is spelled 'received', not 'recieved'."
+     }
+    ],
+    "ms": 756,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "I like the color of this house.",
+    "corrected": "I like the colour of this house.",
+    "errors": [
+     {
+      "original": "color",
+      "replacement": "colour",
+      "explanation": "In British English, ‘colour’ is the standard spelling for the hue of something."
+     }
+    ],
+    "ms": 703,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "We need to analyze the data.",
+    "corrected": "We need to analyze the data.",
+    "errors": [],
+    "ms": 260,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "The goverment announced new rules.",
+    "corrected": "The government announced new rules.",
+    "errors": [
+     {
+      "original": "goverment",
+      "replacement": "government",
+      "explanation": "This is a spelling error. The correct spelling in English is 'government'.",
+      "alternatives": []
+     }
+    ],
+    "ms": 747,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "It was definately a good idea.",
+    "corrected": "It was definitely a good idea.",
+    "errors": [
+     {
+      "original": "definately",
+      "replacement": "definitely",
+      "explanation": "This is a common spelling mistake in Russian. The correct spelling is 'definitely'.",
+      "alternatives": []
+     }
+    ],
+    "ms": 741,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "We will meet tommorow.",
+    "corrected": "We will meet tomorrow.",
+    "errors": [
+     {
+      "original": "tommorow",
+      "replacement": "tomorrow",
+      "explanation": "The correct spelling is 'tomorrow'. (English)"
+     }
+    ],
+    "ms": 614,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "This is a seperate issue.",
+    "corrected": "This is a separate issue.",
+    "errors": [],
+    "ms": 254,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "This sentence is perfectly fine.",
+    "corrected": "This sentence is perfectly fine.",
+    "errors": [],
+    "ms": 235,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "We organised the meeting for Tuesday afternoon.",
+    "corrected": "We organised the meeting for Tuesday afternoon.",
+    "errors": [],
+    "ms": 270,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "The committee have agreed on the budget.",
+    "corrected": "The committee has agreed on the budget.",
+    "errors": [
+     {
+      "original": "The committee have agreed on the budget.",
+      "replacement": "The committee has agreed on the budget.",
+      "explanation": "В английском языке глагол 'have' используется для личного местоимения 'we' и 'they'. Для 'the committee' используется форма единственного числа 'has'."
+     }
+    ],
+    "ms": 911,
+    "result": "false"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "If I were you, I would apologise.",
+    "corrected": "If I were you, I would apologise.",
+    "errors": [],
+    "ms": 300,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "Fewer people came than we expected.",
+    "corrected": "Fewer people came than we expected.",
+    "errors": [],
+    "ms": 284,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "She has lived in London since 2010.",
+    "corrected": "She has lived in London since 2010.",
+    "errors": [],
+    "ms": 320,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "I'd rather stay at home tonight.",
+    "corrected": "I'd rather stay at home tonight.",
+    "errors": [],
+    "ms": 284,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "The data are stored on a secure server.",
+    "corrected": "The data are stored on a secure server.",
+    "errors": [
+     {
+      "original": "The data are stored on a secure server.",
+      "replacement": "The data are stored on a secure server.",
+      "explanation": "The sentence is already correct. No changes are needed."
+     }
+    ],
+    "ms": 756,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "Neither the manager nor the staff were informed.",
+    "corrected": "Neither the manager nor the staff were informed.",
+    "errors": [],
+    "ms": 240,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "He travelled to Manchester last week.",
+    "corrected": "He travelled to Manchester last week.",
+    "errors": [],
+    "ms": 279,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "Whom did you invite to the party?",
+    "corrected": "Whom did you invite to the party?",
+    "errors": [],
+    "ms": 289,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "I've got a new job, which I really enjoy.",
+    "corrected": "I've got a new job, which I really enjoy.",
+    "errors": [],
+    "ms": 322,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "The centre will open at nine o'clock.",
+    "corrected": "The centre will open at nine o'clock.",
+    "errors": [],
+    "ms": 305,
+    "result": "ok"
+   }
+  ]
+ },
+ "Phi-4-mini": {
+  "load_s": 2.7,
+  "rows": [
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Я пошли домой вчера.",
+    "corrected": "Я пошел домой вчера.",
+    "errors": [
+     {
+      "original": "Я пошли",
+      "replacement": "Я пошел",
+      "explanation": "The verb 'пошел' agrees with the masculine subject 'я'."
+     }
+    ],
+    "ms": 563,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Мы был в магазине и купили хлеб.",
+    "corrected": "Мы были в магазине и купили хлеб.",
+    "errors": [
+     {
+      "original": "Мы был",
+      "replacement": "Мы были",
+      "explanation": "The verb 'быть' (to be) must agree with the plural subject 'Мы' (we)."
+     }
+    ],
+    "ms": 578,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Он сказал что придёт завтра.",
+    "corrected": "Он сказал, что придёт завтра.",
+    "errors": [
+     {
+      "original": "он сказал что",
+      "replacement": "он сказал, что",
+      "explanation": "The phrase 'он сказал что' is incorrect in English. It should be 'он сказал, что' to properly connect the clause."
+     }
+    ],
+    "ms": 618,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "В течении недели мы работали без выходных.",
+    "corrected": "В течение недели мы работали без выходных.",
+    "errors": [
+     {
+      "original": "В течении",
+      "replacement": "В течение",
+      "explanation": "The phrase 'В течении' is incorrect in Russian. The correct preposition is 'В течение'."
+     }
+    ],
+    "ms": 575,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Она одела пальто и вышла на улицу.",
+    "corrected": "Она одела пальто и вышла на улицу.",
+    "errors": [],
+    "ms": 227,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Мне нравится эти книги.",
+    "corrected": "Мне нравится эти книги.",
+    "errors": [],
+    "ms": 186,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Директор попросил подготовить отчёт к пятнице, не смотря на праздники.",
+    "corrected": "Директор попросил подготовить отчёт к пятнице, не смотря на праздники.",
+    "errors": [],
+    "ms": 280,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Я не знаю, что-бы он сказал на это.",
+    "corrected": "Я не знаю, что он сказал на это.",
+    "errors": [
+     {
+      "original": "что-бы",
+      "replacement": "что",
+      "explanation": "The phrase 'что-бы' is incorrect in this context. The correct phrase is 'что'."
+     }
+    ],
+    "ms": 463,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Дети играли во дворе пока родители готовили ужин.",
+    "corrected": "Дети играли во дворе пока родители готовили ужин.",
+    "errors": [],
+    "ms": 246,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "По приезду в город мы сразу пошли в гостиницу.",
+    "corrected": "По приезду в город мы сразу пошли в гостиницу.",
+    "errors": [],
+    "ms": 190,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Он ложит книги на стол.",
+    "corrected": "Он ложит книги на стол.",
+    "errors": [],
+    "ms": 194,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Компания, которая выпустили этот продукт, находится в Москве.",
+    "corrected": "Компания, которая выпустила этот продукт, находится в Москве.",
+    "errors": [],
+    "ms": 235,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Он не разу не был в Париже.",
+    "corrected": "Он не разу не был в Париже.",
+    "errors": [],
+    "ms": 211,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Я хотел бы поблагодарить вас за помощь которую вы оказали.",
+    "corrected": "Я хотел бы поблагодарить вас за помощь, которую вы оказали.",
+    "errors": [
+     {
+      "original": "которую",
+      "replacement": "которую",
+      "explanation": "The word 'которую' is correctly used in this context."
+     }
+    ],
+    "ms": 578,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "typo",
+    "text": "Надеюсь, вы прийдёте вовремя.",
+    "corrected": "Надеюсь, вы придёте вовремя.",
+    "errors": [
+     {
+      "original": "Надеюсь, вы прийдёте вовремя.",
+      "replacement": "Надеюсь, вы придёте вовремя.",
+      "explanation": "The text is correct as it stands."
+     }
+    ],
+    "ms": 499,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "typo",
+    "text": "Это решение было принятно руководством.",
+    "corrected": "Это решение было принято руководством.",
+    "errors": [],
+    "ms": 202,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "typo",
+    "text": "Мы обсудили все детали проэкта.",
+    "corrected": "Мы обсудили все детали проекта.",
+    "errors": [
+     {
+      "original": "проэкта",
+      "replacement": "проекта",
+      "explanation": "The word 'проэкта' is incorrect in Russian. The correct spelling is 'проекта'."
+     }
+    ],
+    "ms": 574,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "typo",
+    "text": "Учитель обьяснил новую тему.",
+    "corrected": "Учитель объяснил новую тему.",
+    "errors": [
+     {
+      "original": "обьяснил",
+      "replacement": "объяснил",
+      "explanation": "The verb 'объяснил' is the correct past tense form of 'объяснить' in Russian."
+     }
+    ],
+    "ms": 466,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Вчера мы долго гуляли по парку и разговаривали о книгах.",
+    "corrected": "Вчера мы долго гуляли по парку и разговаривали о книгах.",
+    "errors": [],
+    "ms": 271,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Если будет время, я обязательно позвоню.",
+    "corrected": "Если будет время, я обязательно позвоню.",
+    "errors": [],
+    "ms": 208,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Несмотря на дождь, мы пошли гулять.",
+    "corrected": "Несмотря на дождь, мы пошли гулять.",
+    "errors": [],
+    "ms": 228,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Она надела шапку, потому что на улице было холодно.",
+    "corrected": "Она надела шапку, потому что на улице было холодно.",
+    "errors": [],
+    "ms": 254,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Книга, которую ты мне дал, оказалась интересной.",
+    "corrected": "Книга, которую ты мне дал, оказалась интересной.",
+    "errors": [],
+    "ms": 242,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Ни один из нас не знал ответа.",
+    "corrected": "Ни один из нас не знал ответа.",
+    "errors": [],
+    "ms": 163,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "He go to school every days.",
+    "corrected": "He goes to school every day.",
+    "errors": [
+     {
+      "original": "He go to school every days.",
+      "replacement": "He goes to school every day.",
+      "explanation": "Corrected verb tense and pluralization."
+     }
+    ],
+    "ms": 516,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Their going to the park tomorrow, weather or not it rains.",
+    "corrected": "They're going to the park tomorrow, weather or not it rains.",
+    "errors": [
+     {
+      "original": "Their going",
+      "replacement": "They're going",
+      "explanation": "The contraction 'They're' (they are) is needed instead of the possessive pronoun 'Their'."
+     }
+    ],
+    "ms": 600,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "The results was better then we expected.",
+    "corrected": "The results were better than we expected.",
+    "errors": [
+     {
+      "original": "The results was better then we expected.",
+      "replacement": "The results were better than we expected.",
+      "explanation": "Corrected subject-verb agreement and preposition."
+     }
+    ],
+    "ms": 549,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Its a nice day, isn't it?",
+    "corrected": "It's a nice day, isn't it?",
+    "errors": [],
+    "ms": 202,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "She don't like coffee.",
+    "corrected": "She doesn't like coffee.",
+    "errors": [
+     {
+      "original": "She don't like coffee.",
+      "replacement": "She doesn't like coffee.",
+      "explanation": "The verb 'do' needs to be conjugated to 'does' to agree with the third person singular subject 'She'."
+     }
+    ],
+    "ms": 608,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Between you and I, the plan is risky.",
+    "corrected": "Between you and me, the plan is risky.",
+    "errors": [
+     {
+      "original": "Between you and I",
+      "replacement": "Between you and me",
+      "explanation": "The correct idiomatic expression in English is 'Between you and me'."
+     }
+    ],
+    "ms": 563,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "The team finished there work early.",
+    "corrected": "The team finished their work early.",
+    "errors": [
+     {
+      "original": "their work",
+      "replacement": "their work",
+      "explanation": "The original text was grammatically correct."
+     }
+    ],
+    "ms": 462,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Who's book is this?",
+    "corrected": "Who's book is this?",
+    "errors": [],
+    "ms": 143,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I have seen him yesterday.",
+    "corrected": "Я видел его вчера.",
+    "errors": [
+     {
+      "original": "I have seen him yesterday",
+      "replacement": "Я видел его вчера.",
+      "explanation": "The sentence should be in the past simple tense to match the time expression 'yesterday'."
+     }
+    ],
+    "ms": 551,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "She is married with a doctor.",
+    "corrected": "She is married with a doctor.",
+    "errors": [],
+    "ms": 148,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Each of the students have a laptop.",
+    "corrected": "Each of the students has a laptop.",
+    "errors": [
+     {
+      "original": "Each of the students have a laptop.",
+      "replacement": "Each of the students has a laptop.",
+      "explanation": "The verb 'have' should agree with the singular subject 'Each'."
+     }
+    ],
+    "ms": 590,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I am agree with you.",
+    "corrected": "Я согласен с вами.",
+    "errors": [
+     {
+      "original": "I am agree with you.",
+      "replacement": "Я согласен с вами.",
+      "explanation": "The phrase 'I am agree' is grammatically incorrect in English. The correct phrase is 'I agree'."
+     }
+    ],
+    "ms": 484,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "He is more taller than his brother.",
+    "corrected": "He is taller than his brother.",
+    "errors": [
+     {
+      "original": "He is more taller than his brother.",
+      "replacement": "He is taller than his brother.",
+      "explanation": "The phrase 'more taller' is incorrect because 'taller' is already a comparative form. The correct comparative form is 'taller'."
+     }
+    ],
+    "ms": 671,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "There is many reasons to stay.",
+    "corrected": "There are many reasons to stay.",
+    "errors": [
+     {
+      "original": "There is many reasons",
+      "replacement": "There are many reasons",
+      "explanation": "The verb 'to be' must agree with the plural subject 'reasons'."
+     }
+    ],
+    "ms": 555,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I look forward to hear from you.",
+    "corrected": "Я с нетерпением жду вашего ответа.",
+    "errors": [
+     {
+      "original": "I look forward to hear from you",
+      "replacement": "Я с нетерпением жду вашего ответа",
+      "explanation": "The sentence structure and verb conjugation are incorrect in English."
+     }
+    ],
+    "ms": 469,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "The dog wagged it's tail.",
+    "corrected": "The dog wagged its tail.",
+    "errors": [
+     {
+      "original": "it's",
+      "replacement": "its",
+      "explanation": "The contraction 'it's' (it is) should be replaced with the possessive pronoun 'its' to indicate possession."
+     }
+    ],
+    "ms": 567,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "She suggested me to go home.",
+    "corrected": "She suggested me to go home.",
+    "errors": [],
+    "ms": 202,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I didn't saw anything.",
+    "corrected": "I didn't see anything.",
+    "errors": [
+     {
+      "original": "I didn't saw anything.",
+      "replacement": "I didn't see anything.",
+      "explanation": "The verb 'saw' should be in its base form 'see' after 'didn't'."
+     }
+    ],
+    "ms": 568,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "He has went to the shop.",
+    "corrected": "He has gone to the shop.",
+    "errors": [
+     {
+      "original": "He has went",
+      "replacement": "He has gone",
+      "explanation": "The correct past participle form of 'go' is 'gone', not 'went'."
+     }
+    ],
+    "ms": 561,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Less people came than expected.",
+    "corrected": "Less people came than expected.",
+    "errors": [],
+    "ms": 190,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "If I would have known, I would have come.",
+    "corrected": "If I had known, I would have come.",
+    "errors": [
+     {
+      "original": "would have known",
+      "replacement": "had known",
+      "explanation": "The correct conditional form in English is 'had known' instead of 'would have known'."
+     },
+     {
+      "original": "would have come",
+      "replacement": "would have come",
+      "explanation": "The phrase 'would have come' is correct in this context."
+     }
+    ],
+    "ms": 848,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Me and my sister went to the cinema.",
+    "corrected": "My sister and I went to the cinema.",
+    "errors": [
+     {
+      "original": "Me and my sister",
+      "replacement": "My sister and I",
+      "explanation": "The correct order of pronouns in English is subject before object."
+     }
+    ],
+    "ms": 540,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "However I disagree with the decision.",
+    "corrected": "However, I disagree with the decision.",
+    "errors": [
+     {
+      "original": "However I disagree with the decision.",
+      "replacement": "However, I disagree with the decision.",
+      "explanation": "Added comma after 'However' for correct punctuation."
+     }
+    ],
+    "ms": 550,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I went to the shop, I bought some milk.",
+    "corrected": "I went to the shop, I bought some milk.",
+    "errors": [],
+    "ms": 224,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "The informations you sent was useful.",
+    "corrected": "The information you sent was useful.",
+    "errors": [
+     {
+      "original": "informations",
+      "replacement": "information",
+      "explanation": "The word 'information' is an uncountable noun and does not have a plural form."
+     }
+    ],
+    "ms": 525,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "I have recieved your letter.",
+    "corrected": "I have received your letter.",
+    "errors": [
+     {
+      "original": "recieved",
+      "replacement": "received",
+      "explanation": "The word 'recieved' is a misspelling of 'received'."
+     }
+    ],
+    "ms": 508,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "I like the color of this house.",
+    "corrected": "I like the color of this house.",
+    "errors": [],
+    "ms": 204,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "We need to analyze the data.",
+    "corrected": "We need to analyze the data.",
+    "errors": [],
+    "ms": 190,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "The goverment announced new rules.",
+    "corrected": "The government announced new rules.",
+    "errors": [
+     {
+      "original": "goverment",
+      "replacement": "government",
+      "explanation": "The word 'goverment' is a spelling error; the correct spelling is 'government'."
+     }
+    ],
+    "ms": 542,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "It was definately a good idea.",
+    "corrected": "It was definitely a good idea.",
+    "errors": [
+     {
+      "original": "definately",
+      "replacement": "definitely",
+      "explanation": "Spelling error."
+     }
+    ],
+    "ms": 426,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "We will meet tommorow.",
+    "corrected": "We will meet tomorrow.",
+    "errors": [
+     {
+      "original": "tommorow",
+      "replacement": "tomorrow",
+      "explanation": "Spelling error in the word 'tomorrow'."
+     }
+    ],
+    "ms": 480,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "This is a seperate issue.",
+    "corrected": "This is a separate issue.",
+    "errors": [
+     {
+      "original": "seperate",
+      "replacement": "separate",
+      "explanation": "The word 'seperate' is incorrect; the correct spelling is 'separate'."
+     }
+    ],
+    "ms": 406,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "This sentence is perfectly fine.",
+    "corrected": "This sentence is perfectly fine.",
+    "errors": [],
+    "ms": 169,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "We organised the meeting for Tuesday afternoon.",
+    "corrected": "We organised the meeting for Tuesday afternoon.",
+    "errors": [],
+    "ms": 202,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "The committee have agreed on the budget.",
+    "corrected": "The committee has agreed on the budget.",
+    "errors": [
+     {
+      "original": "The committee have agreed on the budget.",
+      "replacement": "The committee has agreed on the budget.",
+      "explanation": "The verb 'have' should agree with the singular noun 'committee'."
+     }
+    ],
+    "ms": 583,
+    "result": "false"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "If I were you, I would apologise.",
+    "corrected": "If I were you, I would apologise.",
+    "errors": [],
+    "ms": 204,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "Fewer people came than we expected.",
+    "corrected": "Fewer people came than we expected.",
+    "errors": [],
+    "ms": 183,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "She has lived in London since 2010.",
+    "corrected": "She has lived in London since 2010.",
+    "errors": [],
+    "ms": 199,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "I'd rather stay at home tonight.",
+    "corrected": "I'd rather stay at home tonight.",
+    "errors": [],
+    "ms": 187,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "The data are stored on a secure server.",
+    "corrected": "The data are stored on a secure server.",
+    "errors": [],
+    "ms": 217,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "Neither the manager nor the staff were informed.",
+    "corrected": "Neither the manager nor the staff were informed.",
+    "errors": [],
+    "ms": 214,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "He travelled to Manchester last week.",
+    "corrected": "He travelled to Manchester last week.",
+    "errors": [],
+    "ms": 204,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "Whom did you invite to the party?",
+    "corrected": "Whom did you invite to the party?",
+    "errors": [],
+    "ms": 188,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "I've got a new job, which I really enjoy.",
+    "corrected": "I've got a new job, which I really enjoy.",
+    "errors": [],
+    "ms": 216,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "The centre will open at nine o'clock.",
+    "corrected": "The centre will open at nine o'clock.",
+    "errors": [],
+    "ms": 207,
+    "result": "ok"
+   }
+  ]
+ },
+ "Qwen3 8B": {
+  "load_s": 4.6,
+  "rows": [
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Я пошли домой вчера.",
+    "corrected": "Я пошёл домой вчера.",
+    "errors": [
+     {
+      "original": "пошли",
+      "replacement": "пошёл",
+      "explanation": "Правильная форма глагола 'идти' для мужского рода в прошедшем времени"
+     }
+    ],
+    "ms": 861,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Мы был в магазине и купили хлеб.",
+    "corrected": "Мы были в магазине и купили хлеб.",
+    "errors": [
+     {
+      "original": "был",
+      "replacement": "были",
+      "explanation": "Глагол должен быть в форме прошедшего времени множественного числа, так как подлежащее \"мы\" является множественным числом"
+     }
+    ],
+    "ms": 985,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Он сказал что придёт завтра.",
+    "corrected": "Он сказал, что придёт завтра.",
+    "errors": [
+     {
+      "original": "что придёт",
+      "replacement": "что придёт",
+      "explanation": "Нужна запятая после слова «сказал»"
+     }
+    ],
+    "ms": 683,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "В течении недели мы работали без выходных.",
+    "corrected": "В течение недели мы работали без выходных.",
+    "errors": [
+     {
+      "original": "В течении",
+      "replacement": "В течение",
+      "explanation": "Правильная форма предлога 'в течение'"
+     }
+    ],
+    "ms": 695,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Она одела пальто и вышла на улицу.",
+    "corrected": "Она одела пальто и вышла на улицу.",
+    "errors": [],
+    "ms": 338,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Мне нравится эти книги.",
+    "corrected": "Мне нравятся эти книги.",
+    "errors": [
+     {
+      "original": "нравится",
+      "replacement": "нравятся",
+      "explanation": "Согласование глагола с существительным в роде, числе и лице. Существительное \"книги\" является множественным числом и женского рода, поэтому глагол должен быть в форме \"нравятся\"."
+     }
+    ],
+    "ms": 1174,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Директор попросил подготовить отчёт к пятнице, не смотря на праздники.",
+    "corrected": "Директор попросил подготовить отчёт к пятнице, несмотря на праздники.",
+    "errors": [
+     {
+      "original": "не смотря",
+      "replacement": "несмотря",
+      "explanation": "Отсутствие пробела после запятой"
+     }
+    ],
+    "ms": 810,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Я не знаю, что-бы он сказал на это.",
+    "corrected": "Я не знаю, что бы он сказал на это.",
+    "errors": [
+     {
+      "original": "что-бы",
+      "replacement": "что бы",
+      "explanation": "Неправильное написание союза 'что бы' без дефиса"
+     }
+    ],
+    "ms": 782,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Дети играли во дворе пока родители готовили ужин.",
+    "corrected": "Дети играли во дворе, пока родители готовили ужин.",
+    "errors": [
+     {
+      "original": "пока",
+      "replacement": "пока",
+      "explanation": "Необходимо добавить запятую после «во дворе» для правильного оформления придаточного времени."
+     }
+    ],
+    "ms": 941,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "По приезду в город мы сразу пошли в гостиницу.",
+    "corrected": "По приезду в город мы сразу пошли в гостиницу.",
+    "errors": [],
+    "ms": 364,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Он ложит книги на стол.",
+    "corrected": "Он ложит книги на стол.",
+    "errors": [],
+    "ms": 272,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Компания, которая выпустили этот продукт, находится в Москве.",
+    "corrected": "Компания, которая выпустила этот продукт, находится в Москве.",
+    "errors": [
+     {
+      "original": "выпустили",
+      "replacement": "выпустила",
+      "explanation": "Глагол должен согласовываться с подлежащим 'компания' (женский род)."
+     }
+    ],
+    "ms": 919,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Он не разу не был в Париже.",
+    "corrected": "Он не разу не был в Париже.",
+    "errors": [
+     {
+      "original": "не разу не был",
+      "replacement": "не был никогда",
+      "explanation": "более естественное и литературное выражение"
+     }
+    ],
+    "ms": 742,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Я хотел бы поблагодарить вас за помощь которую вы оказали.",
+    "corrected": "Я хотел бы поблагодарить вас за помощь, которую вы оказали.",
+    "errors": [
+     {
+      "original": "за помощь которую вы оказали",
+      "replacement": "за помощь, которую вы оказали",
+      "explanation": "Нужна запятая перед придаточным предложением"
+     }
+    ],
+    "ms": 882,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "typo",
+    "text": "Надеюсь, вы прийдёте вовремя.",
+    "corrected": "Надеюсь, вы прийдёте вовремя.",
+    "errors": [
+     {
+      "original": "прийдёте",
+      "replacement": "придёте",
+      "explanation": "Правильная форма глагола 'прийти' в будущем времени для второго лица множественного числа."
+     }
+    ],
+    "ms": 979,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "typo",
+    "text": "Это решение было принятно руководством.",
+    "corrected": "Это решение было принято руководством.",
+    "errors": [
+     {
+      "original": "принятно",
+      "replacement": "принято",
+      "explanation": "Правильная форма глагола 'принять' в прошедшем времени, третье лицо множественного числа."
+     }
+    ],
+    "ms": 892,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "typo",
+    "text": "Мы обсудили все детали проэкта.",
+    "corrected": "Мы обсудили все детали проекта.",
+    "errors": [
+     {
+      "original": "проэкта",
+      "replacement": "проекта",
+      "explanation": "Правильная форма родительного падежа существительного 'проект' с окончанием -а."
+     }
+    ],
+    "ms": 857,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "typo",
+    "text": "Учитель обьяснил новую тему.",
+    "corrected": "Учитель объяснил новую тему.",
+    "errors": [
+     {
+      "original": "обьяснил",
+      "replacement": "объяснил",
+      "explanation": "Неправильное написание слова. Правильная форма — \"объяснил\"."
+     }
+    ],
+    "ms": 904,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Вчера мы долго гуляли по парку и разговаривали о книгах.",
+    "corrected": "Вчера мы долго гуляли по парку и разговаривали о книгах.",
+    "errors": [],
+    "ms": 441,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Если будет время, я обязательно позвоню.",
+    "corrected": "Если будет время, я обязательно позвоню.",
+    "errors": [],
+    "ms": 286,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Несмотря на дождь, мы пошли гулять.",
+    "corrected": "Несмотря на дождь, мы пошли гулять.",
+    "errors": [],
+    "ms": 376,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Она надела шапку, потому что на улице было холодно.",
+    "corrected": "Она надела шапку, потому что на улице было холодно.",
+    "errors": [],
+    "ms": 382,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Книга, которую ты мне дал, оказалась интересной.",
+    "corrected": "Книга, которую ты мне дал, оказалась интересной.",
+    "errors": [],
+    "ms": 357,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Ни один из нас не знал ответа.",
+    "corrected": "Ни один из нас не знал ответа.",
+    "errors": [],
+    "ms": 291,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "He go to school every days.",
+    "corrected": "He goes to school every day.",
+    "errors": [
+     {
+      "original": "go",
+      "replacement": "goes",
+      "explanation": "Third person singular verb form is required"
+     }
+    ],
+    "ms": 555,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Their going to the park tomorrow, weather or not it rains.",
+    "corrected": "Their going to the park tomorrow, weather or not it rains.",
+    "errors": [
+     {
+      "original": "Their",
+      "replacement": "They're",
+      "explanation": "Incorrect contraction. 'Their' is a possessive pronoun, while 'They're' is a contraction of 'they are'."
+     }
+    ],
+    "ms": 851,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "The results was better then we expected.",
+    "corrected": "The results were better than we expected.",
+    "errors": [
+     {
+      "original": "was",
+      "replacement": "were",
+      "explanation": "The subject 'results' is plural, so the verb should be 'were'"
+     }
+    ],
+    "ms": 678,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Its a nice day, isn't it?",
+    "corrected": "It's a nice day, isn't it?",
+    "errors": [
+     {
+      "original": "Its",
+      "replacement": "It's",
+      "explanation": "Contraction of 'it is'"
+     }
+    ],
+    "ms": 601,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "She don't like coffee.",
+    "corrected": "She doesn't like coffee.",
+    "errors": [
+     {
+      "original": "don't",
+      "replacement": "doesn't",
+      "explanation": "Incorrect contraction. The correct contraction for 'does not' is 'doesn't' when used with a third person singular subject."
+     }
+    ],
+    "ms": 767,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Between you and I, the plan is risky.",
+    "corrected": "Between you and me, the plan is risky.",
+    "errors": [
+     {
+      "original": "you and I",
+      "replacement": "you and me",
+      "explanation": "After the preposition 'between', the correct pronoun is 'me' (objective case), not 'I' (subjective case)."
+     }
+    ],
+    "ms": 861,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "The team finished there work early.",
+    "corrected": "The team finished their work early.",
+    "errors": [
+     {
+      "original": "there",
+      "replacement": "their",
+      "explanation": "The pronoun 'their' is used to indicate possession, whereas 'there' refers to a place. In this context, 'their' is the correct choice."
+     }
+    ],
+    "ms": 841,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Who's book is this?",
+    "corrected": "Who's book is this?",
+    "errors": [
+     {
+      "original": "Who's",
+      "replacement": "Whose",
+      "explanation": "Incorrect contraction. 'Whose' is the correct possessive form of 'who'."
+     }
+    ],
+    "ms": 678,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I have seen him yesterday.",
+    "corrected": "I have seen him yesterday.",
+    "errors": [
+     {
+      "original": "yesterday",
+      "replacement": "yesterday",
+      "explanation": "The word is spelled correctly in British English."
+     }
+    ],
+    "ms": 570,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "She is married with a doctor.",
+    "corrected": "She is married to a doctor.",
+    "errors": [
+     {
+      "original": "with",
+      "replacement": "to",
+      "explanation": "The preposition 'to' is used after 'married' in this context."
+     }
+    ],
+    "ms": 654,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Each of the students have a laptop.",
+    "corrected": "Each of the students has a laptop.",
+    "errors": [
+     {
+      "original": "have",
+      "replacement": "has",
+      "explanation": "Subject 'each of the students' is singular, so the verb should be 'has' instead of 'have'."
+     }
+    ],
+    "ms": 763,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I am agree with you.",
+    "corrected": "I agree with you.",
+    "errors": [
+     {
+      "original": "am agree",
+      "replacement": "agree",
+      "explanation": "The verb 'agree' is used without the auxiliary verb 'to' in this context"
+     }
+    ],
+    "ms": 659,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "He is more taller than his brother.",
+    "corrected": "He is taller than his brother.",
+    "errors": [
+     {
+      "original": "more taller",
+      "replacement": "taller",
+      "explanation": "The comparative form of 'tall' is 'taller', and 'more' is not used with adjectives that already have a comparative form"
+     }
+    ],
+    "ms": 855,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "There is many reasons to stay.",
+    "corrected": "There are many reasons to stay.",
+    "errors": [
+     {
+      "original": "is",
+      "replacement": "are",
+      "explanation": "The verb 'to be' in the present tense should be 'are' to agree with the plural subject 'reasons'."
+     }
+    ],
+    "ms": 780,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I look forward to hear from you.",
+    "corrected": "I look forward to hearing from you.",
+    "errors": [
+     {
+      "original": "to hear",
+      "replacement": "to hearing",
+      "explanation": "The correct form after 'look forward to' is the gerund (hearing), not the base form (hear)."
+     }
+    ],
+    "ms": 781,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "The dog wagged it's tail.",
+    "corrected": "The dog wagged its tail.",
+    "errors": [
+     {
+      "original": "it's",
+      "replacement": "its",
+      "explanation": "The possessive pronoun 'its' is used to show ownership, whereas 'it's' is a contraction of 'it is'."
+     }
+    ],
+    "ms": 800,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "She suggested me to go home.",
+    "corrected": "She suggested me to go home.",
+    "errors": [
+     {
+      "original": "suggested me to",
+      "replacement": "suggested that I",
+      "explanation": "In British English, the correct structure after 'suggest' is 'suggest that + subject + base verb'"
+     }
+    ],
+    "ms": 791,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I didn't saw anything.",
+    "corrected": "I didn't see anything.",
+    "errors": [
+     {
+      "original": "saw",
+      "replacement": "see",
+      "explanation": "The past tense form 'saw' is incorrect here. The correct form for the negative past tense in this context is 'see'."
+     }
+    ],
+    "ms": 790,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "He has went to the shop.",
+    "corrected": "He has gone to the shop.",
+    "errors": [
+     {
+      "original": "has went",
+      "replacement": "has gone",
+      "explanation": "The past participle of 'go' is 'gone', not 'went'"
+     }
+    ],
+    "ms": 677,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Less people came than expected.",
+    "corrected": "Less people came than expected.",
+    "errors": [
+     {
+      "original": "Less",
+      "replacement": "Fewer",
+      "explanation": "The word 'fewer' is used for countable nouns, while 'less' is used for uncountable nouns. 'People' is a countable noun, so 'fewer' is correct."
+     }
+    ],
+    "ms": 959,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "If I would have known, I would have come.",
+    "corrected": "If I had known, I would have come.",
+    "errors": [
+     {
+      "original": "would have known",
+      "replacement": "had known",
+      "explanation": "In the past perfect tense, 'had' is used before the past participle"
+     }
+    ],
+    "ms": 710,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Me and my sister went to the cinema.",
+    "corrected": "Me and my sister went to the cinema.",
+    "errors": [
+     {
+      "original": "Me and my sister",
+      "replacement": "My sister and I",
+      "explanation": "In British English, it is more grammatically correct to place the subject closer to the verb when using 'and' in a sentence."
+     }
+    ],
+    "ms": 891,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "However I disagree with the decision.",
+    "corrected": "However, I disagree with the decision.",
+    "errors": [
+     {
+      "original": "However I disagree with the decision.",
+      "replacement": "However, I disagree with the decision.",
+      "explanation": "Missing comma after introductory word 'However'"
+     }
+    ],
+    "ms": 711,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I went to the shop, I bought some milk.",
+    "corrected": "I went to the shop, I bought some milk.",
+    "errors": [
+     {
+      "original": "I went to the shop, I bought some milk.",
+      "replacement": "I went to the shop, and I bought some milk.",
+      "explanation": "Missing conjunction 'and' after the comma"
+     }
+    ],
+    "ms": 820,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "The informations you sent was useful.",
+    "corrected": "The information you sent was useful.",
+    "errors": [
+     {
+      "original": "informations",
+      "replacement": "information",
+      "explanation": "The word 'information' is uncountable and does not take the plural form 'informations' in English"
+     }
+    ],
+    "ms": 738,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "I have recieved your letter.",
+    "corrected": "I have received your letter.",
+    "errors": [
+     {
+      "original": "recieved",
+      "replacement": "received",
+      "explanation": "incorrect spelling of the verb 'receive'"
+     }
+    ],
+    "ms": 564,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "I like the color of this house.",
+    "corrected": "I like the colour of this house.",
+    "errors": [
+     {
+      "original": "color",
+      "replacement": "colour",
+      "explanation": "In British English, 'colour' is the correct spelling."
+     }
+    ],
+    "ms": 617,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "We need to analyze the data.",
+    "corrected": "We need to analyze the data.",
+    "errors": [],
+    "ms": 254,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "The goverment announced new rules.",
+    "corrected": "The government announced new rules.",
+    "errors": [
+     {
+      "original": "goverment",
+      "replacement": "government",
+      "explanation": "Incorrect spelling of the word 'government'"
+     }
+    ],
+    "ms": 571,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "It was definately a good idea.",
+    "corrected": "It was definitely a good idea.",
+    "errors": [
+     {
+      "original": "definately",
+      "replacement": "definitely",
+      "explanation": "Incorrect spelling of the word 'definitely'"
+     }
+    ],
+    "ms": 602,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "We will meet tommorow.",
+    "corrected": "We will meet tomorrow.",
+    "errors": [
+     {
+      "original": "tommorow",
+      "replacement": "tomorrow",
+      "explanation": "Incorrect spelling of the word 'tomorrow'"
+     }
+    ],
+    "ms": 596,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "This is a seperate issue.",
+    "corrected": "This is a separate issue.",
+    "errors": [
+     {
+      "original": "seperate",
+      "replacement": "separate",
+      "explanation": "Wrong spelling"
+     }
+    ],
+    "ms": 507,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "This sentence is perfectly fine.",
+    "corrected": "This sentence is perfectly fine.",
+    "errors": [],
+    "ms": 241,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "We organised the meeting for Tuesday afternoon.",
+    "corrected": "We organised the meeting for Tuesday afternoon.",
+    "errors": [],
+    "ms": 254,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "The committee have agreed on the budget.",
+    "corrected": "The committee has agreed on the budget.",
+    "errors": [
+     {
+      "original": "have",
+      "replacement": "has",
+      "explanation": "The subject 'committee' is singular, so the verb should be 'has' instead of 'have'."
+     }
+    ],
+    "ms": 735,
+    "result": "false"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "If I were you, I would apologise.",
+    "corrected": "If I were you, I would apologise.",
+    "errors": [],
+    "ms": 285,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "Fewer people came than we expected.",
+    "corrected": "Fewer people came than we expected.",
+    "errors": [],
+    "ms": 278,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "She has lived in London since 2010.",
+    "corrected": "She has lived in London since 2010.",
+    "errors": [],
+    "ms": 310,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "I'd rather stay at home tonight.",
+    "corrected": "I'd rather stay at home tonight.",
+    "errors": [],
+    "ms": 256,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "The data are stored on a secure server.",
+    "corrected": "The data are stored on a secure server.",
+    "errors": [],
+    "ms": 270,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "Neither the manager nor the staff were informed.",
+    "corrected": "Neither the manager nor the staff were informed.",
+    "errors": [
+     {
+      "original": "were",
+      "replacement": "was",
+      "explanation": "The subject 'Neither the manager nor the staff' is a plural subject, so the verb should be 'were'"
+     }
+    ],
+    "ms": 763,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "He travelled to Manchester last week.",
+    "corrected": "He travelled to Manchester last week.",
+    "errors": [],
+    "ms": 230,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "Whom did you invite to the party?",
+    "corrected": "Whom did you invite to the party?",
+    "errors": [
+     {
+      "original": "Whom",
+      "replacement": "Who",
+      "explanation": "In informal speech and in questions, 'who' is more commonly used instead of 'whom'"
+     }
+    ],
+    "ms": 730,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "I've got a new job, which I really enjoy.",
+    "corrected": "I've got a new job, which I really enjoy.",
+    "errors": [],
+    "ms": 298,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "The centre will open at nine o'clock.",
+    "corrected": "The centre will open at nine o'clock.",
+    "errors": [],
+    "ms": 253,
+    "result": "ok"
+   }
+  ]
+ },
+ "YandexGPT 5 Lite 8B": {
+  "load_s": 4.7,
+  "rows": [
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Я пошли домой вчера.",
+    "corrected": "Я пошёл домой вчера.",
+    "errors": [
+     {
+      "original": "пошли",
+      "replacement": "пошёл",
+      "explanation": "Глагол должен соответствовать мужскому роду."
+     }
+    ],
+    "ms": 959,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Мы был в магазине и купили хлеб.",
+    "corrected": "Мы были в магазине и купили хлеб.",
+    "errors": [
+     {
+      "original": "был",
+      "replacement": "были",
+      "explanation": "Глагол 'был' в прошедшем времени должен согласовываться с подлежащим 'Мы' во множественном числе."
+     }
+    ],
+    "ms": 1072,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Он сказал что придёт завтра.",
+    "corrected": "Он сказал, что придёт завтра.",
+    "errors": [
+     {
+      "original": "что придёт завтра.",
+      "replacement": "что придёт завтра.",
+      "explanation": "Запятая перед союзом 'что' обязательна для отделения придаточного предложения от главного."
+     }
+    ],
+    "ms": 995,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "В течении недели мы работали без выходных.",
+    "corrected": "В течение недели мы работали без выходных.",
+    "errors": [
+     {
+      "original": "В течении",
+      "replacement": "В течение",
+      "explanation": "Предлог 'в течение' пишется слитно."
+     }
+    ],
+    "ms": 898,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Она одела пальто и вышла на улицу.",
+    "corrected": "Она надела пальто и вышла на улицу.",
+    "errors": [
+     {
+      "original": "одела",
+      "replacement": "надела",
+      "explanation": "Глагол 'одела' используется для обозначения действия, направленного на другого человека, в данном контексте правильно использовать 'надела'."
+     }
+    ],
+    "ms": 1071,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Мне нравится эти книги.",
+    "corrected": "Мне нравятся эти книги.",
+    "errors": [
+     {
+      "original": "нравится",
+      "replacement": "нравятся",
+      "explanation": "Глагол должен согласовываться с существительным во множественном числе."
+     }
+    ],
+    "ms": 973,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Директор попросил подготовить отчёт к пятнице, не смотря на праздники.",
+    "corrected": "Директор попросил подготовить отчёт к пятнице, несмотря на праздники.",
+    "errors": [
+     {
+      "original": "не смотря на",
+      "replacement": "несмотря на",
+      "explanation": "Предлог 'несмотря на' пишется слитно."
+     }
+    ],
+    "ms": 976,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Я не знаю, что-бы он сказал на это.",
+    "corrected": "Я не знаю, что бы он сказал на это.",
+    "errors": [
+     {
+      "original": "что-бы",
+      "replacement": "что бы",
+      "explanation": "Раздельное написание частицы 'бы' с предшествующим словом."
+     }
+    ],
+    "ms": 961,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Дети играли во дворе пока родители готовили ужин.",
+    "corrected": "Дети играли во дворе, пока родители готовили ужин.",
+    "errors": [
+     {
+      "original": ", пока",
+      "replacement": ", пока",
+      "explanation": "запятая перед союзом 'пока' обязательна для разделения частей сложноподчинённого предложения."
+     }
+    ],
+    "ms": 1013,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "По приезду в город мы сразу пошли в гостиницу.",
+    "corrected": "По приезде в город мы сразу пошли в гостиницу.",
+    "errors": [
+     {
+      "original": "по приезду",
+      "replacement": "по приезде",
+      "explanation": "Предлог 'по' с предложным падежом ('приезде') используется для обозначения действия, которое происходит после события, указанного в предложном падеже."
+     }
+    ],
+    "ms": 1212,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Он ложит книги на стол.",
+    "corrected": "Он кладёт книги на стол.",
+    "errors": [
+     {
+      "original": "ложит",
+      "replacement": "кладёт",
+      "explanation": "Неправильный глагол в настоящем времени, правильный вариант — 'кладёт'."
+     }
+    ],
+    "ms": 1009,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Компания, которая выпустили этот продукт, находится в Москве.",
+    "corrected": "Компания, которая выпустила этот продукт, находится в Москве.",
+    "errors": [
+     {
+      "original": "выпустили",
+      "replacement": "выпустила",
+      "explanation": "Согласование глагола с существительным в роде."
+     }
+    ],
+    "ms": 914,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Он не разу не был в Париже.",
+    "corrected": "Он ни разу не был в Париже.",
+    "errors": [
+     {
+      "original": "не разу",
+      "replacement": "ни разу",
+      "explanation": "Правильное употребление частицы в отрицании."
+     }
+    ],
+    "ms": 844,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Я хотел бы поблагодарить вас за помощь которую вы оказали.",
+    "corrected": "Я хотел бы поблагодарить вас за помощь, которую вы оказали.",
+    "errors": [
+     {
+      "original": "которую вы оказали.",
+      "replacement": "которую вы оказали.",
+      "explanation": "Запятая перед придаточным предложением уточняет структуру предложения и улучшает его читаемость."
+     }
+    ],
+    "ms": 1143,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "typo",
+    "text": "Надеюсь, вы прийдёте вовремя.",
+    "corrected": "Надеюсь, вы придёте вовремя.",
+    "errors": [
+     {
+      "original": "прийдёте",
+      "replacement": "придёте",
+      "explanation": "Ошибка в написании глагола 'придёте'."
+     }
+    ],
+    "ms": 903,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "typo",
+    "text": "Это решение было принятно руководством.",
+    "corrected": "Это решение было принято руководством.",
+    "errors": [
+     {
+      "original": "принятно",
+      "replacement": "принято",
+      "explanation": "Ошибка в написании слова."
+     }
+    ],
+    "ms": 821,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "typo",
+    "text": "Мы обсудили все детали проэкта.",
+    "corrected": "Мы обсудили все детали проекта.",
+    "errors": [
+     {
+      "original": "проэкта",
+      "replacement": "проекта",
+      "explanation": "Ошибка в написании слова 'проект'."
+     }
+    ],
+    "ms": 917,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "typo",
+    "text": "Учитель обьяснил новую тему.",
+    "corrected": "Учитель объяснил новую тему.",
+    "errors": [
+     {
+      "original": "обьяснил",
+      "replacement": "объяснил",
+      "explanation": "Ошибка в написании слова."
+     }
+    ],
+    "ms": 835,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Вчера мы долго гуляли по парку и разговаривали о книгах.",
+    "corrected": "Вчера мы долго гуляли по парку и разговаривали о книгах.",
+    "errors": [],
+    "ms": 419,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Если будет время, я обязательно позвоню.",
+    "corrected": "Если будет время, я обязательно позвоню.",
+    "errors": [],
+    "ms": 409,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Несмотря на дождь, мы пошли гулять.",
+    "corrected": "Несмотря на дождь, мы пошли гулять.",
+    "errors": [],
+    "ms": 387,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Она надела шапку, потому что на улице было холодно.",
+    "corrected": "Она надела шапку, потому что на улице было холодно.",
+    "errors": [],
+    "ms": 431,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Книга, которую ты мне дал, оказалась интересной.",
+    "corrected": "Книга, которую ты мне дал, оказалась интересной.",
+    "errors": [],
+    "ms": 417,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Ни один из нас не знал ответа.",
+    "corrected": "Ни один из нас не знал ответа.",
+    "errors": [],
+    "ms": 396,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "He go to school every days.",
+    "corrected": "He goes to school every day.",
+    "errors": [
+     {
+      "original": "go",
+      "replacement": "goes",
+      "explanation": "Third person singular present tense of the verb 'to go'."
+     },
+     {
+      "original": "every days",
+      "replacement": "every day",
+      "explanation": "The correct expression for 'каждый день'."
+     }
+    ],
+    "ms": 1428,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Their going to the park tomorrow, weather or not it rains.",
+    "corrected": "They're going to the park tomorrow, whether or not it rains.",
+    "errors": [
+     {
+      "original": "Their going",
+      "replacement": "They're going",
+      "explanation": "Contraction of 'they are' is used instead of 'their going'."
+     },
+     {
+      "original": "weather or not it rains",
+      "replacement": "whether or not it rains",
+      "explanation": "The correct conjunction to use here is 'whether or not', not 'weather or not'."
+     }
+    ],
+    "ms": 1867,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "The results was better then we expected.",
+    "corrected": "The results were better than we expected.",
+    "errors": [
+     {
+      "original": "was",
+      "replacement": "were",
+      "explanation": "The verb 'to be' in the past simple tense for the third person plural."
+     },
+     {
+      "original": "then",
+      "replacement": "than",
+      "explanation": "The word 'than' is used to introduce the second element in a comparison."
+     }
+    ],
+    "ms": 1578,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Its a nice day, isn't it?",
+    "corrected": "It's a nice day, isn't it?",
+    "errors": [
+     {
+      "original": "Its",
+      "replacement": "It's",
+      "explanation": "Contraction of 'It is'"
+     }
+    ],
+    "ms": 913,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "She don't like coffee.",
+    "corrected": "She doesn't like coffee.",
+    "errors": [
+     {
+      "original": "don't",
+      "replacement": "doesn't",
+      "explanation": "The correct form of the verb 'to do' in the third person singular is 'doesn't'."
+     }
+    ],
+    "ms": 1111,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Between you and I, the plan is risky.",
+    "corrected": "Between you and me, the plan is risky.",
+    "errors": [
+     {
+      "original": "Between you and I",
+      "replacement": "Between you and me",
+      "explanation": "The correct preposition to use after 'between' is 'me' in this context."
+     }
+    ],
+    "ms": 1056,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "The team finished there work early.",
+    "corrected": "The team finished their work early.",
+    "errors": [
+     {
+      "original": "there work",
+      "replacement": "their work",
+      "explanation": "The possessive adjective 'their' is used to refer to a group of people."
+     }
+    ],
+    "ms": 1030,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Who's book is this?",
+    "corrected": "Who's book is this?",
+    "errors": [
+     {
+      "original": "Who's",
+      "replacement": "Who's",
+      "explanation": "No error, but the contraction 'Who's' is used correctly."
+     }
+    ],
+    "ms": 966,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I have seen him yesterday.",
+    "corrected": "I have seen him yesterday.",
+    "errors": [],
+    "ms": 360,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "She is married with a doctor.",
+    "corrected": "She is married to a doctor.",
+    "errors": [
+     {
+      "original": "with a doctor",
+      "replacement": "to a doctor",
+      "explanation": "The correct preposition to use when talking about being married to a specific person is 'to'."
+     }
+    ],
+    "ms": 1032,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Each of the students have a laptop.",
+    "corrected": "Each of the students has a laptop.",
+    "errors": [
+     {
+      "original": "have",
+      "replacement": "has",
+      "explanation": "The verb 'has' is used with singular subjects."
+     }
+    ],
+    "ms": 940,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I am agree with you.",
+    "corrected": "I agree with you.",
+    "errors": [
+     {
+      "original": "I am agree",
+      "replacement": "I agree",
+      "explanation": "The correct form of the verb 'to be' in this context is 'agree', not 'am agree'."
+     }
+    ],
+    "ms": 1035,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "He is more taller than his brother.",
+    "corrected": "He is taller than his brother.",
+    "errors": [
+     {
+      "original": "more taller",
+      "replacement": "taller",
+      "explanation": "The comparative form of 'tall' is 'taller', not 'more taller'."
+     }
+    ],
+    "ms": 1055,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "There is many reasons to stay.",
+    "corrected": "There are many reasons to stay.",
+    "errors": [
+     {
+      "original": "There is many reasons to stay.",
+      "replacement": "There are many reasons to stay.",
+      "explanation": "The verb 'to be' should agree with the plural noun 'reasons'."
+     }
+    ],
+    "ms": 1116,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I look forward to hear from you.",
+    "corrected": "I look forward to hearing from you.",
+    "errors": [
+     {
+      "original": "hear",
+      "replacement": "hearing",
+      "explanation": "The correct verb form for the context is 'hearing', not 'hear'."
+     }
+    ],
+    "ms": 966,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "The dog wagged it's tail.",
+    "corrected": "The dog wagged its tail.",
+    "errors": [
+     {
+      "original": "it's",
+      "replacement": "its",
+      "explanation": "The possessive adjective 'its' is used instead of the contraction 'it's' (it is)."
+     }
+    ],
+    "ms": 1034,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "She suggested me to go home.",
+    "corrected": "She suggested to me to go home.",
+    "errors": [
+     {
+      "original": "suggested me",
+      "replacement": "suggested to me",
+      "explanation": "The correct preposition to use after 'suggested' is 'to'."
+     }
+    ],
+    "ms": 996,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I didn't saw anything.",
+    "corrected": "I didn't see anything.",
+    "errors": [
+     {
+      "original": "saw",
+      "replacement": "see",
+      "explanation": "The correct form of the verb in the past participle for 'see' is 'saw', but in this context, it should be 'see'."
+     }
+    ],
+    "ms": 1177,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "He has went to the shop.",
+    "corrected": "He has gone to the shop.",
+    "errors": [
+     {
+      "original": "has went",
+      "replacement": "has gone",
+      "explanation": "The correct past participle of 'to go' in British English is 'gone'."
+     }
+    ],
+    "ms": 1056,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Less people came than expected.",
+    "corrected": "Fewer people came than expected.",
+    "errors": [
+     {
+      "original": "Less people",
+      "replacement": "Fewer people",
+      "explanation": "Less is used with uncountable nouns, while fewer is used with countable nouns."
+     }
+    ],
+    "ms": 1057,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "If I would have known, I would have come.",
+    "corrected": "If I had known, I would have come.",
+    "errors": [
+     {
+      "original": "would have known",
+      "replacement": "had known",
+      "explanation": "The past participle 'known' should be used with 'had' to indicate a past action that did not happen."
+     }
+    ],
+    "ms": 1096,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Me and my sister went to the cinema.",
+    "corrected": "Me and my sister went to the cinema.",
+    "errors": [
+     {
+      "original": "Me and my sister went to the cinema.",
+      "replacement": "Me and my sister went to the cinema.",
+      "explanation": "No errors were found."
+     }
+    ],
+    "ms": 989,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "However I disagree with the decision.",
+    "corrected": "However, I disagree with the decision.",
+    "errors": [
+     {
+      "original": "However I disagree with the decision.",
+      "replacement": "However, I disagree with the decision.",
+      "explanation": "A comma is needed after 'However' to separate it from the main clause."
+     }
+    ],
+    "ms": 1081,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I went to the shop, I bought some milk.",
+    "corrected": "I went to the shop, I bought some milk.",
+    "errors": [],
+    "ms": 421,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "The informations you sent was useful.",
+    "corrected": "The information you sent was useful.",
+    "errors": [
+     {
+      "original": "informations",
+      "replacement": "information",
+      "explanation": "The word 'informations' is incorrect, the correct singular form is 'information'."
+     },
+     {
+      "original": "was useful.",
+      "replacement": "was useful.",
+      "explanation": "No further corrections needed."
+     },
+     {
+      "original": "The informations",
+      "replacement": "The information",
+      "explanation": "The word 'informations' is incorrect, the correct singular form is 'information'."
+     }
+    ],
+    "ms": 2036,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "I have recieved your letter.",
+    "corrected": "I have received your letter.",
+    "errors": [
+     {
+      "original": "recieved",
+      "replacement": "received",
+      "explanation": "Typographical error in the past participle of the verb 'to receive'."
+     }
+    ],
+    "ms": 917,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "I like the color of this house.",
+    "corrected": "I like the colour of this house.",
+    "errors": [
+     {
+      "original": "color",
+      "replacement": "colour",
+      "explanation": "In British English, 'colour' is used instead of 'color'."
+     }
+    ],
+    "ms": 986,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "We need to analyze the data.",
+    "corrected": "We need to analyze the data.",
+    "errors": [],
+    "ms": 385,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "The goverment announced new rules.",
+    "corrected": "The government announced new rules.",
+    "errors": [
+     {
+      "original": "goverment",
+      "replacement": "government",
+      "explanation": "Typographical error in the spelling of the word 'government'."
+     }
+    ],
+    "ms": 962,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "It was definately a good idea.",
+    "corrected": "It was definitely a good idea.",
+    "errors": [
+     {
+      "original": "definately",
+      "replacement": "definitely",
+      "explanation": "Typographical error in spelling."
+     }
+    ],
+    "ms": 841,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "We will meet tommorow.",
+    "corrected": "We will meet tomorrow.",
+    "errors": [
+     {
+      "original": "tommorow",
+      "replacement": "tomorrow",
+      "explanation": "Typographical error in spelling the word 'tomorrow'."
+     }
+    ],
+    "ms": 920,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "This is a seperate issue.",
+    "corrected": "This is a separate issue.",
+    "errors": [
+     {
+      "original": "seperate",
+      "replacement": "separate",
+      "explanation": "Typographical error in spelling."
+     }
+    ],
+    "ms": 899,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "This sentence is perfectly fine.",
+    "corrected": "This sentence is perfectly fine.",
+    "errors": [],
+    "ms": 370,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "We organised the meeting for Tuesday afternoon.",
+    "corrected": "We organised the meeting for Tuesday afternoon.",
+    "errors": [],
+    "ms": 374,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "The committee have agreed on the budget.",
+    "corrected": "The committee has agreed on the budget.",
+    "errors": [
+     {
+      "original": "have agreed",
+      "replacement": "has agreed",
+      "explanation": "The verb 'to have' should be in the third person singular form ('has') when used with the subject 'the committee'."
+     }
+    ],
+    "ms": 1101,
+    "result": "false"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "If I were you, I would apologise.",
+    "corrected": "If I were you, I would apologise.",
+    "errors": [],
+    "ms": 419,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "Fewer people came than we expected.",
+    "corrected": "Fewer people came than we expected.",
+    "errors": [],
+    "ms": 384,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "She has lived in London since 2010.",
+    "corrected": "She has lived in London since 2010.",
+    "errors": [],
+    "ms": 441,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "I'd rather stay at home tonight.",
+    "corrected": "I'd rather stay at home tonight.",
+    "errors": [],
+    "ms": 413,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "The data are stored on a secure server.",
+    "corrected": "The data are stored on a secure server.",
+    "errors": [],
+    "ms": 391,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "Neither the manager nor the staff were informed.",
+    "corrected": "Neither the manager nor the staff were informed.",
+    "errors": [],
+    "ms": 401,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "He travelled to Manchester last week.",
+    "corrected": "He travelled to Manchester last week.",
+    "errors": [],
+    "ms": 379,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "Whom did you invite to the party?",
+    "corrected": "Whom did you invite to the party?",
+    "errors": [],
+    "ms": 402,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "I've got a new job, which I really enjoy.",
+    "corrected": "I've got a new job, which I really enjoy.",
+    "errors": [],
+    "ms": 458,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "The centre will open at nine o'clock.",
+    "corrected": "The centre will open at nine o'clock.",
+    "errors": [],
+    "ms": 404,
+    "result": "ok"
+   }
+  ]
+ },
+ "Gemma 3 12B": {
+  "load_s": 6.7,
+  "rows": [
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Я пошли домой вчера.",
+    "corrected": "Я пошёл домой вчера.",
+    "errors": [
+     {
+      "original": "Я пошли",
+      "replacement": "Я пошёл",
+      "explanation": "Неправильная форма глагола 'идти' в прошедшем времени для мужского рода."
+     }
+    ],
+    "ms": 1344,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Мы был в магазине и купили хлеб.",
+    "corrected": "Мы были в магазине и купили хлеб.",
+    "errors": [
+     {
+      "original": "Мы был",
+      "replacement": "Мы были",
+      "explanation": "Согласование сказуемого с подлежащим. Правильно: 'Мы были'."
+     }
+    ],
+    "ms": 1309,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Он сказал что придёт завтра.",
+    "corrected": "Он сказал, что придёт завтра.",
+    "errors": [
+     {
+      "original": "Он сказал что придёт завтра.",
+      "replacement": "Он сказал, что придёт завтра.",
+      "explanation": "Не хватает запятой после 'сказал'."
+     }
+    ],
+    "ms": 1266,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "В течении недели мы работали без выходных.",
+    "corrected": "В течение недели мы работали без выходных.",
+    "errors": [
+     {
+      "original": "В течении",
+      "replacement": "В течение",
+      "explanation": "Орфографическая ошибка: правильное написание предлога - 'в течение'."
+     }
+    ],
+    "ms": 1320,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Она одела пальто и вышла на улицу.",
+    "corrected": "Она одела пальто и вышла на улицу.",
+    "errors": [],
+    "ms": 643,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Мне нравится эти книги.",
+    "corrected": "Мне нравятся эти книги.",
+    "errors": [
+     {
+      "original": "Мне нравится эти книги.",
+      "replacement": "Мне нравятся эти книги.",
+      "explanation": "Согласование глагола 'нравиться' с существительным во множественном числе."
+     }
+    ],
+    "ms": 1349,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Директор попросил подготовить отчёт к пятнице, не смотря на праздники.",
+    "corrected": "Директор попросил подготовить отчёт к пятнице, несмотря на праздники.",
+    "errors": [
+     {
+      "original": "не смотря на праздники",
+      "replacement": "несмотря на праздники",
+      "explanation": "‘Несмотря’ is the correct spelling for ‘despite’ in Russian."
+     }
+    ],
+    "ms": 1488,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Я не знаю, что-бы он сказал на это.",
+    "corrected": "Я не знаю, что бы он сказал на это.",
+    "errors": [
+     {
+      "original": "что-бы",
+      "replacement": "что бы",
+      "explanation": "Неправильное написание союза 'что бы'. Необходимо раздельное написание."
+     }
+    ],
+    "ms": 1310,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Дети играли во дворе пока родители готовили ужин.",
+    "corrected": "Дети играли во дворе, пока родители готовили ужин.",
+    "errors": [
+     {
+      "original": "пока родители готовили ужин.",
+      "replacement": "пока родители готовили ужин.",
+      "explanation": "Добавлена запятая перед союзом 'пока'."
+     }
+    ],
+    "ms": 1466,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "По приезду в город мы сразу пошли в гостиницу.",
+    "corrected": "По приезде в город мы сразу пошли в гостиницу.",
+    "errors": [
+     {
+      "original": "По приезду",
+      "replacement": "По приезде",
+      "explanation": "Орфографическая ошибка: 'приезде' - это предложный падеж от 'приезд'."
+     }
+    ],
+    "ms": 1508,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Он ложит книги на стол.",
+    "corrected": "Он ложит книги на стол.",
+    "errors": [],
+    "ms": 538,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Компания, которая выпустили этот продукт, находится в Москве.",
+    "corrected": "Компания, которая выпустила этот продукт, находится в Москве.",
+    "errors": [
+     {
+      "original": "выпустили",
+      "replacement": "выпустила",
+      "explanation": "Согласование глагола с подлежащим (компания - женский род)"
+     }
+    ],
+    "ms": 1364,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Он не разу не был в Париже.",
+    "corrected": "Он ни разу не был в Париже.",
+    "errors": [
+     {
+      "original": "не разу",
+      "replacement": "ни разу",
+      "explanation": "Правильное употребление отрицательной частицы 'ни' с существительным 'разу'."
+     }
+    ],
+    "ms": 1270,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Я хотел бы поблагодарить вас за помощь которую вы оказали.",
+    "corrected": "Я хотел бы поблагодарить вас за помощь, которую вы оказали.",
+    "errors": [
+     {
+      "original": "которую вы оказали",
+      "replacement": "которую вы оказали",
+      "explanation": "Добавлена запятая перед придаточным предложением."
+     }
+    ],
+    "ms": 1460,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "typo",
+    "text": "Надеюсь, вы прийдёте вовремя.",
+    "corrected": "Надеюсь, вы придёте вовремя.",
+    "errors": [
+     {
+      "original": "прийдёте",
+      "replacement": "придёте",
+      "explanation": "Орфографическая ошибка: нужно писать \"придёте\" с буквой \"е\" в суффиксе."
+     }
+    ],
+    "ms": 1529,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "typo",
+    "text": "Это решение было принятно руководством.",
+    "corrected": "Это решение было принято руководством.",
+    "errors": [
+     {
+      "original": "принятно",
+      "replacement": "принято",
+      "explanation": "Орфографическая ошибка: правильное написание глагола в страдательном залоге."
+     }
+    ],
+    "ms": 1302,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "typo",
+    "text": "Мы обсудили все детали проэкта.",
+    "corrected": "Мы обсудили все детали проекта.",
+    "errors": [
+     {
+      "original": "проэкта",
+      "replacement": "проекта",
+      "explanation": "Орфографическая ошибка: правильное написание слова 'проект'."
+     }
+    ],
+    "ms": 1214,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "typo",
+    "text": "Учитель обьяснил новую тему.",
+    "corrected": "Учитель объяснил новую тему.",
+    "errors": [
+     {
+      "original": "обьяснил",
+      "replacement": "объяснил",
+      "explanation": "Орфографическая ошибка: неправильное написание гласной после согласной."
+     }
+    ],
+    "ms": 1310,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Вчера мы долго гуляли по парку и разговаривали о книгах.",
+    "corrected": "Вчера мы долго гуляли по парку и разговаривали о книгах.",
+    "errors": [],
+    "ms": 738,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Если будет время, я обязательно позвоню.",
+    "corrected": "Если будет время, я обязательно позвоню.",
+    "errors": [],
+    "ms": 572,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Несмотря на дождь, мы пошли гулять.",
+    "corrected": "Несмотря на дождь, мы пошли гулять.",
+    "errors": [],
+    "ms": 644,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Она надела шапку, потому что на улице было холодно.",
+    "corrected": "Она надела шапку, потому что на улице было холодно.",
+    "errors": [],
+    "ms": 684,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Книга, которую ты мне дал, оказалась интересной.",
+    "corrected": "Книга, которую ты мне дал, оказалась интересной.",
+    "errors": [],
+    "ms": 626,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Ни один из нас не знал ответа.",
+    "corrected": "Ни один из нас не знал ответа.",
+    "errors": [],
+    "ms": 560,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "He go to school every days.",
+    "corrected": "He goes to school every day.",
+    "errors": [
+     {
+      "original": "He go to school every days.",
+      "replacement": "He goes to school every day.",
+      "explanation": "The verb 'go' needs to be conjugated in the third person singular present tense, which is 'goes'. 'Days' should be 'day' to match 'every'."
+     }
+    ],
+    "ms": 1679,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Their going to the park tomorrow, weather or not it rains.",
+    "corrected": "They’re going to the park tomorrow, weather or not it rains.",
+    "errors": [
+     {
+      "original": "Their",
+      "replacement": "They’re",
+      "explanation": "Contraction of 'they are'."
+     }
+    ],
+    "ms": 1168,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "The results was better then we expected.",
+    "corrected": "The results were better than we expected.",
+    "errors": [
+     {
+      "original": "The results was",
+      "replacement": "The results were",
+      "explanation": "Subject-verb agreement: 'results' is plural, so it requires 'were'."
+     }
+    ],
+    "ms": 1243,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Its a nice day, isn't it?",
+    "corrected": "It's a nice day, isn't it?",
+    "errors": [
+     {
+      "original": "Its",
+      "replacement": "It's",
+      "explanation": "Contraction of 'it is'."
+     }
+    ],
+    "ms": 1128,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "She don't like coffee.",
+    "corrected": "She doesn't like coffee.",
+    "errors": [
+     {
+      "original": "She don't like coffee.",
+      "replacement": "She doesn't like coffee.",
+      "explanation": "The third-person singular form of 'do not' is 'doesn't'."
+     }
+    ],
+    "ms": 1352,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Between you and I, the plan is risky.",
+    "corrected": "Between you and me, the plan is risky.",
+    "errors": [
+     {
+      "original": "Between you and I",
+      "replacement": "Between you and me",
+      "explanation": "The preposition 'between' is followed by the objective case, which is 'me', not 'I'."
+     }
+    ],
+    "ms": 1410,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "The team finished there work early.",
+    "corrected": "The team finished their work early.",
+    "errors": [
+     {
+      "original": "there",
+      "replacement": "their",
+      "explanation": "Typo: 'there' refers to a place, 'their' is the possessive pronoun."
+     }
+    ],
+    "ms": 1221,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Who's book is this?",
+    "corrected": "Whose book is this?",
+    "errors": [
+     {
+      "original": "Who's",
+      "replacement": "Whose",
+      "explanation": "The word 'who's' is a contraction of 'who is' or 'who has'. The possessive pronoun 'whose' is needed here."
+     }
+    ],
+    "ms": 1459,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I have seen him yesterday.",
+    "corrected": "I saw him yesterday.",
+    "errors": [
+     {
+      "original": "seen",
+      "replacement": "saw",
+      "explanation": "The past simple tense 'saw' is required here, not the past participle 'seen'."
+     }
+    ],
+    "ms": 1148,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "She is married with a doctor.",
+    "corrected": "She is married to a doctor.",
+    "errors": [
+     {
+      "original": "with a doctor",
+      "replacement": "to a doctor",
+      "explanation": "The correct preposition to use with 'married' is 'to'."
+     }
+    ],
+    "ms": 1183,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Each of the students have a laptop.",
+    "corrected": "Each of the students has a laptop.",
+    "errors": [
+     {
+      "original": "have",
+      "replacement": "has",
+      "explanation": "Subject-verb agreement: 'Each' is singular, so it requires the singular verb 'has'."
+     }
+    ],
+    "ms": 1241,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I am agree with you.",
+    "corrected": "I agree with you.",
+    "errors": [
+     {
+      "original": "I am agree",
+      "replacement": "I agree",
+      "explanation": "The correct phrasing is 'I agree', not 'I am agree'."
+     }
+    ],
+    "ms": 1127,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "He is more taller than his brother.",
+    "corrected": "He is taller than his brother.",
+    "errors": [
+     {
+      "original": "more taller",
+      "replacement": "taller",
+      "explanation": "The comparative form of 'tall' is 'taller', not 'more tall'."
+     }
+    ],
+    "ms": 1192,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "There is many reasons to stay.",
+    "corrected": "There are many reasons to stay.",
+    "errors": [],
+    "ms": 532,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I look forward to hear from you.",
+    "corrected": "I look forward to hearing from you.",
+    "errors": [],
+    "ms": 651,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "The dog wagged it's tail.",
+    "corrected": "The dog wagged its tail.",
+    "errors": [
+     {
+      "original": "it's",
+      "replacement": "its",
+      "explanation": "Possessive pronoun 'its' is used to indicate possession, while 'it's' is a contraction of 'it is' or 'it has'."
+     }
+    ],
+    "ms": 1466,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "She suggested me to go home.",
+    "corrected": "She suggested that I go home.",
+    "errors": [
+     {
+      "original": "She suggested me to go home.",
+      "replacement": "She suggested that I go home.",
+      "explanation": "The correct construction is 'suggest that + clause' or 'suggest + gerund'."
+     }
+    ],
+    "ms": 1348,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I didn't saw anything.",
+    "corrected": "I didn't see anything.",
+    "errors": [
+     {
+      "original": "didn't saw",
+      "replacement": "didn't see",
+      "explanation": "The correct past tense form of 'see' after 'didn't' is 'see'."
+     }
+    ],
+    "ms": 1308,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "He has went to the shop.",
+    "corrected": "He has gone to the shop.",
+    "errors": [
+     {
+      "original": "He has went",
+      "replacement": "He has gone",
+      "explanation": "The past participle of 'go' is 'gone', not 'went'."
+     }
+    ],
+    "ms": 1190,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Less people came than expected.",
+    "corrected": "Fewer people came than expected.",
+    "errors": [
+     {
+      "original": "Less people",
+      "replacement": "Fewer people",
+      "explanation": "The word 'less' is used for uncountable nouns, while 'fewer' is used for countable nouns like 'people'."
+     }
+    ],
+    "ms": 1359,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "If I would have known, I would have come.",
+    "corrected": "If I would have known, I would have come.",
+    "errors": [],
+    "ms": 608,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Me and my sister went to the cinema.",
+    "corrected": "My sister and I went to the cinema.",
+    "errors": [
+     {
+      "original": "Me and my sister",
+      "replacement": "My sister and I",
+      "explanation": "In English, when referring to yourself and another person, it's grammatically correct to place the other person first and use 'I' instead of 'me'."
+     }
+    ],
+    "ms": 1588,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "However I disagree with the decision.",
+    "corrected": "However I disagree with the decision.",
+    "errors": [],
+    "ms": 538,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I went to the shop, I bought some milk.",
+    "corrected": "I went to the shop, I bought some milk.",
+    "errors": [],
+    "ms": 605,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "The informations you sent was useful.",
+    "corrected": "The information you sent was useful.",
+    "errors": [
+     {
+      "original": "The informations you sent was useful.",
+      "replacement": "The information you sent was useful.",
+      "explanation": "The word 'informations' is incorrect. 'Information' is uncountable in English."
+     }
+    ],
+    "ms": 1326,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "I have recieved your letter.",
+    "corrected": "I have received your letter.",
+    "errors": [
+     {
+      "original": "recieved",
+      "replacement": "received",
+      "explanation": "Spelling error: 'recieved' is incorrect; the correct spelling is 'received'."
+     }
+    ],
+    "ms": 1160,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "I like the color of this house.",
+    "corrected": "I like the colour of this house.",
+    "errors": [
+     {
+      "original": "color",
+      "replacement": "colour",
+      "explanation": "British English spelling uses 'colour' instead of 'color'."
+     }
+    ],
+    "ms": 1080,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "We need to analyze the data.",
+    "corrected": "We need to analyze the data.",
+    "errors": [],
+    "ms": 540,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "The goverment announced new rules.",
+    "corrected": "The government announced new rules.",
+    "errors": [
+     {
+      "original": "goverment",
+      "replacement": "government",
+      "explanation": "Spelling error: 'goverment' should be 'government'."
+     }
+    ],
+    "ms": 1080,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "It was definately a good idea.",
+    "corrected": "It was definitely a good idea.",
+    "errors": [
+     {
+      "original": "definately",
+      "replacement": "definitely",
+      "explanation": "Spelling error: 'definitely' is the correct spelling."
+     }
+    ],
+    "ms": 1190,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "We will meet tommorow.",
+    "corrected": "We will meet tomorrow.",
+    "errors": [
+     {
+      "original": "tommorow",
+      "replacement": "tomorrow",
+      "explanation": "Spelling error: 'tommorow' is incorrectly spelled. The correct spelling is 'tomorrow'."
+     }
+    ],
+    "ms": 1307,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "This is a seperate issue.",
+    "corrected": "This is a separate issue.",
+    "errors": [],
+    "ms": 631,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "This sentence is perfectly fine.",
+    "corrected": "This sentence is perfectly fine.",
+    "errors": [],
+    "ms": 528,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "We organised the meeting for Tuesday afternoon.",
+    "corrected": "We organised the meeting for Tuesday afternoon.",
+    "errors": [],
+    "ms": 548,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "The committee have agreed on the budget.",
+    "corrected": "The committee has agreed on the budget.",
+    "errors": [
+     {
+      "original": "have",
+      "replacement": "has",
+      "explanation": "The subject 'committee' is singular, so the verb should be 'has'."
+     }
+    ],
+    "ms": 1178,
+    "result": "false"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "If I were you, I would apologise.",
+    "corrected": "If I were you, I would apologise.",
+    "errors": [],
+    "ms": 571,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "Fewer people came than we expected.",
+    "corrected": "Fewer people came than we expected.",
+    "errors": [],
+    "ms": 547,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "She has lived in London since 2010.",
+    "corrected": "She has lived in London since 2010.",
+    "errors": [],
+    "ms": 623,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "I'd rather stay at home tonight.",
+    "corrected": "I'd rather stay at home tonight.",
+    "errors": [],
+    "ms": 570,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "The data are stored on a secure server.",
+    "corrected": "The data are stored on a secure server.",
+    "errors": [],
+    "ms": 557,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "Neither the manager nor the staff were informed.",
+    "corrected": "Neither the manager nor the staff were informed.",
+    "errors": [],
+    "ms": 578,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "He travelled to Manchester last week.",
+    "corrected": "He travelled to Manchester last week.",
+    "errors": [],
+    "ms": 533,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "Whom did you invite to the party?",
+    "corrected": "Who did you invite to the party?",
+    "errors": [
+     {
+      "original": "Whom",
+      "replacement": "Who",
+      "explanation": "The relative pronoun 'who' is used to refer to the subject of a verb, whereas 'whom' is used to refer to the object. In this sentence, we need the subject."
+     }
+    ],
+    "ms": 1590,
+    "result": "false"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "I've got a new job, which I really enjoy.",
+    "corrected": "I've got a new job, which I really enjoy.",
+    "errors": [],
+    "ms": 641,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "The centre will open at nine o'clock.",
+    "corrected": "The centre will open at nine o'clock.",
+    "errors": [],
+    "ms": 582,
+    "result": "ok"
+   }
+  ]
+ },
+ "Qwen3 14B": {
+  "load_s": 8.2,
+  "rows": [
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Я пошли домой вчера.",
+    "corrected": "Я пошёл домой вчера.",
+    "errors": [
+     {
+      "original": "пошли",
+      "replacement": "пошёл",
+      "explanation": "Неправильная форма глагола. Правильная форма для мужского рода: 'пошёл'."
+     }
+    ],
+    "ms": 1673,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Мы был в магазине и купили хлеб.",
+    "corrected": "Мы были в магазине и купили хлеб.",
+    "errors": [
+     {
+      "original": "был",
+      "replacement": "были",
+      "explanation": "Субъект \"мы\" требует множественного числа."
+     }
+    ],
+    "ms": 1321,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Он сказал что придёт завтра.",
+    "corrected": "Он сказал, что придёт завтра.",
+    "errors": [
+     {
+      "original": "сказал что",
+      "replacement": "сказал, что",
+      "explanation": "После слова \"сказал\" нужна запятая, так как это прямая речь."
+     }
+    ],
+    "ms": 1424,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "В течении недели мы работали без выходных.",
+    "corrected": "В течение недели мы работали без выходных.",
+    "errors": [
+     {
+      "original": "В течении",
+      "replacement": "В течение",
+      "explanation": "Правильная форма предлога 'в течение'."
+     }
+    ],
+    "ms": 1167,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Она одела пальто и вышла на улицу.",
+    "corrected": "Она одела пальто и вышла на улицу.",
+    "errors": [],
+    "ms": 555,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Мне нравится эти книги.",
+    "corrected": "Мне нравятся эти книги.",
+    "errors": [
+     {
+      "original": "нравится",
+      "replacement": "нравятся",
+      "explanation": "Согласование по числу с подлежащим 'книги' (мн. ч.)"
+     }
+    ],
+    "ms": 1337,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Директор попросил подготовить отчёт к пятнице, не смотря на праздники.",
+    "corrected": "Директор попросил подготовить отчёт к пятнице, несмотря на праздники.",
+    "errors": [
+     {
+      "original": "не смотря",
+      "replacement": "несмотря",
+      "explanation": "Правильная форма предлога 'несмотря' в данном контексте."
+     }
+    ],
+    "ms": 1553,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Я не знаю, что-бы он сказал на это.",
+    "corrected": "Я не знаю, что бы он сказал на это.",
+    "errors": [
+     {
+      "original": "что-бы",
+      "replacement": "что бы",
+      "explanation": "При использовании вводного слова «что» перед ним не ставится дефис, если оно не является частью составного союза."
+     }
+    ],
+    "ms": 1621,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Дети играли во дворе пока родители готовили ужин.",
+    "corrected": "Дети играли во дворе, пока родители готовили ужин.",
+    "errors": [
+     {
+      "original": "пока",
+      "replacement": "пока",
+      "explanation": "Слово 'пока' использовано правильно, но в предложении требуется запятая перед 'пока', так как это союс, соединяющий два самостоятельных предложения."
+     },
+     {
+      "original": "во дворе пока",
+      "replacement": "во дворе, пока",
+      "explanation": "Нужна запятая перед союзом 'пока', так как он соединяет два предложения."
+     }
+    ],
+    "ms": 2904,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "По приезду в город мы сразу пошли в гостиницу.",
+    "corrected": "По приезду в город мы сразу пошли в гостиницу.",
+    "errors": [],
+    "ms": 616,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Он ложит книги на стол.",
+    "corrected": "Он кладёт книги на стол.",
+    "errors": [
+     {
+      "original": "ложит",
+      "replacement": "кладёт",
+      "explanation": "Правильная форма глагола \"класть\" в настоящем времени для третьего лица единственного числа — \"кладёт\"."
+     }
+    ],
+    "ms": 1462,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Компания, которая выпустили этот продукт, находится в Москве.",
+    "corrected": "Компания, которая выпустила этот продукт, находится в Москве.",
+    "errors": [
+     {
+      "original": "выпустили",
+      "replacement": "выпустила",
+      "explanation": "Согласование глагола с подлежащим \"компания\" (женский род)."
+     }
+    ],
+    "ms": 1671,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Он не разу не был в Париже.",
+    "corrected": "Он ни разу не был в Париже.",
+    "errors": [
+     {
+      "original": "не разу",
+      "replacement": "ни разу",
+      "explanation": "Правильная форма частицы \"ни\" используется в сочетании с отрицанием \"не\" для усиления значения."
+     }
+    ],
+    "ms": 1519,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Я хотел бы поблагодарить вас за помощь которую вы оказали.",
+    "corrected": "Я хотел бы поблагодарить вас за помощь, которую вы оказали.",
+    "errors": [
+     {
+      "original": "за помощь которую вы оказали",
+      "replacement": "за помощь, которую вы оказали",
+      "explanation": "Нужна запятая после слова \"помощь\" для разделения придаточного предложения."
+     }
+    ],
+    "ms": 1676,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "typo",
+    "text": "Надеюсь, вы прийдёте вовремя.",
+    "corrected": "Надеюсь, вы прийдёте вовремя.",
+    "errors": [
+     {
+      "original": "прийдёте",
+      "replacement": "придёте",
+      "explanation": "Правильная форма глагола 'прийти' в будущем времени: 'придёте'."
+     }
+    ],
+    "ms": 1604,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "typo",
+    "text": "Это решение было принятно руководством.",
+    "corrected": "Это решение было принято руководством.",
+    "errors": [
+     {
+      "original": "принятно",
+      "replacement": "принято",
+      "explanation": "Неправильная форма глагола. Правильная форма - 'принято'."
+     }
+    ],
+    "ms": 1427,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "typo",
+    "text": "Мы обсудили все детали проэкта.",
+    "corrected": "Мы обсудили все детали проекта.",
+    "errors": [
+     {
+      "original": "проэкта",
+      "replacement": "проекта",
+      "explanation": "Правильное написание слова 'проекта'."
+     }
+    ],
+    "ms": 1192,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "typo",
+    "text": "Учитель обьяснил новую тему.",
+    "corrected": "Учитель объяснил новую тему.",
+    "errors": [
+     {
+      "original": "обьяснил",
+      "replacement": "объяснил",
+      "explanation": "Неправильное написание слова 'объяснил'."
+     }
+    ],
+    "ms": 1407,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Вчера мы долго гуляли по парку и разговаривали о книгах.",
+    "corrected": "Вчера мы долго гуляли по парку и разговаривали о книгах.",
+    "errors": [],
+    "ms": 720,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Если будет время, я обязательно позвоню.",
+    "corrected": "Если будет время, я обязательно позвоню.",
+    "errors": [],
+    "ms": 493,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Несмотря на дождь, мы пошли гулять.",
+    "corrected": "Несмотря на дождь, мы пошли гулять.",
+    "errors": [],
+    "ms": 640,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Она надела шапку, потому что на улице было холодно.",
+    "corrected": "Она надела шапку, потому что на улице было холодно.",
+    "errors": [],
+    "ms": 627,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Книга, которую ты мне дал, оказалась интересной.",
+    "corrected": "Книга, которую ты мне дал, оказалась интересной.",
+    "errors": [],
+    "ms": 586,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Ни один из нас не знал ответа.",
+    "corrected": "Ни один из нас не знал ответа.",
+    "errors": [],
+    "ms": 481,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "He go to school every days.",
+    "corrected": "He goes to school every day.",
+    "errors": [
+     {
+      "original": "go",
+      "replacement": "goes",
+      "explanation": "Subject-verb agreement: 'He' requires the third person singular form 'goes'."
+     },
+     {
+      "original": "days",
+      "replacement": "day",
+      "explanation": "'Every' is followed by a singular noun, so 'day' is correct instead of 'days'."
+     }
+    ],
+    "ms": 1977,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Their going to the park tomorrow, weather or not it rains.",
+    "corrected": "They're going to the park tomorrow, weather or not it rains.",
+    "errors": [
+     {
+      "original": "Their",
+      "replacement": "They're",
+      "explanation": "The contraction 'they're' is correct here, as it stands for 'they are', whereas 'their' is a possessive pronoun and does not fit the context."
+     }
+    ],
+    "ms": 1652,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "The results was better then we expected.",
+    "corrected": "The results were better than we expected.",
+    "errors": [
+     {
+      "original": "was",
+      "replacement": "were",
+      "explanation": "Subject-verb agreement: 'results' is plural, so the verb should be 'were'."
+     },
+     {
+      "original": "then",
+      "replacement": "than",
+      "explanation": "'than' is the correct comparative conjunction in this context."
+     }
+    ],
+    "ms": 1796,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Its a nice day, isn't it?",
+    "corrected": "It's a nice day, isn't it?",
+    "errors": [
+     {
+      "original": "Its",
+      "replacement": "It's",
+      "explanation": "It's is the correct contraction of 'It is'."
+     }
+    ],
+    "ms": 1184,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "She don't like coffee.",
+    "corrected": "She doesn't like coffee.",
+    "errors": [
+     {
+      "original": "don't",
+      "replacement": "doesn't",
+      "explanation": "Subject-verb agreement error: 'She' requires the third person singular form 'doesn't'."
+     }
+    ],
+    "ms": 1202,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Between you and I, the plan is risky.",
+    "corrected": "Between you and me, the plan is risky.",
+    "errors": [
+     {
+      "original": "I",
+      "replacement": "me",
+      "explanation": "The correct object pronoun to use after 'between you and' is 'me', not 'I'."
+     }
+    ],
+    "ms": 1264,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "The team finished there work early.",
+    "corrected": "The team finished their work early.",
+    "errors": [
+     {
+      "original": "there",
+      "replacement": "their",
+      "explanation": "The possessive pronoun 'their' is correct here, while 'there' is an adverb meaning 'in that place'."
+     }
+    ],
+    "ms": 1319,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Who's book is this?",
+    "corrected": "Who's book is this?",
+    "errors": [],
+    "ms": 375,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I have seen him yesterday.",
+    "corrected": "I have seen him yesterday.",
+    "errors": [],
+    "ms": 400,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "She is married with a doctor.",
+    "corrected": "She is married to a doctor.",
+    "errors": [
+     {
+      "original": "with a doctor",
+      "replacement": "to a doctor",
+      "explanation": "The preposition 'to' is used when indicating the person one is married to."
+     }
+    ],
+    "ms": 1209,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Each of the students have a laptop.",
+    "corrected": "Each of the students has a laptop.",
+    "errors": [
+     {
+      "original": "have",
+      "replacement": "has",
+      "explanation": "The subject 'each of the students' is singular, so the verb should be 'has' instead of 'have'."
+     }
+    ],
+    "ms": 1299,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I am agree with you.",
+    "corrected": "I am agree with you.",
+    "errors": [
+     {
+      "original": "I am agree with you.",
+      "replacement": "I agree with you.",
+      "explanation": "The correct form is 'I agree with you' instead of 'I am agree with you'."
+     }
+    ],
+    "ms": 1307,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "He is more taller than his brother.",
+    "corrected": "He is taller than his brother.",
+    "errors": [
+     {
+      "original": "more taller",
+      "replacement": "taller",
+      "explanation": "The comparative form 'taller' is used without 'more' in English."
+     }
+    ],
+    "ms": 1141,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "There is many reasons to stay.",
+    "corrected": "There are many reasons to stay.",
+    "errors": [
+     {
+      "original": "is",
+      "replacement": "are",
+      "explanation": "Subject-verb agreement: 'many reasons' is plural, so the verb should be 'are'."
+     }
+    ],
+    "ms": 1204,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I look forward to hear from you.",
+    "corrected": "I look forward to hearing from you.",
+    "errors": [
+     {
+      "original": "hear",
+      "replacement": "hearing",
+      "explanation": "The correct preposition after 'look forward to' is 'hearing'."
+     }
+    ],
+    "ms": 1138,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "The dog wagged it's tail.",
+    "corrected": "The dog wagged its tail.",
+    "errors": [
+     {
+      "original": "it's",
+      "replacement": "its",
+      "explanation": "The contraction 'it's' means 'it is', but the correct possessive form here is 'its'."
+     }
+    ],
+    "ms": 1257,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "She suggested me to go home.",
+    "corrected": "She suggested that I go home.",
+    "errors": [
+     {
+      "original": "suggested me to go",
+      "replacement": "suggested that I go",
+      "explanation": "The correct structure after 'suggest' is 'suggest that someone do something'."
+     }
+    ],
+    "ms": 1263,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I didn't saw anything.",
+    "corrected": "I didn't see anything.",
+    "errors": [
+     {
+      "original": "saw",
+      "replacement": "see",
+      "explanation": "The correct past tense of 'see' after 'didn't' is 'see', not 'saw'."
+     }
+    ],
+    "ms": 1241,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "He has went to the shop.",
+    "corrected": "He has gone to the shop.",
+    "errors": [
+     {
+      "original": "has went",
+      "replacement": "has gone",
+      "explanation": "The correct past participle of 'go' is 'gone', not 'went'."
+     }
+    ],
+    "ms": 1168,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Less people came than expected.",
+    "corrected": "Less people came than expected.",
+    "errors": [],
+    "ms": 384,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "If I would have known, I would have come.",
+    "corrected": "If I had known, I would have come.",
+    "errors": [
+     {
+      "original": "If I would have known",
+      "replacement": "If I had known",
+      "explanation": "The correct past perfect conditional structure in English is 'if + past perfect' for hypothetical situations in the past."
+     }
+    ],
+    "ms": 1425,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Me and my sister went to the cinema.",
+    "corrected": "Me and my sister went to the cinema.",
+    "errors": [
+     {
+      "original": "Me and my sister",
+      "replacement": "My sister and I",
+      "explanation": "In British English, the correct subject pronoun to use when referring to oneself is 'I', not 'me', when the subject of the sentence is the person speaking."
+     }
+    ],
+    "ms": 1644,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "However I disagree with the decision.",
+    "corrected": "However I disagree with the decision.",
+    "errors": [],
+    "ms": 395,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I went to the shop, I bought some milk.",
+    "corrected": "I went to the shop, I bought some milk.",
+    "errors": [],
+    "ms": 489,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "The informations you sent was useful.",
+    "corrected": "The information you sent was useful.",
+    "errors": [
+     {
+      "original": "informations",
+      "replacement": "information",
+      "explanation": "The singular form 'information' is correct here, as it is an uncountable noun."
+     }
+    ],
+    "ms": 1186,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "I have recieved your letter.",
+    "corrected": "I have received your letter.",
+    "errors": [
+     {
+      "original": "recieved",
+      "replacement": "received",
+      "explanation": "The correct spelling of the past participle of 'receive' is 'received'."
+     }
+    ],
+    "ms": 1113,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "I like the color of this house.",
+    "corrected": "I like the colour of this house.",
+    "errors": [
+     {
+      "original": "color",
+      "replacement": "colour",
+      "explanation": "British English spelling uses 'colour' instead of 'color'."
+     }
+    ],
+    "ms": 1056,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "We need to analyze the data.",
+    "corrected": "We need to analyze the data.",
+    "errors": [],
+    "ms": 395,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "The goverment announced new rules.",
+    "corrected": "The government announced new rules.",
+    "errors": [
+     {
+      "original": "goverment",
+      "replacement": "government",
+      "explanation": "Correct spelling of the word 'government'."
+     }
+    ],
+    "ms": 987,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "It was definately a good idea.",
+    "corrected": "It was definitely a good idea.",
+    "errors": [
+     {
+      "original": "definately",
+      "replacement": "definitely",
+      "explanation": "Spelling error: 'definitely' is the correct spelling."
+     }
+    ],
+    "ms": 1109,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "We will meet tommorow.",
+    "corrected": "We will meet tomorrow.",
+    "errors": [
+     {
+      "original": "tommorow",
+      "replacement": "tomorrow",
+      "explanation": "Spelling error: 'tommorow' is incorrect; the correct spelling is 'tomorrow'."
+     }
+    ],
+    "ms": 1257,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "This is a seperate issue.",
+    "corrected": "This is a separate issue.",
+    "errors": [
+     {
+      "original": "sepearte",
+      "replacement": "separate",
+      "explanation": "Spelling error."
+     }
+    ],
+    "ms": 969,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "This sentence is perfectly fine.",
+    "corrected": "This sentence is perfectly fine.",
+    "errors": [],
+    "ms": 392,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "We organised the meeting for Tuesday afternoon.",
+    "corrected": "We organised the meeting for Tuesday afternoon.",
+    "errors": [],
+    "ms": 432,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "The committee have agreed on the budget.",
+    "corrected": "The committee has agreed on the budget.",
+    "errors": [
+     {
+      "original": "have",
+      "replacement": "has",
+      "explanation": "The subject 'committee' is singular, so the verb should be 'has' instead of 'have'."
+     }
+    ],
+    "ms": 1243,
+    "result": "false"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "If I were you, I would apologise.",
+    "corrected": "If I were you, I would apologise.",
+    "errors": [],
+    "ms": 454,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "Fewer people came than we expected.",
+    "corrected": "Fewer people came than we expected.",
+    "errors": [],
+    "ms": 421,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "She has lived in London since 2010.",
+    "corrected": "She has lived in London since 2010.",
+    "errors": [],
+    "ms": 510,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "I'd rather stay at home tonight.",
+    "corrected": "I'd rather stay at home tonight.",
+    "errors": [],
+    "ms": 423,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "The data are stored on a secure server.",
+    "corrected": "The data are stored on a secure server.",
+    "errors": [],
+    "ms": 452,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "Neither the manager nor the staff were informed.",
+    "corrected": "Neither the manager nor the staff were informed.",
+    "errors": [],
+    "ms": 442,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "He travelled to Manchester last week.",
+    "corrected": "He travelled to Manchester last week.",
+    "errors": [],
+    "ms": 410,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "Whom did you invite to the party?",
+    "corrected": "Whom did you invite to the party?",
+    "errors": [],
+    "ms": 451,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "I've got a new job, which I really enjoy.",
+    "corrected": "I've got a new job, which I really enjoy.",
+    "errors": [],
+    "ms": 508,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "The centre will open at nine o'clock.",
+    "corrected": "The centre will open at nine o'clock.",
+    "errors": [],
+    "ms": 443,
+    "result": "ok"
+   }
+  ]
+ },
+ "LanguageTool": {
+  "rows": [
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Я пошли домой вчера.",
+    "corrected": "Я пошли домой вчера.",
+    "errors": [
+     {
+      "original": "Я пошли",
+      "message": "Неверное спряжение глагола или неверное местоимение",
+      "replacements": []
+     }
+    ],
+    "ms": 3876,
+    "result": "flagged"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Мы был в магазине и купили хлеб.",
+    "corrected": "Мы был в магазине и купили хлеб.",
+    "errors": [
+     {
+      "original": "Мы был",
+      "message": "Неверное спряжение глагола или неверное местоимение",
+      "replacements": []
+     }
+    ],
+    "ms": 342,
+    "result": "flagged"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Он сказал что придёт завтра.",
+    "corrected": "Он сказал что придёт завтра.",
+    "errors": [],
+    "ms": 248,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "В течении недели мы работали без выходных.",
+    "corrected": "В течение недели мы работали без выходных.",
+    "errors": [
+     {
+      "original": "В течении недели",
+      "message": "Должно быть: «В течение недели»",
+      "replacements": [
+       "В течение недели"
+      ]
+     }
+    ],
+    "ms": 288,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Она одела пальто и вышла на улицу.",
+    "corrected": "Она надела пальто и вышла на улицу.",
+    "errors": [
+     {
+      "original": "одела пальто",
+      "message": "Логическая ошибка: «надела пальто»?",
+      "replacements": [
+       "надела пальто"
+      ]
+     }
+    ],
+    "ms": 190,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Мне нравится эти книги.",
+    "corrected": "Мне нравится эти книги.",
+    "errors": [],
+    "ms": 205,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Директор попросил подготовить отчёт к пятнице, не смотря на праздники.",
+    "corrected": "Директор попросил подготовить отчёт к пятнице, несмотря на праздники.",
+    "errors": [
+     {
+      "original": "не смотря на",
+      "message": "Слово пишется слитно: «несмотря на».",
+      "replacements": [
+       "несмотря на"
+      ]
+     }
+    ],
+    "ms": 212,
+    "result": "fixed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Я не знаю, что-бы он сказал на это.",
+    "corrected": "Я не знаю, что-бы он сказал на это.",
+    "errors": [],
+    "ms": 215,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Дети играли во дворе пока родители готовили ужин.",
+    "corrected": "Дети играли во дворе пока родители готовили ужин.",
+    "errors": [],
+    "ms": 216,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "По приезду в город мы сразу пошли в гостиницу.",
+    "corrected": "По приезду в город мы сразу пошли в гостиницу.",
+    "errors": [],
+    "ms": 200,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Он ложит книги на стол.",
+    "corrected": "Он ложит книги на стол.",
+    "errors": [],
+    "ms": 167,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Компания, которая выпустили этот продукт, находится в Москве.",
+    "corrected": "Компания, которая выпустили этот продукт, находится в Москве.",
+    "errors": [],
+    "ms": 172,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Он не разу не был в Париже.",
+    "corrected": "Он не разу не был в Париже.",
+    "errors": [
+     {
+      "original": "не разу не",
+      "message": "Стиль: не ставьте два «не» подряд, если это не оправдано смыслом предложения.",
+      "replacements": []
+     }
+    ],
+    "ms": 158,
+    "result": "flagged"
+   },
+   {
+    "lang": "ru",
+    "kind": "gram",
+    "text": "Я хотел бы поблагодарить вас за помощь которую вы оказали.",
+    "corrected": "Я хотел бы поблагодарить вас за помощь которую вы оказали.",
+    "errors": [],
+    "ms": 174,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "typo",
+    "text": "Надеюсь, вы прийдёте вовремя.",
+    "corrected": "Надеюсь, вы прийдёте вовремя.",
+    "errors": [],
+    "ms": 198,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "typo",
+    "text": "Это решение было принятно руководством.",
+    "corrected": "Это решение было принятно руководством.",
+    "errors": [],
+    "ms": 209,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "typo",
+    "text": "Мы обсудили все детали проэкта.",
+    "corrected": "Мы обсудили все детали проэкта.",
+    "errors": [],
+    "ms": 243,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "typo",
+    "text": "Учитель обьяснил новую тему.",
+    "corrected": "Учитель обьяснил новую тему.",
+    "errors": [],
+    "ms": 209,
+    "result": "missed"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Вчера мы долго гуляли по парку и разговаривали о книгах.",
+    "corrected": "Вчера мы долго гуляли по парку и разговаривали о книгах.",
+    "errors": [],
+    "ms": 192,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Если будет время, я обязательно позвоню.",
+    "corrected": "Если будет время, я обязательно позвоню.",
+    "errors": [],
+    "ms": 163,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Несмотря на дождь, мы пошли гулять.",
+    "corrected": "Несмотря на дождь, мы пошли гулять.",
+    "errors": [],
+    "ms": 163,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Она надела шапку, потому что на улице было холодно.",
+    "corrected": "Она надела шапку, потому что на улице было холодно.",
+    "errors": [],
+    "ms": 172,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Книга, которую ты мне дал, оказалась интересной.",
+    "corrected": "Книга, которую ты мне дал, оказалась интересной.",
+    "errors": [],
+    "ms": 172,
+    "result": "ok"
+   },
+   {
+    "lang": "ru",
+    "kind": "ok",
+    "text": "Ни один из нас не знал ответа.",
+    "corrected": "Ни один из нас не знал ответа.",
+    "errors": [],
+    "ms": 180,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "He go to school every days.",
+    "corrected": "He goes to school every day.",
+    "errors": [
+     {
+      "original": "go",
+      "message": "The pronoun ‘He’ is usually used with a third-person or a past tense verb.",
+      "replacements": [
+       "goes",
+       "went"
+      ]
+     },
+     {
+      "original": "days",
+      "message": "The noun should probably be in the singular form.",
+      "replacements": [
+       "day"
+      ]
+     }
+    ],
+    "ms": 3015,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Their going to the park tomorrow, weather or not it rains.",
+    "corrected": "Their going to the park tomorrow, weather or not it rains.",
+    "errors": [],
+    "ms": 38,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "The results was better then we expected.",
+    "corrected": "The results were better than we expected.",
+    "errors": [
+     {
+      "original": "was",
+      "message": "You should probably use: “were”.",
+      "replacements": [
+       "were"
+      ]
+     },
+     {
+      "original": "better then",
+      "message": "Did you mean “better than”?",
+      "replacements": [
+       "better than"
+      ]
+     }
+    ],
+    "ms": 36,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Its a nice day, isn't it?",
+    "corrected": "It's a nice day, isn't it?",
+    "errors": [
+     {
+      "original": "Its",
+      "message": "Did you mean “it's” (short for ‘it is’) instead of ‘its’ (possessive pronoun)?",
+      "replacements": [
+       "It's"
+      ]
+     }
+    ],
+    "ms": 57,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "She don't like coffee.",
+    "corrected": "She doesn't like coffee.",
+    "errors": [
+     {
+      "original": "do",
+      "message": "The pronoun ‘She’ is usually used with a third-person or a past tense verb.",
+      "replacements": [
+       "does",
+       "did"
+      ]
+     }
+    ],
+    "ms": 37,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Between you and I, the plan is risky.",
+    "corrected": "Between you and me, the plan is risky.",
+    "errors": [
+     {
+      "original": "Between you and I",
+      "message": "Did you mean “between you and me”?",
+      "replacements": [
+       "Between you and me"
+      ]
+     }
+    ],
+    "ms": 58,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "The team finished there work early.",
+    "corrected": "The team finished there work early.",
+    "errors": [],
+    "ms": 38,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Who's book is this?",
+    "corrected": "Whose book is this?",
+    "errors": [
+     {
+      "original": "Who's",
+      "message": "It appears that the correct determiner here is “whose”.",
+      "replacements": [
+       "Whose"
+      ]
+     }
+    ],
+    "ms": 55,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I have seen him yesterday.",
+    "corrected": "I have seen him yesterday.",
+    "errors": [],
+    "ms": 25,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "She is married with a doctor.",
+    "corrected": "She is married to a doctor.",
+    "errors": [
+     {
+      "original": "married with",
+      "message": "The correct expression is “being married to somebody”.",
+      "replacements": [
+       "married to"
+      ]
+     }
+    ],
+    "ms": 27,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Each of the students have a laptop.",
+    "corrected": "Each of the students have a laptop.",
+    "errors": [],
+    "ms": 22,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I am agree with you.",
+    "corrected": "I agree with you.",
+    "errors": [
+     {
+      "original": "am agree",
+      "message": "The base form of a verb does not usually follow ‘am’. Double-check that the verb is in the correct form.",
+      "replacements": [
+       "agree",
+       "agreed",
+       "am agreeing"
+      ]
+     }
+    ],
+    "ms": 49,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "He is more taller than his brother.",
+    "corrected": "He is taller than his brother.",
+    "errors": [
+     {
+      "original": "more taller",
+      "message": "Use only “taller” (without ‘more’) when you use the comparative.",
+      "replacements": [
+       "taller"
+      ]
+     }
+    ],
+    "ms": 42,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "There is many reasons to stay.",
+    "corrected": "There are many reasons to stay.",
+    "errors": [
+     {
+      "original": "There is many reasons",
+      "message": "Did you mean “There are many reasons”?",
+      "replacements": [
+       "There are many reasons"
+      ]
+     }
+    ],
+    "ms": 48,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I look forward to hear from you.",
+    "corrected": "I look forward to hearing from you.",
+    "errors": [
+     {
+      "original": "to hear",
+      "message": "In the grammatical structure ‘look + forward + to + verb’, the verb ‘to’ is used with the gerund.",
+      "replacements": [
+       "to hearing"
+      ]
+     }
+    ],
+    "ms": 29,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "The dog wagged it's tail.",
+    "corrected": "The dog wagged its tail.",
+    "errors": [
+     {
+      "original": "it's",
+      "message": "It seems that the possessive pronoun “its” fits better in this context.",
+      "replacements": [
+       "its"
+      ]
+     }
+    ],
+    "ms": 29,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "She suggested me to go home.",
+    "corrected": "She suggested me to go home.",
+    "errors": [],
+    "ms": 27,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I didn't saw anything.",
+    "corrected": "I didn't see anything.",
+    "errors": [
+     {
+      "original": "saw",
+      "message": "Check that the past tense form ‘saw’ is correct. Did you mean to write ‘see’?",
+      "replacements": [
+       "see"
+      ]
+     }
+    ],
+    "ms": 30,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "He has went to the shop.",
+    "corrected": "He has gone to the shop.",
+    "errors": [
+     {
+      "original": "went",
+      "message": "It appears that the past participle should be used here.",
+      "replacements": [
+       "gone"
+      ]
+     }
+    ],
+    "ms": 35,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Less people came than expected.",
+    "corrected": "Fewer people came than expected.",
+    "errors": [
+     {
+      "original": "Less",
+      "message": "Did you mean “fewer”? The noun “people” is countable.",
+      "replacements": [
+       "Fewer"
+      ]
+     }
+    ],
+    "ms": 48,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "If I would have known, I would have come.",
+    "corrected": "If I had known, I would have come.",
+    "errors": [
+     {
+      "original": "would have known",
+      "message": "Did you mean “had known”?",
+      "replacements": [
+       "had known"
+      ]
+     }
+    ],
+    "ms": 41,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Me and my sister went to the cinema.",
+    "corrected": "My sister and I went to the cinema.",
+    "errors": [
+     {
+      "original": "Me and my sister",
+      "message": "When referring to yourself and somebody else, put their name first. Also the nominative form “I” is more likely in this context.",
+      "replacements": [
+       "My sister and I"
+      ]
+     }
+    ],
+    "ms": 15,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "However I disagree with the decision.",
+    "corrected": "However, I disagree with the decision.",
+    "errors": [
+     {
+      "original": "However",
+      "message": "A comma may be missing after the conjunctive/linking adverb ‘However’.",
+      "replacements": [
+       "However,"
+      ]
+     }
+    ],
+    "ms": 27,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I went to the shop, I bought some milk.",
+    "corrected": "I went to the shop, I bought some milk.",
+    "errors": [],
+    "ms": 33,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "The informations you sent was useful.",
+    "corrected": "The information you sent was useful.",
+    "errors": [
+     {
+      "original": "informations",
+      "message": "The word ‘informations’ is a legal term. In standard English, the word ‘information’ is a non-count noun.",
+      "replacements": [
+       "information"
+      ]
+     }
+    ],
+    "ms": 32,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "I have recieved your letter.",
+    "corrected": "I have recieved your letter.",
+    "errors": [],
+    "ms": 57,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "I like the color of this house.",
+    "corrected": "I like the color of this house.",
+    "errors": [],
+    "ms": 46,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "We need to analyze the data.",
+    "corrected": "We need to analyze the data.",
+    "errors": [],
+    "ms": 29,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "The goverment announced new rules.",
+    "corrected": "The goverment announced new rules.",
+    "errors": [],
+    "ms": 52,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "It was definately a good idea.",
+    "corrected": "It was definately a good idea.",
+    "errors": [],
+    "ms": 33,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "We will meet tommorow.",
+    "corrected": "We will meet tommorow.",
+    "errors": [],
+    "ms": 108,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "This is a seperate issue.",
+    "corrected": "This is a seperate issue.",
+    "errors": [],
+    "ms": 49,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "This sentence is perfectly fine.",
+    "corrected": "This sentence is perfectly fine.",
+    "errors": [],
+    "ms": 20,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "We organised the meeting for Tuesday afternoon.",
+    "corrected": "We organised the meeting for Tuesday afternoon.",
+    "errors": [],
+    "ms": 19,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "The committee have agreed on the budget.",
+    "corrected": "The committee have agreed on the budget.",
+    "errors": [],
+    "ms": 27,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "If I were you, I would apologise.",
+    "corrected": "If I were you, I would apologise.",
+    "errors": [],
+    "ms": 33,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "Fewer people came than we expected.",
+    "corrected": "Fewer people came than we expected.",
+    "errors": [],
+    "ms": 24,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "She has lived in London since 2010.",
+    "corrected": "She has lived in London since 2010.",
+    "errors": [],
+    "ms": 42,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "I'd rather stay at home tonight.",
+    "corrected": "I'd rather stay at home tonight.",
+    "errors": [],
+    "ms": 40,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "The data are stored on a secure server.",
+    "corrected": "The data are stored on a secure server.",
+    "errors": [],
+    "ms": 31,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "Neither the manager nor the staff were informed.",
+    "corrected": "Neither the manager nor the staff were informed.",
+    "errors": [],
+    "ms": 21,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "He travelled to Manchester last week.",
+    "corrected": "He travelled to Manchester last week.",
+    "errors": [],
+    "ms": 41,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "Whom did you invite to the party?",
+    "corrected": "Whom did you invite to the party?",
+    "errors": [],
+    "ms": 27,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "I've got a new job, which I really enjoy.",
+    "corrected": "I've got a new job, which I really enjoy.",
+    "errors": [],
+    "ms": 37,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "The centre will open at nine o'clock.",
+    "corrected": "The centre will open at nine o'clock.",
+    "errors": [],
+    "ms": 44,
+    "result": "ok"
+   }
+  ]
+ },
+ "Edge Proofreader": {
+  "rows": [
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "He go to school every days.",
+    "corrected": "He goes to school every day.",
+    "errors": [
+     {
+      "original": "go",
+      "replacement": "goes"
+     },
+     {
+      "original": "days",
+      "replacement": "day"
+     }
+    ],
+    "ms": 4223,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Their going to the park tomorrow, weather or not it rains.",
+    "corrected": "They are going to the park tomorrow, regardless of whether it rains.",
+    "errors": [
+     {
+      "original": "Their",
+      "replacement": "They are"
+     },
+     {
+      "original": "weather",
+      "replacement": "regardless"
+     },
+     {
+      "original": "or",
+      "replacement": "of"
+     },
+     {
+      "original": "not",
+      "replacement": "whether"
+     }
+    ],
+    "ms": 183,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "The results was better then we expected.",
+    "corrected": "The results were better than we expected.",
+    "errors": [
+     {
+      "original": "was",
+      "replacement": "were"
+     },
+     {
+      "original": "then",
+      "replacement": "than"
+     }
+    ],
+    "ms": 144,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Its a nice day, isn't it?",
+    "corrected": "It's a nice day, isn't it?",
+    "errors": [
+     {
+      "original": "Its",
+      "replacement": "It's"
+     }
+    ],
+    "ms": 143,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "She don't like coffee.",
+    "corrected": "She doesn't like coffee.",
+    "errors": [
+     {
+      "original": "don't",
+      "replacement": "doesn't"
+     }
+    ],
+    "ms": 125,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Between you and I, the plan is risky.",
+    "corrected": "Between you and I, the plan is risky.",
+    "errors": [],
+    "ms": 152,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "The team finished there work early.",
+    "corrected": "The team finished their work early.",
+    "errors": [
+     {
+      "original": "there",
+      "replacement": "their"
+     }
+    ],
+    "ms": 143,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Who's book is this?",
+    "corrected": "Who's book is this?",
+    "errors": [],
+    "ms": 128,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I have seen him yesterday.",
+    "corrected": "I have seen him yesterday.",
+    "errors": [],
+    "ms": 136,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "She is married with a doctor.",
+    "corrected": "She is married to a doctor.",
+    "errors": [
+     {
+      "original": "with",
+      "replacement": "to"
+     }
+    ],
+    "ms": 132,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Each of the students have a laptop.",
+    "corrected": "Each of the students has a laptop.",
+    "errors": [
+     {
+      "original": "have",
+      "replacement": "has"
+     }
+    ],
+    "ms": 140,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I am agree with you.",
+    "corrected": "I agree with you.",
+    "errors": [
+     {
+      "original": " am",
+      "replacement": ""
+     }
+    ],
+    "ms": 129,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "He is more taller than his brother.",
+    "corrected": "He is taller than his brother.",
+    "errors": [
+     {
+      "original": " more",
+      "replacement": ""
+     }
+    ],
+    "ms": 137,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "There is many reasons to stay.",
+    "corrected": "There are many reasons to stay.",
+    "errors": [
+     {
+      "original": "is",
+      "replacement": "are"
+     }
+    ],
+    "ms": 133,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I look forward to hear from you.",
+    "corrected": "I look forward to hearing from you.",
+    "errors": [
+     {
+      "original": "hear",
+      "replacement": "hearing"
+     }
+    ],
+    "ms": 227,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "The dog wagged it's tail.",
+    "corrected": "The dog wagged its tail.",
+    "errors": [
+     {
+      "original": "it's",
+      "replacement": "its"
+     }
+    ],
+    "ms": 231,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "She suggested me to go home.",
+    "corrected": "She suggested me to go home.",
+    "errors": [],
+    "ms": 224,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I didn't saw anything.",
+    "corrected": "I didn't see anything.",
+    "errors": [
+     {
+      "original": "saw",
+      "replacement": "see"
+     }
+    ],
+    "ms": 292,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "He has went to the shop.",
+    "corrected": "He has gone to the shop.",
+    "errors": [
+     {
+      "original": "went",
+      "replacement": "gone"
+     }
+    ],
+    "ms": 300,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Less people came than expected.",
+    "corrected": "Less people came than expected.",
+    "errors": [],
+    "ms": 387,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "If I would have known, I would have come.",
+    "corrected": "If I had known, I would have come.",
+    "errors": [
+     {
+      "original": "would have",
+      "replacement": "had"
+     }
+    ],
+    "ms": 422,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "Me and my sister went to the cinema.",
+    "corrected": "Me and my sister went to the cinema.",
+    "errors": [],
+    "ms": 408,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "However I disagree with the decision.",
+    "corrected": "However, I disagree with the decision.",
+    "errors": [
+     {
+      "original": "",
+      "replacement": ","
+     }
+    ],
+    "ms": 400,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "I went to the shop, I bought some milk.",
+    "corrected": "I went to the shop and bought some milk.",
+    "errors": [
+     {
+      "original": ",",
+      "replacement": ""
+     },
+     {
+      "original": "I",
+      "replacement": "and"
+     }
+    ],
+    "ms": 419,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "gram",
+    "text": "The informations you sent was useful.",
+    "corrected": "The information you sent was useful.",
+    "errors": [
+     {
+      "original": "informations",
+      "replacement": "information"
+     }
+    ],
+    "ms": 405,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "I have recieved your letter.",
+    "corrected": "I have received your letter.",
+    "errors": [
+     {
+      "original": "recieved",
+      "replacement": "received"
+     }
+    ],
+    "ms": 402,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "I like the color of this house.",
+    "corrected": "I like the color of this house.",
+    "errors": [],
+    "ms": 434,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "We need to analyze the data.",
+    "corrected": "We need to analyze the data.",
+    "errors": [],
+    "ms": 416,
+    "result": "missed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "The goverment announced new rules.",
+    "corrected": "The government announced new rules.",
+    "errors": [
+     {
+      "original": "goverment",
+      "replacement": "government"
+     }
+    ],
+    "ms": 415,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "It was definately a good idea.",
+    "corrected": "It was definitely a good idea.",
+    "errors": [
+     {
+      "original": "definately",
+      "replacement": "definitely"
+     }
+    ],
+    "ms": 408,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "We will meet tommorow.",
+    "corrected": "We will meet tomorrow.",
+    "errors": [
+     {
+      "original": "tommorow",
+      "replacement": "tomorrow"
+     }
+    ],
+    "ms": 414,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "typo",
+    "text": "This is a seperate issue.",
+    "corrected": "This is a separate issue.",
+    "errors": [
+     {
+      "original": "seperate",
+      "replacement": "separate"
+     }
+    ],
+    "ms": 419,
+    "result": "fixed"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "This sentence is perfectly fine.",
+    "corrected": "This sentence is perfectly fine.",
+    "errors": [],
+    "ms": 396,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "We organised the meeting for Tuesday afternoon.",
+    "corrected": "We organized the meeting for Tuesday afternoon.",
+    "errors": [
+     {
+      "original": "organised",
+      "replacement": "organized"
+     }
+    ],
+    "ms": 448,
+    "result": "false"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "The committee have agreed on the budget.",
+    "corrected": "The committee has agreed on the budget.",
+    "errors": [
+     {
+      "original": "have",
+      "replacement": "has"
+     }
+    ],
+    "ms": 447,
+    "result": "false"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "If I were you, I would apologise.",
+    "corrected": "If I were you, I would apologize.",
+    "errors": [
+     {
+      "original": "apologise",
+      "replacement": "apologize"
+     }
+    ],
+    "ms": 417,
+    "result": "false"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "Fewer people came than we expected.",
+    "corrected": "Fewer people came than we expected.",
+    "errors": [],
+    "ms": 424,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "She has lived in London since 2010.",
+    "corrected": "She has lived in London since 2010.",
+    "errors": [],
+    "ms": 490,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "I'd rather stay at home tonight.",
+    "corrected": "I'd rather stay at home tonight.",
+    "errors": [],
+    "ms": 462,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "The data are stored on a secure server.",
+    "corrected": "The data are stored on a secure server.",
+    "errors": [],
+    "ms": 429,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "Neither the manager nor the staff were informed.",
+    "corrected": "Neither the manager nor the staff were informed.",
+    "errors": [],
+    "ms": 720,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "He travelled to Manchester last week.",
+    "corrected": "He traveled to Manchester last week.",
+    "errors": [
+     {
+      "original": "travelled",
+      "replacement": "traveled"
+     }
+    ],
+    "ms": 8865,
+    "result": "false"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "Whom did you invite to the party?",
+    "corrected": "Who did you invite to the party?",
+    "errors": [
+     {
+      "original": "Whom",
+      "replacement": "Who"
+     }
+    ],
+    "ms": 176,
+    "result": "false"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "I've got a new job, which I really enjoy.",
+    "corrected": "I've got a new job, which I really enjoy.",
+    "errors": [],
+    "ms": 197,
+    "result": "ok"
+   },
+   {
+    "lang": "en",
+    "kind": "ok",
+    "text": "The centre will open at nine o'clock.",
+    "corrected": "The center will open at nine o'clock.",
+    "errors": [
+     {
+      "original": "centre",
+      "replacement": "center"
+     }
+    ],
+    "ms": 174,
+    "result": "false"
+   }
+  ]
+ }
+}

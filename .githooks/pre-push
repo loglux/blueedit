@@ -1,0 +1,5 @@
+#!/bin/sh
+# Before a push: make sure the self-hosted GitHub runner is running, so the checks the push starts do not wait.
+# Never stops the push. Turned on once per clone with:  git config core.hooksPath .githooks   (docs/ci.md)
+command -v pwsh >/dev/null 2>&1 && pwsh -NoProfile -File "$(git rev-parse --show-toplevel)/tools/ci/ensure-runner.ps1"
+exit 0

@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- The optional formula pictures module (docs/formula-pictures.md): typesets LaTeX with CSharpMath and SkiaSharp.
+       Not referenced by the editor: published into a folder of its own (mathimages\), which the editor loads when it
+       finds it. Publish with -r win-x64 or -r linux-x64 for the native Skia library of that system. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>BlueEdit.MathImages</AssemblyName>
+    <RootNamespace>BlueEdit.MathImages</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <AnalysisMode>Recommended</AnalysisMode>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="BlueEdit.Tests" />
+  </ItemGroup>
+
+  <!-- Skia's native symbols (84 MB) are of no use to anyone running the module -->
+  <Target Name="DropNativeSymbols" AfterTargets="Publish">
+    <Delete Files="$(PublishDir)libSkiaSharp.pdb" />
+  </Target>
+
+  <ItemGroup>
+    <PackageReference Include="CSharpMath.SkiaSharp" Version="1.0.0-pre.2" />
+    <PackageReference Include="SkiaSharp" Version="3.119.4" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.4" />
+  </ItemGroup>
+
+</Project>

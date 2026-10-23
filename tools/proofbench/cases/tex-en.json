@@ -1,0 +1,28 @@
+{
+  "name": "tex-en",
+  "language": "en-GB",
+  "math": true,
+  "file": "tex",
+  "about": "English LaTeX paragraphs for proofing .tex files (#78): an error in the prose around formulas, \\emph, \\cite, \\ref, \\label, footnotes and \\item; and correct paragraphs full of them, where every finding is a false alarm. The form of math-en.json; \"file\": \"tex\" makes MathBench open each case as a .tex file (the preamble left out: every line is the document's body). source: made = written for this set.",
+  "cases": [
+    {"id": "agree-cite", "source": "made", "text": "Previous studies~\\cite{smith2010} has shown that the effect is small.", "errors": [{"wrong": "has", "kind": "grammar", "ok": ["have shown"]}]},
+    {"id": "agree-math", "source": "made", "text": "The roots of $x^2 - 5x + 6 = 0$ is $x = 2$ and $x = 3$.", "errors": [{"wrong": "is", "kind": "grammar", "ok": ["are"]}]},
+    {"id": "emph-word", "source": "made", "text": "This result is \\emph{very} important, but it's proof is long.", "errors": [{"wrong": "it's", "kind": "grammar", "ok": ["its proof"]}]},
+    {"id": "ref-then", "source": "made", "text": "As Table~\\ref{tab:results} shows, the new method is faster then the old one.", "errors": [{"wrong": "then", "kind": "grammar", "ok": ["than"]}]},
+    {"id": "eqref-affect", "source": "made", "text": "The constant $c$ in~\\eqref{eq:main} does not effect the limit.", "errors": [{"wrong": "effect", "kind": "grammar", "ok": ["affect"]}]},
+    {"id": "display-after", "source": "made", "text": "Substituting the values gives\n\\[\nV = \\frac{1}{3}\\pi r^2 h,\n\\]\nso the volume of the cones are about $1230\\text{ cm}^3$.", "errors": [{"wrong": "are", "kind": "grammar", "ok": ["cones is", "cone is"]}]},
+    {"id": "equation-env", "source": "made", "text": "We define the function by\n\\begin{equation}\nf(x) = \\sin x + \\cos x,\n\\label{eq:f}\n\\end{equation}\nwhich are continuous on $\\mathbb{R}$.", "errors": [{"wrong": "are", "kind": "grammar", "ok": ["which is"]}]},
+    {"id": "footnote", "source": "made", "text": "The data was collected in 2019.\\footnote{The survey were repeated a year later.}", "errors": [{"wrong": "were", "kind": "grammar", "ok": ["survey was"]}]},
+    {"id": "item", "source": "made", "text": "\\begin{itemize}\n\\item Each of the students have a laptop.\n\\end{itemize}", "errors": [{"wrong": "have", "kind": "grammar", "ok": ["has a laptop"]}]},
+    {"id": "section", "source": "made", "text": "\\section{Results}\nThe results was better than expected.", "errors": [{"wrong": "was", "kind": "grammar", "ok": ["were"]}]},
+    {"id": "comma-splice", "source": "made", "text": "The series converges by~\\cite[Thm.~3]{rudin}, this completes the proof.", "errors": [{"wrong": ", this", "kind": "punctuation", "ok": ["; this", ". This"]}]},
+    {"id": "clean-1", "source": "made", "text": "By Theorem~\\ref{thm:main}, the sequence $(a_n)$ converges to $L$ as $n \\to \\infty$.", "errors": []},
+    {"id": "clean-2", "source": "made", "text": "Following~\\cite{knuth1984}, we write $\\mathcal{O}(n \\log n)$ for the running time.", "errors": []},
+    {"id": "clean-3", "source": "made", "text": "The integral\n\\[\n\\int_0^1 x^2 \\, dx = \\frac{1}{3}\n\\]\nis easy to evaluate.", "errors": []},
+    {"id": "clean-4", "source": "made", "text": "\\textbf{Proof.} Suppose, for a contradiction, that $f$ is not continuous at $x_0$.", "errors": []},
+    {"id": "clean-5", "source": "made", "text": "We use the notation of Section~\\ref{sec:prelim} throughout; see also~\\cite[p.~12]{rudin}.", "errors": []},
+    {"id": "clean-6", "source": "made", "text": "The probability is $p = 0.5$ % here the comment is not checked\nand the experiment was repeated ten times.", "errors": []},
+    {"id": "clean-7", "source": "made", "text": "\\begin{align}\na &= b + c \\\\\nd &= e\n\\end{align}\nwhere $a$, $b$ and $c$ are positive integers.", "errors": []},
+    {"id": "clean-8", "source": "made", "text": "It costs 15\\% more \\emph{and} takes twice as long, as shown in Figure~\\ref{fig:cost}.", "errors": []}
+  ]
+}

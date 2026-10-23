@@ -1,0 +1,129 @@
+{
+	"name": "long-made-en",
+	"description": "Long coherent paragraphs in British English about mathematics, written for this set on 2026-10-06 in the style of course notes, with inline formulas and known errors put in: ordinary ones and ones that are errors only because of an earlier sentence (who did it, what a pronoun stands for, tense). For comparing how a long paragraph is cut for the model (run.ts --chunking).",
+	"language": "en-GB",
+	"math": true,
+	"cases": [
+		{
+			"id": "made-en-cone",
+			"text": "To find the surface area of a cone, we need two measurements: the radius of the base and the slant height. The formula is $S=\\pi r^2+\\pi r l$, where the first term is the area of the base and the second term is the area of the curved surface. Sarah wanted to check the formula on a real object, so she measured a paper cone that she had made in class. The radius was 7 cm and the slant height was 25 cm. First he worked out the area of the base, which came to about 154 square centimetres. Then she calculated the curved surface and got roughly 550 square centimetres. Adding the two parts gave a total of about 704 square centimetres. To be sure, she cut the cone open and measured the flat shape that it made. The shape was a sector of a circle, and its area agreed with her answer to within a few percent. The small difference were caused by the overlap where the paper had been glued. The teacher was pleased with the result and asked the class to repeat the experiment with a different cone. This time the students used a cone with a radius of 5 cm and a slant height of 13 cm. They also measured the vertical height, which they found using Pythagoras' theorem, since the radius, the height and the slant height form a right-angled triangle. The vertical height turned out to be exactly 12 cm, which is a nice whole number. Using this height, they could also find the volume of the cone with the formula $V=\\frac{1}{3}\\pi r^2 h$. The volume came to about 314 cubic centimetres. The students compared there results and found that most of them were close to the exact value. One group, however, got a much larger answer. They had forgotten to divide by three, which is a common mistake. After the teacher pointed this out, they corrected their calculation straight away. At the end of the lesson the class discussed why the factor of one third appears in the formula. The teacher explained that a cone fills exactly a third of the cylinder with the same base and height. Next week the class looked at spheres and their surface areas, which follow a similar pattern.",
+			"errors": [
+				{
+					"wrong": "First he worked",
+					"kind": "grammar",
+					"ok": [
+						"First she worked"
+					]
+				},
+				{
+					"wrong": "difference were",
+					"kind": "grammar",
+					"ok": [
+						"difference was"
+					]
+				},
+				{
+					"wrong": "there results",
+					"kind": "spelling",
+					"ok": [
+						"their results"
+					]
+				},
+				{
+					"wrong": "Next week the class looked",
+					"kind": "grammar",
+					"ok": [
+						"will look",
+						"is going to look",
+						"following week",
+						"The next week"
+					]
+				}
+			]
+		},
+		{
+			"id": "made-en-regression",
+			"text": "A scatterplot is often the first step in looking for a relationship between two variables. Each point on the plot represents one observation, with one variable on the horizontal axis and the other on the vertical axis. If the points lie roughly along a straight line, we may decide to fit a regression line of the form $y=a+bx$. The gradient $b$ tells us how much $y$ changes, on average, when $x$ increases by one unit. In our study, the variables was the number of hours spent revising and the mark achieved in the exam. Data were collected from thirty students who took the same module. Their marks ranged from 35 to 92, and their revision time ranged from 2 to 40 hours. The scatterplot showed a clear positive trend, although several points lay well away from the line. The lecturer who supervised the project was surprised by one of them. She noticed that a student with only five hours of revision had scored 88. When she asked him about it, he explained that he had already studied the same topics in a previous course. This point was therefore treated as an outlier, but it was not removed from the data set. Instead, the analysis was carried out twice, once with the point and once without it. Removing the outlier increased the gradient slightly and made the correlation stronger. The correlation coefficient rose from 0.71 to 0.78, which suggests a fairly strong linear relationship. It is important to remember, that correlation does not imply causation. Students who revise more may also attend more lectures, and this could explain part of the effect. The final report included both analyses, so that readers could see how much the outlier mattered. The supervisor read the draft carefully. He suggested adding a residual plot, which shows whether the straight line is a good model. The residual plot showed no obvious pattern, which supports the use of a linear model. Overall, the project gave a clear and honest picture of the data, and it's conclusions were stated with appropriate caution.",
+			"errors": [
+				{
+					"wrong": "variables was",
+					"kind": "grammar",
+					"ok": [
+						"variables were"
+					]
+				},
+				{
+					"wrong": "remember, that",
+					"kind": "punctuation",
+					"ok": [
+						"remember that"
+					]
+				},
+				{
+					"wrong": "He suggested",
+					"kind": "grammar",
+					"ok": [
+						"She suggested"
+					]
+				},
+				{
+					"wrong": "it's conclusions",
+					"kind": "spelling",
+					"ok": [
+						"its conclusions"
+					]
+				}
+			]
+		},
+		{
+			"id": "made-en-dice",
+			"text": "Probability measures how likely an event is, on a scale from zero to one. When all the outcomes of an experiment are equally likely, the probability of an event is the number of favourable outcomes divided by the total number of outcomes. For a fair six-sided die, the probability of rolling a six is $\\frac{1}{6}$. James wanted to test this, so he rolled a die sixty times and recorded each result. A six came up eleven times, which is close to the ten that the theory predicts. Then she rolled two dice together and looked at the sum of the scores. There are thirty-six equally likely pairs of scores, and six of them give a total of seven. So the probability of a total of seven is $\\frac{6}{36}=\\frac{1}{6}$, which makes seven the most likely total. A total of two or twelve is the least likely, because each can only happen in one way. It is worth noticing that the die has no memory. Even after five sixes in a row, the probability of a six on the next roll is still one in six. Many people feel otherwise, this mistaken belief is known as the gambler's fallacy. For independent events, we multiply the probabilities to find the chance that both happen. The probability of two sixes in a row is therefore $\\frac{1}{36}$. To find the probability of at least one six in four rolls, it is easier to work with the complementary event. The chance of no sixes is $\\left(\\frac{5}{6}\\right)^4$, which is roughly 0.48, so at least one six has a probability of about 0.52. Questions of this kind appear in most introductory courses. Its answers often surprise students, who expect the probability to be much lower.",
+			"errors": [
+				{
+					"wrong": "Then she rolled",
+					"kind": "grammar",
+					"ok": [
+						"Then he rolled"
+					]
+				},
+				{
+					"wrong": "otherwise, this",
+					"kind": "punctuation",
+					"ok": [
+						"otherwise; this",
+						"otherwise: this",
+						"otherwise. This",
+						"otherwise — this"
+					]
+				},
+				{
+					"wrong": "Its answers",
+					"kind": "grammar",
+					"ok": [
+						"Their answers"
+					]
+				}
+			]
+		},
+		{
+			"id": "made-en-growth",
+			"text": "Exponential growth describes a quantity that increases by the same factor in each equal time interval. A population of bacteria that doubles every hour is a typical example. If we start with 100 bacteria, after one hour there are 200, after two hours 400, and after $t$ hours there are $100\\cdot 2^t$. In general, the model can be written as $P=P_0 e^{kt}$, where $P_0$ is the initial value and $k$ is the growth constant. The doubling time is the time it takes for the quantity to double, and it equals $\\frac{\\ln 2}{k}$. A biologist who studied a culture in the laboratory measured the population every two hours. She found that the population grew from 500 to 2000 in six hours. From this, he calculated that the population had doubled twice, so the doubling time was three hours. This value fitted the model well for the first day of the experiment. After that, the growth slowed down, because the bacteria were running out of nutrients. Real populations rarely grow exponentially for long, and a logistic model is often more accurate. The logistic model includes a carrying capacity, which is the largest population that the environment can support. Near the carrying capacity the growth rate falls almost to zero. The biologist plotted the data on a graph and compared it with both models. The exponential curve fitted the early data, but it badly overestimated the later values. The logistic curve fitted all of the data much better, especially after the first twenty-four hours. In her report, the biologist recommended using the logistic model for long experiments. She also noted that the growth constant depend on the temperature of the laboratory. The following month the team repeated the experiment at a higher temperature to test this idea.",
+			"errors": [
+				{
+					"wrong": "he calculated",
+					"kind": "grammar",
+					"ok": [
+						"she calculated"
+					]
+				},
+				{
+					"wrong": "constant depend",
+					"kind": "grammar",
+					"ok": [
+						"constant depends"
+					]
+				}
+			]
+		}
+	]
+}

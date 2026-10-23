@@ -1,0 +1,193 @@
+{
+	"name": "context-en",
+	"description": "Two sentences each, where the error in the second is only an error because of the first (who did it, what 'it' is, when). Correct pairs for false findings. For comparing pieces checked alone with pieces given the sentence before (run.ts --chunking sent,sentctx). Written for this set, 2026-10-06.",
+	"language": "en-GB",
+	"math": false,
+	"cases": [
+		{
+			"id": "ctx-pronoun-1",
+			"text": "Mary finished the report early. Then he sent it to the manager.",
+			"errors": [
+				{
+					"wrong": "he sent",
+					"kind": "grammar",
+					"ok": [
+						"she sent"
+					]
+				}
+			]
+		},
+		{
+			"id": "ctx-pronoun-2",
+			"text": "My sister moved to Leeds last year. He likes the city a lot.",
+			"errors": [
+				{
+					"wrong": "He",
+					"kind": "grammar",
+					"ok": [
+						"She likes"
+					]
+				}
+			]
+		},
+		{
+			"id": "ctx-number-1",
+			"text": "The students passed the exam. He was very pleased with the result.",
+			"errors": [
+				{
+					"wrong": "He was",
+					"kind": "grammar",
+					"ok": [
+						"They"
+					]
+				}
+			]
+		},
+		{
+			"id": "ctx-number-2",
+			"text": "We bought a new laptop for the lab. They are very fast.",
+			"errors": [
+				{
+					"wrong": "They are",
+					"kind": "grammar",
+					"ok": [
+						"It is",
+						"It's"
+					]
+				}
+			]
+		},
+		{
+			"id": "ctx-number-3",
+			"text": "The results of the survey were published. It shows a clear trend.",
+			"errors": [
+				{
+					"wrong": "It shows",
+					"kind": "grammar",
+					"ok": [
+						"They show"
+					]
+				}
+			]
+		},
+		{
+			"id": "ctx-tense-1",
+			"text": "Yesterday we visited the museum. Tomorrow we visited the gallery.",
+			"errors": [
+				{
+					"wrong": "visited",
+					"nth": 2,
+					"kind": "grammar",
+					"ok": [
+						"will visit"
+					]
+				}
+			]
+		},
+		{
+			"id": "ctx-pronoun-3",
+			"text": "The proof is surprisingly short. Their main step is a substitution.",
+			"errors": [
+				{
+					"wrong": "Their",
+					"kind": "grammar",
+					"ok": [
+						"Its main step"
+					]
+				}
+			]
+		},
+		{
+			"id": "ctx-clean-1",
+			"text": "The data were collected in May. They were analysed in June.",
+			"errors": []
+		},
+		{
+			"id": "ctx-clean-2",
+			"text": "Anna wrote the code. She tested it herself.",
+			"errors": []
+		},
+		{
+			"id": "ctx-clean-3",
+			"text": "The graph was drawn by hand. It shows the same trend.",
+			"errors": []
+		},
+		{
+			"id": "ctx-pronoun-4",
+			"text": "Mr Smith finished the lecture early. Then she answered questions from the students.",
+			"errors": [
+				{
+					"wrong": "Then she answered",
+					"kind": "grammar",
+					"ok": [
+						"Then he answered"
+					]
+				}
+			]
+		},
+		{
+			"id": "ctx-pronoun-5",
+			"text": "Both graphs were drawn from the same data. It agrees at almost every point.",
+			"errors": [
+				{
+					"wrong": "It agrees",
+					"kind": "grammar",
+					"ok": [
+						"They agree"
+					]
+				}
+			]
+		},
+		{
+			"id": "ctx-pronoun-6",
+			"text": "The problem gives two circles. Its radii are three and five.",
+			"errors": [
+				{
+					"wrong": "Its radii",
+					"kind": "grammar",
+					"ok": [
+						"Their radii"
+					]
+				}
+			]
+		},
+		{
+			"id": "ctx-tense-2",
+			"text": "Next Monday we have an algebra test. In it we solved equations and inequalities.",
+			"errors": [
+				{
+					"wrong": "solved",
+					"kind": "grammar",
+					"ok": [
+						"will solve",
+						"are solving",
+						"are going to solve"
+					]
+				}
+			]
+		},
+		{
+			"id": "ctx-number-4",
+			"text": "Heron's formula gives the area of a triangle. They are named after a Greek mathematician.",
+			"errors": [
+				{
+					"wrong": "They are named",
+					"kind": "grammar",
+					"ok": [
+						"It is named"
+					]
+				}
+			]
+		},
+		{
+			"id": "ctx-clean-4",
+			"text": "Irene checked the proof. She found no gaps in it.",
+			"errors": []
+		},
+		{
+			"id": "ctx-clean-5",
+			"text": "Both functions increase everywhere. Their graphs do not cross.",
+			"errors": []
+		}
+	]
+}

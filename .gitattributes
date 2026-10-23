@@ -1,0 +1,6 @@
+# Shell scripts keep LF line endings on every checkout: with core.autocrlf, Windows would give them CRLF, and bash
+# fails on the carriage return at each line end
+*.sh text eol=lf
+
+# Models are binary
+*.ftz binary

@@ -1,0 +1,5 @@
+pytest>=8
+pytest-xdist>=3.5
+pyte>=0.8
+pywinpty>=2.0; sys_platform == "win32"
+ptyprocess>=0.7; sys_platform != "win32"

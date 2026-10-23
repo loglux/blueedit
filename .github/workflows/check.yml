@@ -1,0 +1,53 @@
+# Every pull request and push to main, on GitHub's own machines (docs/ci.md): on Ubuntu the build (warnings are
+# errors), the unit tests, the Linux build and the UI tests driving it in a pty; on Windows the build and the unit
+# tests. No language model, LanguageTool or Word there: the tests that need one skip.
+name: check
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  linux:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Hunspell dictionaries for the spelling tests
+        run: sudo apt-get update -q && sudo apt-get install -y -q hunspell-en-us hunspell-en-gb hunspell-ru
+      - name: build, unit tests, Linux build, UI tests
+        env:
+          BLUEEDIT_UI_PATIENCE: '3'           # shared machines: wait longer for a key to show
+          BLUEEDIT_NO_TIMING: '1'             # their timings say nothing about the editor
+          UI_WORKERS: '4'
+        run: |
+          pip install -q -r tests/ui/requirements.txt
+          export PYTEST_ADDOPTS="--basetemp=$RUNNER_TEMP/pytest"
+          PYTHON=python PUBLISH_DIR="$RUNNER_TEMP/publish" tools/ci/check-linux.sh
+
+  windows:
+    runs-on: windows-2025
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+      - name: build and unit tests
+        shell: pwsh
+        run: .\check.ps1 -Fast

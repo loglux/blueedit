@@ -1,0 +1,89 @@
+# A tag vX.Y.Z: build and unit-test, publish the single-file exe, zip it, publish the Linux build into a
+# tar.gz (tools/ci/pack-linux.py), pack the formula pictures module for both, and make a DRAFT release with these four
+# and their SHA-256, on GitHub's own Windows machine. The draft is reviewed (notes written) and published by hand.
+# See docs/ci.md.
+name: release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-2025
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: build and unit tests
+        shell: pwsh
+        run: .\check.ps1 -Fast
+      - name: version matches the tag
+        shell: pwsh
+        run: |
+          $v = ([xml](Get-Content BlueEdit.csproj)).Project.PropertyGroup.Version | Where-Object { $_ } | Select-Object -First 1
+          if ("v$v" -ne '${{ github.ref_name }}') { throw "BlueEdit.csproj has version $v, the tag is ${{ github.ref_name }}" }
+      - name: publish and zip
+        id: zip
+        shell: pwsh
+        run: |
+          $out = Join-Path $env:RUNNER_TEMP 'release'
+          dotnet publish -c Release -r win-x64 --self-contained -p:PublishSingleFile=true -o $out -nologo -v q
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          $name = "blueedit-$('${{ github.ref_name }}'.TrimStart('v'))-win-x64.zip"
+          $zip = Join-Path $env:RUNNER_TEMP $name
+          # the zip: the editor and the setup scripts for the optional checkers and language servers
+          $stage = Join-Path $env:RUNNER_TEMP 'stage'
+          if (Test-Path $stage) { Remove-Item -Recurse -Force $stage }
+          New-Item -ItemType Directory (Join-Path $stage 'tools') | Out-Null
+          Copy-Item (Join-Path $out 'be.exe') $stage
+          Copy-Item -Recurse 'tools/proofing-setup', 'tools/lsp-setup' (Join-Path $stage 'tools')
+          Compress-Archive -Path (Join-Path $stage '*') -DestinationPath $zip -Force
+          $sha = (Get-FileHash $zip).Hash.ToLower()
+          "zip=$zip" >> $env:GITHUB_OUTPUT
+          "sha=$sha" >> $env:GITHUB_OUTPUT
+          "$name  SHA-256 $sha"
+          # Linux: the same build for linux-x64 (.NET cross-publishes from Windows), packed with the execute bits set
+          $outLinux = Join-Path $env:RUNNER_TEMP 'release-linux'
+          dotnet publish -c Release -r linux-x64 --self-contained -p:PublishSingleFile=true -o $outLinux -nologo -v q
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          $tgz = Join-Path $env:RUNNER_TEMP "blueedit-$('${{ github.ref_name }}'.TrimStart('v'))-linux-x64.tar.gz"
+          python tools/ci/pack-linux.py $outLinux $tgz
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          $shaLinux = (Get-FileHash $tgz).Hash.ToLower()
+          "tgz=$tgz" >> $env:GITHUB_OUTPUT
+          "shaLinux=$shaLinux" >> $env:GITHUB_OUTPUT
+          "$(Split-Path $tgz -Leaf)  SHA-256 $shaLinux"
+          # the optional formula pictures module (docs/formula-pictures.md): a folder mathimages/ to unpack next to
+          # the editor, for each system (its native Skia library differs)
+          $ver = '${{ github.ref_name }}'.TrimStart('v')
+          $miWin = Join-Path $env:RUNNER_TEMP 'mi-win'
+          dotnet publish src/MathImages -c Release -r win-x64 --self-contained false -o (Join-Path $miWin 'mathimages') -nologo -v q
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          $miZip = Join-Path $env:RUNNER_TEMP "blueedit-mathimages-$ver-win-x64.zip"
+          Compress-Archive -Path (Join-Path $miWin 'mathimages') -DestinationPath $miZip -Force
+          $miLinux = Join-Path $env:RUNNER_TEMP 'mi-linux'
+          dotnet publish src/MathImages -c Release -r linux-x64 --self-contained false -o $miLinux -nologo -v q
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          $miTgz = Join-Path $env:RUNNER_TEMP "blueedit-mathimages-$ver-linux-x64.tar.gz"
+          python tools/ci/pack-linux.py --module $miLinux $miTgz
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          "miZip=$miZip" >> $env:GITHUB_OUTPUT
+          "miTgz=$miTgz" >> $env:GITHUB_OUTPUT
+          "shaMiZip=$((Get-FileHash $miZip).Hash.ToLower())" >> $env:GITHUB_OUTPUT
+          "shaMiTgz=$((Get-FileHash $miTgz).Hash.ToLower())" >> $env:GITHUB_OUTPUT
+      - name: draft release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $notes = "Draft made by the release workflow from ${{ github.ref_name }}. Write the notes, then publish.`n`nSHA-256 of the Windows zip: ``${{ steps.zip.outputs.sha }}```nSHA-256 of the Linux tar.gz: ``${{ steps.zip.outputs.shaLinux }}```nSHA-256 of the formula pictures module, Windows: ``${{ steps.zip.outputs.shaMiZip }}```nSHA-256 of the formula pictures module, Linux: ``${{ steps.zip.outputs.shaMiTgz }}``"
+          gh release create '${{ github.ref_name }}' '${{ steps.zip.outputs.zip }}' '${{ steps.zip.outputs.tgz }}' '${{ steps.zip.outputs.miZip }}' '${{ steps.zip.outputs.miTgz }}' --draft --prerelease --title "BlueEdit $('${{ github.ref_name }}'.TrimStart('v')) (preview)" --notes $notes
