@@ -38,7 +38,7 @@ BlueEdit общается с **языковыми серверами** — те�
     текст не меняется, а в строке состояния — сообщение программы.
   - Ни того, ни другого: строка состояния так и говорит (`no formatter: Tools > Code tools installs ruff`).
 
-  Поставить ruff: `tools\lsp-setup\install.ps1 -Python` (winget, `astral-sh.ruff`, для текущего пользователя) или
+  Поставить ruff: **Tools → Code tools** или `tools\lsp-setup\install.ps1 -Python` (winget, `astral-sh.ruff`, для текущего пользователя) или
   `tools/lsp-setup/install.sh --python` (релиз ruff с GitHub в `~/.local/bin`). black, поставленный через
   `pip install --user black`, тоже находится, хотя pip не добавляет его папку в `PATH`.
 - **Ctrl+F2** переименовывает символ под курсором везде, где его находит сервер (или Edit → Rename symbol). Наберите
@@ -123,8 +123,15 @@ apt (`nodejs npm`, `dotnet-sdk-10.0`; sudo спросит пароль, `--yes` 
 "languageServers": {                           // поверх стандартных
     "Python": { "command": "pylsp", "args": [] },                // другой сервер для языка
     "C#": "off"                                                   // стандартный выключен
+},
+"formatters": {                                // Ctrl+F12 программой, раньше форматирования сервера
+    "Python": { "command": "black", "args": ["-q", "--stdin-filename", "{file}", "-"] },
+    "C#": "off"                                                   // без форматирования для языка
 }
 ```
+
+Форматтер читает текст со стандартного входа и пишет отформатированный; `{file}` в его аргументах — путь файла.
+Подойдёт любая такая программа: `prettier --stdin-filepath {file}`, `clang-format --assume-filename={file}`…
 
 Названия языков — как в строке состояния: `Python`, `C#`, `PowerShell`, `C/C++`, `JavaScript`, `Go`, `Rust`, `Java`,
 `JSON`, `SQL`, `HTML/XML`. Подойдёт любой сервер, работающий по LSP через stdio (clangd для C/C++, gopls для Go,
@@ -139,3 +146,8 @@ rust-analyzer для Rust…); проверены Python и C#. Сервер Pow
 | долго `LSP … starting` | сервер сначала загружает проект: csharp-ls запускает MSBuild (от секунд до минуты на большом решении) |
 | `LSP … failed: …` | не запустился или не ответил на `initialize` за 60 с; дальше — причина (и один раз в строке сообщений) |
 | `LSP … stopped: …` | сервер завершился; дальше — последняя строка, которую он написал в поток ошибок |
+
+Тесты: `tests/BlueEdit.Tests/LspTests.cs` (пути, корни, настройки, отрисовка; настоящие pyright и csharp-ls, если
+установлены), `tests/ui/test_lsp.py` (pyright в настоящем редакторе). Как устроено: `Lsp/LspClient.cs` (JSON-RPC через
+stdio с заголовками Content-Length; на запросы сервера отвечает пустыми результатами), `Lsp/LanguageServers.cs`
+(серверы по языку и корню, синхронизация, находки), `EditorView.Diagnostics.cs` (подчёркивания, Shift+F7, F7).

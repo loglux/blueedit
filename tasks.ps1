@@ -46,6 +46,13 @@ $tasks = [ordered]@{
         Run { dotnet publish -c Release -r linux-x64 --self-contained -p:PublishSingleFile=true -o publish-linux -nologo -v q }
         $v = ([xml](Get-Content BlueEdit.csproj)).Project.PropertyGroup.Version | Where-Object { $_ } | Select-Object -First 1
         Run { python tools/ci/pack-linux.py publish-linux "publish-linux/blueedit-$v-linux-x64.tar.gz" } })
+    'installer'      = @('the Windows installer into publish-installer\, as the release makes it (Inno Setup 6; docs/tech/installer.md)', {
+        $build = Join-Path ([IO.Path]::GetTempPath()) 'blueedit-installer-build'
+        Run { dotnet publish -c Release -r win-x64 --self-contained -p:PublishSingleFile=true -o $build -nologo -v q }
+        ./tools/installer/build.ps1 -Source $build -Output publish-installer })
+    'installer-sandbox' = @('the installer on a clean Windows: its pages captured, installed, checked, uninstalled (Windows Sandbox), ~5 min', {
+        NotWhileRunnerBusy
+        Run { ./tools/sandbox/start.ps1 -Installer } })
     'setup'          = @('install the spelling/grammar checkers and the language servers', {
         Run { ./tools/proofing-setup/install.ps1 -All }; Run { ./tools/lsp-setup/install.ps1 -All } })
     'setup-proofing' = @('LanguageTool, llama.cpp, the recommended model, Edge Canary (docs/proofing-setup.md)', {
@@ -63,7 +70,7 @@ $tasks = [ordered]@{
     'newcomer'       = @('a new user on a clean Windows: the release zip, be.exe started, screens captured (Windows Sandbox), ~5 min', {
         NotWhileRunnerBusy
         Run { ./tools/sandbox/start.ps1 -Newcomer } })
-    'newcomer-linux' = @('a new user on bare Linux: the release tar.gz in clean Debian, Ubuntu, Fedora containers on the LAN server, screens as text, ~6 min', {
+    'newcomer-linux' = @('a new user on bare Linux: the release tar.gz in clean Debian, Ubuntu, Fedora containers on a Linux host with Docker (BLUEEDIT_LINUX_HOST), screens as text, ~6 min', {
         NotWhileRunnerBusy
         Run { ./tools/linux-newcomer/run.ps1 } })
     'dialogs'        = @('the dialogs in Russian on a clean Windows, each captured, nothing installed (Windows Sandbox), ~3 min', {
@@ -77,7 +84,7 @@ $tasks = [ordered]@{
         gh api 'repos/{owner}/{repo}/actions/runners' -q '.runners[] | "runner: " + .name + " " + .status + (if .busy then " (busy)" else "" end)'
         gh run list --limit 5; gh pr list
         ./tools/proofing-setup/check.ps1; ./tools/lsp-setup/install.ps1 })
-    'runner'         = @('start the CI runner if it is not running (as the pre-push hook does)', {
+    'runner'         = @('the maintainer''s: start the self-hosted CI runner if it is not running (as the pre-push hook does)', {
         ./tools/ci/ensure-runner.ps1; Get-Process Runner.Listener -ErrorAction SilentlyContinue | Select-Object Name, Id, StartTime })
     'pr'             = @("push the current branch and open its pull request (title and text from its last commit)", {
         if ((git branch --show-current) -eq 'main') { Fail 'on main: make a branch first (git checkout -b <name>)' }

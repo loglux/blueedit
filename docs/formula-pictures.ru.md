@@ -25,7 +25,7 @@ English: [formula-pictures.md](formula-pictures.md).
   ```
 
   В Linux: `tar xzf blueedit-mathimages-*-linux-x64.tar.gz -C blueedit-*-linux-x64` (`mathimages/` рядом с
-  `blueedit`). Ещё редактор ищет модуль в `%LOCALAPPDATA%\BlueEdit\mathimages` (`~/.local/share/BlueEdit/mathimages`),
+  `be`). Ещё редактор ищет модуль в `%LOCALAPPDATA%\BlueEdit\mathimages` (`~/.local/share/BlueEdit/mathimages`),
   куда его собирает из исходников `.\tasks.ps1 setup-math`, и там, куда указывает `BLUEEDIT_MATHIMAGES` (`off`
   выключает). Редактор проверяет номер интерфейса модуля (`Api`), а не релиз: модуль от другого релиза работает,
   пока этот номер тот же (с первого выпуска модуля он равен 1). Модуль с другим номером не загружается, с
@@ -44,4 +44,4 @@ English: [formula-pictures.md](formula-pictures.md).
 - Картинки настолько чёткие, насколько позволяет терминал: Windows Terminal рисует Sixel на сетке 10 × 20 точек на
   ячейку при любом шрифте и масштабирует её под шрифт, так что с крупным шрифтом они мягче.
 
-Устройство, выбор и замеры: [tech/editing.ru.md](tech/editing.ru.md#картинки-формул-sixel-49).
+Устройство, выбор и замеры: [tech/editing.ru.md](tech/editing.ru.md#картинки-формул-sixel).

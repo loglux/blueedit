@@ -27,12 +27,12 @@ cd blueedit-*-linux-x64
 |---|---|
 | Редактор, меню, диалоги, мышь, живой просмотр Markdown | как на Windows: у терминального слоя есть часть для Unix (сырой режим termios) |
 | Орфография | **Hunspell**: **Tools → Get spelling dictionaries…** скачивает словари LibreOffice в `~/.local/share/BlueEdit/hunspell` (без root; в командной строке `be --install-proofing ru-RU,en-GB`), или словари дистрибутива: `sudo apt install hunspell-ru hunspell-en-gb hunspell-en-us` (ставятся в `/usr/share/hunspell`; читаются также `~/.local/share/hunspell`, `/usr/share/myspell`, `/usr/local/share/hunspell`, `/opt/homebrew/share/hunspell`, `~/Library/Spelling`) |
-| Грамматика: LanguageTool, локальная языковая модель; советы по стилю | `tools/proofing-setup/install.sh --all` (Java, LanguageTool, llama.cpp — сборка CUDA, Vulkan или для процессора — и модель, в `~/.local/share/BlueEdit`) |
-| Языковые серверы (Python, C#), ruff | **Tools → Code tools** в редакторе или `be --install-tools` (в `~/.local/share/blueedit/tools`, без root и apt: годится и для NAS); или `tools/lsp-setup/install.sh --all` (apt, sudo) |
+| Грамматика: LanguageTool, Harper, локальная языковая модель, сервер моделей или облачный сервис; советы по стилю | **Tools → Set up grammar checking** в редакторе или `be --install-proofing` в командной строке (в `~/.local/share/BlueEdit`, без root: сборка llama.cpp для CUDA, Vulkan или процессора и модель, Java и LanguageTool, Harper); или `tools/proofing-setup/install.sh --all`. Серверу моделей и облачному сервису ничего ставить не нужно |
+| Языковые серверы (Python, C#, JavaScript и TypeScript), ruff | **Tools → Code tools** в редакторе или `be --install-tools` (в `~/.local/share/blueedit/tools`, без root и apt: годится и для NAS или сервера без пакетов); или `tools/lsp-setup/install.sh --all` (apt, sudo) |
 | Буфер обмена | `wl-copy`/`wl-paste` (Wayland), `xclip` или `xsel` (X11), `pbcopy` (macOS) — первый, что работает; если нет ни одного (консоль, SSH), копия уходит в терминал через OSC 52, и большинство терминалов кладут её в свой буфер |
 | Настройки, личный словарь | `~/.config/blueedit/settings.json`, `dictionary.txt` (`$XDG_CONFIG_HOME/blueedit`) |
 | Шрифт терминала | задаётся в настройках самого терминала; **Tools → Terminal font** так и говорит (профиль Windows Terminal — только для Windows) |
-| Орфография Microsoft Word, корректор Edge | только Windows |
+| Орфография Microsoft Word, корректоры Edge и Chrome, модель Chrome | только Windows |
 
 ## WSL
 
@@ -52,7 +52,7 @@ Hunspell, LanguageTool, модель на видеокарте NVIDIA компь
 только в Windows — профиль Windows Terminal, его шрифт, буфер обмена Windows, — и одному нужен Word). Каждый PR
 проверяется и на Linux-раннере CI (`docs/ci.md`).
 
-Проверено на рабочем столе Linux (6 октября 2026, #89): Ubuntu 26.04.1 Desktop (GNOME на Wayland) в VirtualBox, сборка
+Проверено на рабочем столе Linux (6 октября 2026): Ubuntu 26.04.1 Desktop (GNOME на Wayland) в VirtualBox, сборка
 из `tasks publish-linux`:
 - в терминале GNOME (Ptyxis): рисование, меню, кириллица, подчёркивания Hunspell (`hunspell-ru`, `hunspell-en-gb`),
   режим чтения с выносной формулой в несколько строк; `--version`;
@@ -72,7 +72,8 @@ Ubuntu 24.04 и Fedora 41, ничего не установлено. Что ре
 - **ICU (libicu)**, языковые данные: без неё редактор работает в инвариантном режиме .NET. Набор, кириллица и регистр
   букв работают; языки называются тегами (`ru-RU` вместо «Русский»). В трёх образах её нет, нет и на минимальном
   сервере Ubuntu 24.04 (его облачный образ, проверено в виртуальной машине); в облачном образе Debian 12 она есть, как
-  и на рабочих столах и наших серверах (`libicu74` в Ubuntu, своя копия на NAS в `/usr/builtin/lib`).
+  и на рабочих столах и полных серверных установках (`libicu74` в Ubuntu; у некоторых NAS своя копия, например в
+  `/usr/builtin/lib`).
 - **OpenSSL (libssl) и корневые сертификаты** — для загрузки словарей, проверяющих, моделей и инструментов кода по
   https: без них окно говорит, что поставить (`sudo apt install openssl ca-certificates`), а редактор работает дальше.
   В образе Debian 12 нет libssl, в Ubuntu 24.04 — сертификатов, в Fedora 41 есть и то и другое.
@@ -82,4 +83,3 @@ Ubuntu 24.04 и Fedora 41, ничего не установлено. Что ре
 - если редактор убит, LanguageTool, llama-server и языковые серверы остаются работать (на Windows их завершает объект
   задания; при обычном выходе они завершаются и на Linux).
 
-План и его состояние — задача #29.

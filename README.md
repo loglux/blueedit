@@ -16,10 +16,28 @@ A fast console text editor for writing, mathematics and code, on Windows and Lin
   indent after `:` and `{`, line comments (Ctrl+/), moving lines (Alt+↑/↓), the bracket pair marked.
 - **Editing**: tabs, column blocks, soft wrap; a file changed by another program is reloaded.
 
-A key reaches the screen in about 5 ms. One self-contained file, no installer: `be.exe` on Windows, `be` on
-Linux (the command is `be`, as `mc` is Midnight Commander) ([docs/linux.md](docs/linux.md)). `be.exe` is not
-signed, so the first start of a downloaded copy may meet a warning: "Windows protected your PC" — **More info > Run
-anyway**; "The publisher could not be verified" — **Run**.
+A key reaches the screen in about 5 ms. The command is `be`, as `mc` is Midnight Commander.
+
+## Install
+
+From the [releases](https://github.com/loglux/blueedit/releases), on Windows 10 or 11, either:
+
+- **the installer**, `blueedit-<version>-win-x64-setup.exe`: for your user, no administrator rights; it adds `be` to
+  PATH, the Start menu and "Open with BlueEdit", and offers grammar checking — rules, a language model only where the
+  video card has the memory for it, or a cloud service (OpenAI, Claude, Gemini, DeepSeek) or a model server of your
+  own — and the language servers for code. Nothing is chosen at first: the editor alone is about 25 MB, and all of it
+  can be added later from the editor's menus. Programs and Features removes it
+  ([docs/tech/installer.md](docs/tech/installer.md));
+- **the zip**: a self-contained `be.exe` to put anywhere, nothing installed, with the setup scripts beside it.
+
+On Linux (x64), `be` from the tar.gz ([docs/linux.md](docs/linux.md)). The Windows files are not signed, so the first
+start of a downloaded copy may meet a warning: "Windows protected your PC" — **More info > Run anyway**; "The
+publisher could not be verified" — **Run**.
+
+**First steps.** `be notes.md` opens a file (or `be` alone, then **F3**). **F9** opens the menus (or Alt+F, Alt+E…),
+**F1** lists every key, **F2** saves, **F10** quits. The first start shows a short welcome with the keys to begin with
+and the interface language (English or Russian). Spelling works at once with the dictionaries Windows has; grammar checking is one menu
+away: **Tools → Set up grammar checking** ([docs/proofing.md](docs/proofing.md)).
 
 ## Screenshots
 
@@ -43,17 +61,15 @@ editor in a pseudo-console, plays the scenarios and renders the screen. Rerun it
 pictures are the one exception: they are Sixel graphics, which the emulated screen does not draw, so that one is a
 capture of a real Windows Terminal window.
 
-## Build and run
+## Command line
 
-    dotnet build
-    dotnet run -- file.md
-    dotnet publish -c Release -r win-x64 --self-contained -p:PublishSingleFile=true -o publish
-    .\tasks.ps1 publish-linux       # the Linux build and its tar.gz in publish-linux\ (docs/linux.md)
+    be [-r] [+LINE] file[:LINE[:COL]]...
 
-Command line: `be [-r] [+LINE] file[:LINE[:COL]]...`  (`-r` read-only, `+N` open at line N,
-`file:12:5` as compilers, grep and other tools print locations; `--version` and `--help` print and exit).
-Press **F1** inside the editor for the full key list. The first start shows a short welcome: the keys to begin
-with, the spelling that works already, the way to grammar checking and the interface language (once; Esc begins).
+`-r` (`--read-only`) opens the files read-only, `+N` (`--line N`) at line N, `file:12:5` at a line and column, as
+compilers, grep and other tools print locations. `--version` and `--help` print and exit; `be --help` also lists
+what works without the screen, for scripts and servers over SSH: `--install-proofing` and `--install-tools` (the
+checkers and language servers, as the menus install them), `--grammar` and `--model-server` (which checkers are on,
+and a model server with its key in `BLUEEDIT_LLM_KEY`).
 
 **Syntax highlighting** (by extension or file name, the same in Markdown code blocks): C#, C/C++, Java, JavaScript /
 TypeScript, Go, Rust, Python, PowerShell, Batch, shell (`.sh`, `.bash`, `.zsh`, `.bashrc`), SQL, Pascal, JSON, YAML,
@@ -153,8 +169,12 @@ Details: [docs/lsp.md](docs/lsp.md) (in Russian: [docs/lsp.ru.md](docs/lsp.ru.md
 
 ## Settings
 
-**Tools → Settings…** shows the everyday settings as a list (colours, Markdown view, formula pictures, spelling, wrapping, margins, Esc, keys in any layout on Windows): Space or ← → changes one, Enter saves and applies them at once. Its last row, **Edit settings.json…**, opens the file with all the settings and their comments; saving it (F2) applies the changes, Esc goes back to the text. The list writes into the same file, keeping your comments.
-The file lives in `%APPDATA%\blueedit\` and explains every option in comments:
+**Tools → Settings…** shows the everyday settings as a list (interface language, colours, Markdown view, formula
+pictures, spelling, wrapping, margins, tabs and indenting, brackets, completion, word count, line numbers, language
+servers, Esc, keys in any layout): Space or ← → changes one, Enter saves and applies them at once. Its last row,
+**Edit settings.json…**, opens the file with all the settings and their comments; saving it (F2) applies the
+changes, Esc goes back to the text. The list writes into the same file, keeping your comments.
+The file lives in `%APPDATA%\blueedit\` (on Linux `~/.config/blueedit/`) and explains every option in comments:
 
 | option | default | meaning |
 |---|---|---|
@@ -170,14 +190,15 @@ The file lives in `%APPDATA%\blueedit\` and explains every option in comments:
 | `autoClose` | `"code"` | brackets and quotes in pairs: `(` adds `)`, typing `)` steps over it, Backspace removes an empty pair, an opener over a selection wraps it. `"code"` in code files (not inside strings or comments), `"always"` also in prose (no apostrophes), `"off"` |
 | `spellCheck`, `spellLanguages` | `true`, `"auto"` | Windows spell checking; `"auto"` = the system's languages (added in Windows; on Linux the locale's, `LANG`), or a list like `["ru-RU", "en-GB"]` (also **Tools → Spelling languages…**) |
 | `spellProvider` | `"windows"` | `"windows"` (instant), `"office"`: Microsoft Word's dictionaries, asked in the background in a hidden Word, or `"hunspell"`: LibreOffice dictionaries (always on Linux and macOS; also **Tools → Spelling provider…**) |
-| `grammar` | `"off"` | grammar checkers to use together: `"languagetool"`, `"llm"`, `"edge"`, `"harper"` or a list like `["languagetool", "llm"]` (see below) |
+| `grammar` | `"off"` | grammar checkers to use together: `"languagetool"`, `"llm"`, `"harper"`, `"edge"`, `"chrome"`, `"chromemodel"` or a list like `["languagetool", "llm"]` (see below) |
+| `grammarTogether` | `false` | **Tools → Grammar checking**: one checker at a time (choosing one switches the others off), or several |
 | `languageToolDir`, `llmDir`, `llmModel` | `""` | where they are installed; `llmModel` picks the `.gguf` model (empty: the best one present; `"server"`: the model server below) |
-| `llmServer`, `llmServerModel`, `llmApiKey` | `""` | a model server at an address (Ollama, LM Studio, llama-server elsewhere, a cloud API): its address, the model's name there, a key, `"env:NAME"` or `"file:PATH"`; chosen in **Tools → Grammar model**, or used when llama.cpp here is missing or does not start (docs/proofing.md) |
-| `edgePath` | `""` | the `msedge.exe` whose built-in proofreader is used (empty: Edge Canary) |
-| `languageToolDisabledRules`, `languageToolDisabledCategories`, `languageToolEnabledRules`, `languageToolLevel` | spacing rules and `TYPOS` off, `"default"` | LanguageTool's rules: switched off, switched on, `"default"` or `"picky"` (docs/proofing.md) |
+| `llmServer`, `llmServerModel`, `llmApiKey` | `""` | a model server at an address (Ollama, LM Studio, llama-server elsewhere, or a cloud service: OpenAI, Anthropic, Google, DeepSeek): its address, the model's name there (empty: the first it lists), a key, `"env:NAME"` or `"file:PATH"` (a key typed in the editor is kept in `llm-key` beside the settings, encrypted on Windows); chosen in **Tools → Grammar model**, or used when llama.cpp here is missing or does not start ([docs/proofing.md](docs/proofing.md)) |
+| `edgePath` | `""` | the `msedge.exe` whose built-in proofreader is used (empty: Edge Canary, else Edge) |
+| `languageToolDisabledRules`, `languageToolDisabledCategories`, `languageToolEnabledRules`, `languageToolLevel`, `languageToolMemory` | Oxford spelling (`BRE_STYLE_OXFORD_SPELLING`) off, `"default"` | LanguageTool's rules: switched off, switched on, `"default"` or `"picky"`; the memory its Java may take ([docs/proofing.md](docs/proofing.md)) |
 | `ignoredRules` | `[]` | findings never shown, from any checker (F7 → Never show this; **Tools → Ignored rules…**) |
 | `escapeQuits` | `"auto"` | Esc closes the file (and the editor with the last one) once there is nothing to cancel, as in Far's editor: `"auto"` only when Far Manager opened it (F4), `true` always, `false` never |
-| `keyEvents` | `true` | Shortcuts with punctuation and digits (Ctrl+/, Ctrl+1) work in any keyboard layout: on Windows keys are read as key events, on Linux and macOS through the kitty keyboard protocol where the terminal has it (Windows Terminal 1.25 over SSH does); **Tools → Settings… → Keys in any layout**; `false` reads keys as text, as before ([#184](docs/tech/tui.md#key-events-on-windows)) |
+| `keyEvents` | `true` | Shortcuts with punctuation and digits (Ctrl+/, Ctrl+1) work in any keyboard layout: on Windows keys are read as key events, on Linux and macOS through the kitty keyboard protocol where the terminal has it (Windows Terminal 1.25 over SSH does); **Tools → Settings… → Keys in any layout**; `false` reads keys as text ([docs/tech/tui.md](docs/tech/tui.md)) |
 | `wrapProse`, `wrapCode` | `true`, `false` | soft wrap for Markdown/LaTeX/text and for code |
 | `lineNumbers` | `false` | line numbers at the left, for every file (Alt+G turns them on or off and saves this) |
 | `markdownView` | `"live"` | how Markdown opens: `"source"`, `"live"` or `"reading"` |
@@ -185,6 +206,9 @@ The file lives in `%APPDATA%\blueedit\` and explains every option in comments:
 | `latexCheck` | `true` | formulas that would not typeset underlined as errors in Markdown and LaTeX files; Shift+F7 goes to them, F7 explains |
 | `latexStyle` | `true` | with `latexCheck`: rules of writing in formulas as warnings (`cos` without `\`, `2*3`, `<=`, `5 cm` in italics); F7 puts in the fix or never shows that rule again |
 | `formulaImages` | `true` | display formulas as typeset pictures where the terminal shows Sixel graphics and the mathimages module is installed (**View → Formula pictures**; docs/formula-pictures.md) |
+| `styleFocus` | all but informal words | what **Ctrl+F7** looks for: officialese, wordiness, repetition, informal words in academic writing (**Tools → Style options…**) |
+| `lsp`, `languageServers`, `formatters` | `true`, `{}`, `{}` | language servers for code, your own servers by language, formatters by language ([docs/lsp.md](docs/lsp.md)) |
+| `fastScroll` | `false` | let the terminal move scrolled lines itself (much less output); experimental, Windows Terminal has shown it wrongly |
 | `colors` | `{}` | overrides, e.g. `{ "keyword": "#ffcc00", "background": "#101820" }` |
 | `fontSetup`, `font`, `fontSize` | `"auto"`, `"Cascadia Mono"`, `12` | terminal font, see below |
 
@@ -192,8 +216,11 @@ A broken value is reported in the status line and the default is used instead.
 
 ### Spelling
 
-**Ctrl+F7** asks the local language model for a better wording of the paragraph (less officialese, wordiness and
-repetition; optionally informal words in academic writing); you tick which changes to take — **Tools → Style options…** sets what it looks for. **Shift+F7** goes to the next spelling or grammar problem and selects it, so **F7** fixes it. Each finding names
+Spelling is underlined as you type, with the dictionaries already on the computer: Windows' own (instant), Microsoft
+Word's, or LibreOffice's (Hunspell; always on Linux). **F7** on a word offers fixes and *Add to dictionary*.
+**Ctrl+F7** asks the language model (here, or the model server or cloud service chosen) for a better wording of the
+paragraph (less officialese, wordiness and repetition; optionally informal words in academic writing); you tick which
+changes to take — **Tools → Style options…** sets what it looks for. **Shift+F7** goes to the next spelling or grammar problem and selects it, so **F7** fixes it. Each finding names
 its source: the F7 title and options say "Windows spelling", "LanguageTool" or the model's name, and the status line
 after Shift+F7 reads "Spelling (Windows): …" or "Grammar (LanguageTool): …". Web addresses, e-mail and paths are not
 spell-checked. A word typed partly in the other keyboard layout ("пpивет" with a Latin p) is always marked, whatever
@@ -204,16 +231,17 @@ so they stay whichever provider is used.
 
 A step-by-step guide (setup, keys, choosing checkers, a test text): [docs/proofing.md](docs/proofing.md),
 in Russian [docs/proofing.ru.md](docs/proofing.ru.md). Installing the checkers — **Tools → Set up grammar
-checking…** (a model here with its size and licence, a model server at an address, LanguageTool or Harper; the editor
-installs it and turns it on; **Tools → Get spelling dictionaries…** for Hunspell's on Linux and macOS),
+checking…** (a model here with its size and licence; Ollama or LM Studio, their models listed; another model server or
+a cloud service; LanguageTool or Harper; the editor installs it and turns it on; **Remove…** takes back what it
+installed; **Tools → Get spelling dictionaries…** for Hunspell's on Linux and macOS),
 `be --install-proofing` in a shell, one script
 (`tools\proofing-setup\install.ps1 -All`) or by hand: [docs/proofing-setup.md](docs/proofing-setup.md).
 How it is built and what was found researching Edge, Chrome and Word: [docs/tech](docs/tech).
 
 ### Grammar
 
-Grammar checking is optional and uses external programs you install yourself, running on your computer — nothing
-leaves it. **Tools → Grammar checking…** turns one of these on for Markdown, LaTeX and plain text (its last line, **Several
+Grammar checking is optional. The checkers run on your computer, and nothing leaves it, unless you choose a model
+server elsewhere or a cloud service (below): then the paragraphs being checked are sent there. **Tools → Grammar checking…** turns one of these on for Markdown, LaTeX and plain text (its last line, **Several
 at once**, allows more, their findings shown together); findings are underlined in their own colour, and **F7** on
 one shows the explanation and the fixes. Each paragraph is checked in its own language among your spelling languages:
 by its letters, and languages with the same letters (English and German) by fastText's language identification model,
@@ -238,6 +266,12 @@ computer without a GPU (docs/proofing.md, "Which to choose"):
       models\         a .gguf model; tried: YandexGPT 5 Lite 8B (best at Russian), Gemma 3 12B, Qwen3, Gemma 3 4B, Phi-4-mini
 
   `llmModel` (or **Tools → Grammar model…**) picks one; empty takes the best one present. Answers in 0.2–1 s per paragraph on a mid-range GPU.
+- **A model server or a cloud service** — the same proofreading by a model elsewhere: Ollama or LM Studio, llama-server
+  on a computer with a bigger video card, or a cloud service with a key — OpenAI, Anthropic (Claude), Google (Gemini),
+  DeepSeek, or another with OpenAI's API. Each cloud service is asked in its own way; each was tried with its
+  recommended model (gpt-5.4-mini, claude-haiku-5-5, gemini-3.5-flash-lite, deepseek-flash) and answers in about 1–2 s a
+  paragraph. The key is kept in a file of its own, encrypted on Windows. Set up in **Tools → Set up grammar checking →
+  Another model server** or in the installer ([docs/proofing.md](docs/proofing.md)).
 - **Edge** (experimental) — Microsoft Edge's built-in on-device proofreader, English only (American spelling). Not
   officially on yet: the editor starts a hidden Edge Canary with a profile of its own and the hidden switches that
   turn it on, and drives it over the DevTools protocol. Needs [Edge Canary](https://www.microsoft.com/edge/download/insider)
@@ -250,7 +284,7 @@ computer without a GPU (docs/proofing.md, "Which to choose"):
   in the dialect of the text's language: British for `en-GB`. Answers in tens of milliseconds. Needs `harper-ls` from
   its releases in `%LOCALAPPDATA%\BlueEdit\harper` or on PATH.
 
-They start on first use (a few seconds) and stop with the editor — also when the editor is killed. Paragraphs are
+They start on first use (a few seconds) and stop with the editor — on Windows also when the editor is killed. Paragraphs are
 sent once they have not been edited for a moment; code, code blocks and tables are not checked; markup (in LaTeX its commands) is hidden
 from them. Spelling stays with the spelling provider.
 
@@ -265,8 +299,12 @@ other profiles are never edited. Restart Windows Terminal and pick "BlueEdit" fr
 written and the same menu item explains how to set the font by hand. On Linux and macOS there is no profile: the
 menu item says to set the font in the terminal's own settings.
 
-## Checks and routine tasks
+## Building and working on it
 
+    dotnet build
+    dotnet run -- file.md
+    dotnet publish -c Release -r win-x64 --self-contained -p:PublishSingleFile=true -o publish
+    .\tasks.ps1 publish-linux       # the Linux build and its tar.gz in publish-linux\ (docs/linux.md)
     .\tasks.ps1 help      # every routine operation (or: make help)
     .\tasks.ps1 check     # build with analyzers (warnings are errors) + unit tests, ~30 s
     .\tasks.ps1 test-all  # also publishes and runs all UI regression tests (~5 min)
@@ -288,4 +326,5 @@ known pitfalls: [CONTRIBUTING.md](CONTRIBUTING.md). Licence: MIT ([LICENSE](LICE
 
 ## Status
 
-Work in progress.
+Preview releases (0.x): used daily for writing, mathematics and code, and still changing. Problems and wishes:
+[issues](https://github.com/loglux/blueedit/issues).

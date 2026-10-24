@@ -13,7 +13,7 @@ run where those are installed: `.\tasks.ps1 test-all` on Windows (it starts them
 The UI tests on Windows are not run there: run them locally (`.\tasks.ps1 test-all`).
 
 A release: bump `<Version>` in `BlueEdit.csproj` (a pull request), then tag it (`git tag v0.4.0; git push origin
-v0.4.0`). `.github/workflows/release.yml` builds, on a GitHub Windows machine, the Windows zip, the Linux tar.gz
+v0.4.0`). `.github/workflows/release.yml` builds, on a GitHub Windows machine, the Windows installer and zip, the Linux tar.gz
 (`tools/ci/pack-linux.py` keeps the execute bits), the formula pictures module for each, and makes a **draft**
 release with their SHA-256; the notes are written and the draft published by hand.
 
@@ -24,7 +24,7 @@ The checks below run on a computer of your own, not in GitHub Actions.
 `.\tasks.ps1 sandbox` (`tools\sandbox\start.ps1`) tries the setup scripts the way a new user meets them: it starts
 Windows Sandbox (a throw-away Windows with nothing installed) with `tools\` mapped read-only, runs
 `tools\sandbox\inside.ps1` there — `proofing-setup\install.ps1 -LanguageTool`, `check.ps1 -Run`,
-`lsp-setup\install.ps1 -All -Yes` — prints its transcript and closes the sandbox. Nothing on this computer changes; the
+`lsp-setup\install.ps1 -All -Yes` — prints its transcript and closes the sandbox. Nothing on the host computer changes; the
 output stays in `%TEMP%\blueedit-sandbox\out`. It is a manual check before a release or after changing the scripts,
 not part of CI. Needs the Windows feature: `Enable-WindowsOptionalFeature -Online -FeatureName
 Containers-DisposableClientVM`, then a restart.
@@ -88,13 +88,13 @@ cards Vulkan sees (be --vulkan-devices): none", and the list said "no video card
 
 **The virtual GPU is off** (`<vGPU>Disable</vGPU>`). With it on (the default, also when the sandbox is started from
 the Start menu) the sandbox showed a black screen and then "connection to the Windows Sandbox environment was lost"
-on this computer (Insider build 26300, NVIDIA RTX 4070); the Hyper-V-Worker log had event 33101, "Virtual machine
-requested unsupported Virtual PCI protocol version 0x10006 … two revision levels are incompatible". With the vGPU off
-it starts and stays up. Others report the same event on 26300
+on a test machine (Windows 11 Insider build 26300, NVIDIA RTX 4070); the Hyper-V-Worker log had event 33101,
+"Virtual machine requested unsupported Virtual PCI protocol version 0x10006 … two revision levels are incompatible".
+With the vGPU off it starts and stays up. Others report the same event on 26300
 ([microsoft/Windows-Sandbox#131](https://github.com/microsoft/Windows-Sandbox/issues/131)) and lost connections cured
 by turning the vGPU off ([#71](https://github.com/microsoft/Windows-Sandbox/issues/71)). For the sandbox started by
 hand: the group policy *Allow vGPU sharing for Windows Sandbox* = Disabled, or
-`reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Sandbox" /v AllowVGPU /t REG_DWORD /d 0 /f` (not done here).
+`reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Sandbox" /v AllowVGPU /t REG_DWORD /d 0 /f` (not tried).
 
 ## A bare Linux: the new user's way in clean containers
 

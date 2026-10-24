@@ -27,12 +27,12 @@ Put it on your PATH if you like (`ln -s "$PWD/be" ~/.local/bin/be`). From the so
 |---|---|
 | The editor, menus, dialogs, mouse, Markdown live preview | as on Windows: the terminal layer has a Unix back end (termios raw mode) |
 | Spelling | **Hunspell**: **Tools → Get spelling dictionaries…** downloads LibreOffice's into `~/.local/share/BlueEdit/hunspell` (no root; `be --install-proofing ru-RU,en-GB` in a shell), or the distribution's: `sudo apt install hunspell-ru hunspell-en-gb hunspell-en-us` (they go to `/usr/share/hunspell`; also read: `~/.local/share/hunspell`, `/usr/share/myspell`, `/usr/local/share/hunspell`, `/opt/homebrew/share/hunspell`, `~/Library/Spelling`) |
-| Grammar: LanguageTool, a local language model; style suggestions | `tools/proofing-setup/install.sh --all` (Java, LanguageTool, llama.cpp — CUDA, Vulkan or CPU build — and a model, into `~/.local/share/BlueEdit`) |
-| Language servers (Python, C#), ruff | **Tools → Code tools** in the editor, or `be --install-tools` (into `~/.local/share/blueedit/tools`, no root, no apt: also on a NAS); or `tools/lsp-setup/install.sh --all` (apt, sudo) |
+| Grammar: LanguageTool, Harper, a local language model, a model server or cloud service; style suggestions | **Tools → Set up grammar checking** in the editor, or `be --install-proofing` in a shell (into `~/.local/share/BlueEdit`, no root: llama.cpp's CUDA, Vulkan or CPU build and a model, Java and LanguageTool, Harper); or `tools/proofing-setup/install.sh --all`. A model server or cloud service needs nothing installed |
+| Language servers (Python, C#, JavaScript and TypeScript), ruff | **Tools → Code tools** in the editor, or `be --install-tools` (into `~/.local/share/blueedit/tools`, no root, no apt: also on a NAS or a server without packages); or `tools/lsp-setup/install.sh --all` (apt, sudo) |
 | Clipboard | `wl-copy`/`wl-paste` (Wayland), `xclip` or `xsel` (X11), `pbcopy` (macOS), the first that works; with none (a console, SSH) a copy goes to the terminal as OSC 52, which most terminals put on their own clipboard |
 | Settings, your dictionary | `~/.config/blueedit/settings.json`, `dictionary.txt` (`$XDG_CONFIG_HOME/blueedit`) |
 | Terminal font | set in the terminal's own settings; **Tools → Terminal font** says so (the Windows Terminal profile is Windows-only) |
-| Microsoft Word spelling, Edge's proofreader | Windows only |
+| Microsoft Word spelling, Edge's and Chrome's proofreaders, the Chrome model | Windows only |
 
 ## WSL
 
@@ -52,7 +52,7 @@ test suite against the Linux build (`tools/ci/check-linux.sh`, 5 October 2026: 1
 Windows-only things — the Windows Terminal profile, its font, the Windows clipboard — and one needs Word). Every pull
 request is also checked on a Linux CI runner (`docs/ci.md`).
 
-Checked on a Linux desktop (6 October 2026, #89): Ubuntu 26.04.1 Desktop (GNOME on Wayland) in VirtualBox, the build
+Checked on a Linux desktop (6 October 2026): Ubuntu 26.04.1 Desktop (GNOME on Wayland) in VirtualBox, the build
 from `tasks publish-linux`:
 - in GNOME's terminal (Ptyxis): drawing, menus, Cyrillic, Hunspell underlines (`hunspell-ru`, `hunspell-en-gb`), the
   reading view with a display formula over several rows; `--version`;
@@ -71,7 +71,8 @@ Fedora 41 containers, nothing installed. What the editor needs of the system, an
 - **ICU (libicu)**, the language data: without it the editor runs in .NET's invariant mode. Typing, Cyrillic and
   letter case work; languages are named by their tags (`ru-RU` where "Russian" would be). The three images have
   none, nor has a minimal Ubuntu 24.04 server (its cloud image, checked in a virtual machine); Debian 12's cloud image
-  has it, as do desktops and the servers we use (Ubuntu's `libicu74`, the NAS's own copy in `/usr/builtin/lib`).
+  has it, as do desktops and full server installs (Ubuntu's `libicu74`; some NAS systems have their own copy, e.g. in
+  `/usr/builtin/lib`).
 - **OpenSSL (libssl) and root certificates**, for downloading dictionaries, checkers, models and code tools over
   https: without them a window says what to install (`sudo apt install openssl ca-certificates`), and the editor
   runs on. Debian 12's image has no libssl, Ubuntu 24.04's no certificates, Fedora 41's both.
@@ -81,4 +82,3 @@ Not yet:
 - a killed editor leaves LanguageTool, llama-server and language servers running (on Windows a job object ends them;
   a normal exit ends them on Linux too).
 
-The plan and its state: issue #29.

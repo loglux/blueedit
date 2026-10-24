@@ -64,7 +64,7 @@ sealed class Settings
     public string LlmServer { get; set; } = "";
     /// <summary>The model to ask that server for (its name there, e.g. "qwen3.5:9b").</summary>
     public string LlmServerModel { get; set; } = "";
-    /// <summary>Its API key, or "env:NAME" to read it from an environment variable; empty: none.</summary>
+    /// <summary>Its API key, "env:NAME" to read it from an environment variable, or "file:PATH"; empty: none.</summary>
     public string LlmApiKey { get; set; } = "";
     /// <summary>Language servers on (errors and warnings in code, docs/lsp.md).</summary>
     public bool Lsp { get; set; } = true;
@@ -406,7 +406,7 @@ sealed class Settings
         sb.Append("    // \"auto\" only when Far Manager opened it, true always, false never\n");
         sb.Append(CultureInfo.InvariantCulture, $"    \"escapeQuits\": {(s.EscapeQuits switch { "on" => "true", "off" => "false", _ => "\"auto\"" })},\n\n");
         sb.Append("    // grammar and style of Markdown and text (Tools > Grammar checking), external programs you install yourself,\n");
-        sb.Append("    // running locally (nothing leaves the computer): \"off\", or a list of\n");
+        sb.Append("    // on this computer, or a model server or cloud service you choose (llmServer below): \"off\", or a list of\n");
         sb.Append("    //   \"languagetool\"  a LanguageTool server: jre\\ and languagetool\\ in languageToolDir (default %LOCALAPPDATA%\\BlueEdit)\n");
         sb.Append("    //   \"llm\"           a language model in llama.cpp: bin\\llama-server.exe and models\\*.gguf in llmDir\n");
         sb.Append("    //                   (default %LOCALAPPDATA%\\BlueEdit\\llm); llmModel picks the .gguf (empty: the best one there)\n");
@@ -424,8 +424,10 @@ sealed class Settings
         sb.Append(CultureInfo.InvariantCulture, $"    \"llmDir\": \"{Json(s.LlmDir)}\",\n");
         sb.Append(CultureInfo.InvariantCulture, $"    \"llmModel\": \"{Json(s.LlmModel)}\",\n");
         sb.Append("    // a model server at an address instead of (or, when llama.cpp is missing or fails, in place of) llama.cpp here:\n");
-        sb.Append("    // Ollama, LM Studio, llama-server on another computer, a cloud API (then paragraphs leave the computer).\n");
-        sb.Append("    // llmModel \"server\" chooses it (Tools > Grammar model lists its models); llmApiKey: the key or \"env:NAME\"\n");
+        sb.Append("    // Ollama, LM Studio, llama-server on another computer, or a cloud service: OpenAI, Anthropic (Claude), Google\n");
+        sb.Append("    // (Gemini), DeepSeek, another with OpenAI's API (then paragraphs leave the computer). llmModel \"server\" chooses\n");
+        sb.Append("    // it (Tools > Grammar model lists its models; llmServerModel empty: the first it lists); llmApiKey: the key,\n");
+        sb.Append("    // \"env:NAME\" or \"file:PATH\" (a key typed in Tools > Set up grammar checking goes to the file llm-key here)\n");
         sb.Append(CultureInfo.InvariantCulture, $"    \"llmServer\": \"{Json(s.LlmServer)}\",\n");
         sb.Append(CultureInfo.InvariantCulture, $"    \"llmServerModel\": \"{Json(s.LlmServerModel)}\",\n");
         sb.Append(CultureInfo.InvariantCulture, $"    \"llmApiKey\": \"{Json(s.LlmApiKey)}\",\n");

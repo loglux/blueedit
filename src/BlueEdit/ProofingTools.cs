@@ -17,20 +17,21 @@ static class ProofingTools
     public sealed record Homes(string LanguageTool, string Llm, string Harper, string Hunspell);
 
     /// <summary>A model tested with BlueEdit (tools/proofbench): its key, Hugging Face repository and file, size of
-    /// the file (measured), licence and what it is good at.</summary>
-    public sealed record Model(string Key, string Repo, string File, string Size, string Licence, string Note);
+    /// the file (measured), licence, what it is good at, and the video memory it wants in GB (the file and llama.cpp's
+    /// working space for a paragraph, as the notes say).</summary>
+    public sealed record Model(string Key, string Repo, string File, string Size, string Licence, string Note, int MemoryGb);
 
     public static readonly Model[] Models =
     [
-        new("qwen3-8b", "Qwen/Qwen3-8B-GGUF", "Qwen3-8B-Q4_K_M.gguf", "4.7 GB", "Apache 2.0", "many languages, ~6 GB of video memory"),
+        new("qwen3-8b", "Qwen/Qwen3-8B-GGUF", "Qwen3-8B-Q4_K_M.gguf", "4.7 GB", "Apache 2.0", "many languages, ~6 GB of video memory", 6),
         new("yandexgpt", "yandex/YandexGPT-5-Lite-8B-instruct-GGUF", "YandexGPT-5-Lite-8B-instruct-Q4_K_M.gguf", "4.6 GB",
-            "Yandex's own licence", "the best at Russian here, ~6 GB of video memory"),
+            "Yandex's own licence", "the best at Russian here, ~6 GB of video memory", 6),
         new("gemma3-12b", "bartowski/google_gemma-3-12b-it-GGUF", "google_gemma-3-12b-it-Q4_K_M.gguf", "6.8 GB", "Gemma terms (Google)",
-            "many languages, ~8 GB"),
+            "many languages, ~8 GB", 8),
         new("gemma3-4b", "bartowski/google_gemma-3-4b-it-GGUF", "google_gemma-3-4b-it-Q4_K_M.gguf", "2.3 GB", "Gemma terms (Google)",
-            "for small video cards, ~3 GB"),
+            "for small video cards, ~3 GB", 3),
         new("phi4-mini", "bartowski/microsoft_Phi-4-mini-instruct-GGUF", "microsoft_Phi-4-mini-instruct-Q4_K_M.gguf", "2.3 GB", "MIT",
-            "the fastest and weakest, ~3 GB"),
+            "the fastest and weakest, ~3 GB", 3),
     ];
 
     /// <summary>A Hunspell spelling dictionary from LibreOffice's repository: the language, its .dic/.aff there
@@ -123,6 +124,52 @@ static class ProofingTools
     /// (<see cref="VideoCards"/>); null when it could not be asked.</summary>
     static bool? VulkanGpu() =>
         Environment.ProcessPath is { } be && RunQuiet(be, "--vulkan-devices", 15000) is { } o ? VideoCards.Parse(o)?.Exists(d => d.IsGpu) : null;
+
+    /// <summary>A video card a model can be put in: its name and memory in MB.</summary>
+    public sealed record VideoCard(string Name, int MemoryMb);
+
+    /// <summary>The video card with the most memory of its own: NVIDIA's from nvidia-smi, else what Vulkan sees as
+    /// a discrete (or virtual) card. Null without one: an integrated card borrows the computer's memory and runs a
+    /// model about as slowly as the processor, so it counts as none. Takes up to a few seconds (as LlamaKind).</summary>
+    public static VideoCard? FindVideoCard()
+    {
+        // "12282 NVIDIA GeForce RTX 4070" or "none": the installer's page as another computer would show it, in
+        // Windows Sandbox, which has no video card (tools/sandbox/installer.ps1)
+        if (Environment.GetEnvironmentVariable("BLUEEDIT_VIDEO_CARD") is { Length: > 0 } given)
+            return given.Split(' ', 2) is [var mb, var name] && int.TryParse(mb, out int m) ? new VideoCard(name, m) : null;
+        if (RunQuiet("nvidia-smi", "--query-gpu=name,memory.total --format=csv,noheader,nounits") is { } o)
+        {
+            var cards = o.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Select(l => l.Split(',', StringSplitOptions.TrimEntries))
+                .Where(f => f.Length == 2 && int.TryParse(f[1], out _))
+                .Select(f => new VideoCard(f[0], int.Parse(f[1], System.Globalization.CultureInfo.InvariantCulture))).ToList();
+            if (cards.Count > 0) return cards.MaxBy(c => c.MemoryMb);
+        }
+        var devices = Environment.ProcessPath is { } be && RunQuiet(be, "--vulkan-devices", 15000) is { } v ? VideoCards.Parse(v) : null;
+        return BestCard(devices);
+    }
+
+    internal static VideoCard? BestCard(List<VideoCards.Device>? devices) =>
+        devices?.Where(d => d.IsDedicated && d.MemoryMb > 0).OrderByDescending(d => d.MemoryMb).Select(d => new VideoCard(d.Name, d.MemoryMb)).FirstOrDefault();
+
+    /// <summary>Whether the model fits in the card's memory. A card sold as 8 GB reports a little under 8192 MB
+    /// (8188 here), so a GB counts as 1000 MB.</summary>
+    public static bool Fits(Model m, VideoCard? card) => card != null && card.MemoryMb >= m.MemoryGb * 1000;
+
+    /// <summary>The best model by the benchmark (the order Auto uses, LlmGrammarChecker.Preferred) that fits the card; null
+    /// when none does.</summary>
+    public static Model? Recommended(VideoCard? card) =>
+        Models.Where(m => Fits(m, card)).OrderBy(m => LlmGrammarChecker.Rank(m.File)).FirstOrDefault();
+
+    /// <summary>What <c>be --video-card</c> prints for the installer's page: "card MB name" (or "card none"), a line a
+    /// model, "fits KEY" or "needs KEY GB", and "recommended KEY" when one fits.</summary>
+    public static string VideoCardReport(VideoCard? card)
+    {
+        var lines = new List<string> { card == null ? "card none" : $"card {card.MemoryMb} {card.Name}" };
+        lines.AddRange(Models.Select(m => Fits(m, card) ? $"fits {m.Key}" : $"needs {m.Key} {m.MemoryGb}"));
+        if (Recommended(card) is { } best) lines.Add($"recommended {best.Key}");
+        return string.Join('\n', lines);
+    }
 
     /// <summary>The release's archives for that build: the program, and for CUDA its runtime libraries.</summary>
     internal static IEnumerable<string> LlamaAssets(bool windows, string kind) => windows

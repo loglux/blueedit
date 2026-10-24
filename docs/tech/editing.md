@@ -18,11 +18,12 @@ scripts and the version are read from.
 The program is BlueEdit; the file and the command are `be` (`be.exe`), since 20 October 2026. A console editor is
 typed many times a day, and the ones people type are short: `vi`, `nano`, `mc` for Midnight Commander. Before, the
 file was `blueedit.exe` with a `be.cmd` beside it that nobody saw. Nothing keeps the old name (no `blueedit` link or
-shim): BlueEdit had one user, whose Far association, `EDITOR`/`VISUAL` and PATH were moved by hand. `be` was free on
-the NAS, the LAN server and Windows here. The folders keep their names (`%APPDATA%\blueedit`,
-`%LOCALAPPDATA%\BlueEdit`): they hold settings and checkers, not the command.
+shim): the editor was not public yet, and the one set-up there was (a Far association, `EDITOR`/`VISUAL`, PATH) was
+moved over by hand. No other `be` command was found on the systems checked (Windows and two Linux machines). The
+folders keep their names (`%APPDATA%\blueedit`, `%LOCALAPPDATA%\BlueEdit`): they hold settings and checkers, not the
+command.
 
-## The interface in other languages (`Ui.cs`, `lang/*.json`, #199)
+## The interface in other languages (`Ui.cs`, `lang/*.json`)
 
 - **A table per language, keyed by the English string.** `lang/ru.json` maps `"_File"` to `"_Файл"`; the code
   writes English and passes it through `T()`. No numbered or named keys: the English text in the code stays the
@@ -129,7 +130,7 @@ not "Русский": the editor is for anyone, and more tables (`lang/*.json`) 
 - **What the old file had is kept.** On Windows `ReplaceFile` keeps its attributes, permissions and creation time;
   on Linux the mode (rwx bits) is copied, since a rename would not. A symbolic link stays a link: the file it points
   to is replaced. Not kept: hard links (the other names still show the old text), and on Linux the owner, when the
-  editor runs as another user who may write the folder. Neither was a case met here.
+  editor runs as another user who may write the folder. Neither case had come up when this was written.
 - **Read-only stays read-only.** A rename needs only the folder to be writable, so it would replace a read-only file
   on Linux. The old file is first opened for writing (and closed, unchanged); that fails where writing in place
   failed: no permission, read-only, or held by a program that shares it with nobody (Word holds its documents so).
@@ -159,7 +160,7 @@ cut, up to the last few seconds.
 - **The next start** looks for copies whose editor is not running: a copy names its process by id *and* start time,
   and the process must be a BlueEdit. Process ids are reused: in the UI tests, run in parallel, a killed editor's
   id went to another BlueEdit within seconds, and with the id alone its copy was passed over as a running editor's
-  (the CI failure on PR #211). A file per start also keeps an editor given an old id from writing over, and then
+  (a CI failure). A file per start also keeps an editor given an old id from writing over, and then
   deleting, the copy of the one that had it. `HasExited` is not asked: another user's process refuses it with
   "Access is denied" (met in the tests with id 0); a start time that cannot be read counts as running. A copy older than its file (the file was saved after it) or saying what the file says is left
   out. The rest are offered in one dialog: *Recover* opens them as unsaved documents (a file's document with the
@@ -169,14 +170,14 @@ cut, up to the last few seconds.
   editor is killed after a copy, the next start recovers the text, the file was never touched). The error path
   around `app.Run` has no test: nothing in the editor can be made to throw there on purpose.
 
-## Paragraph formatting (`EditorView.Paragraph.cs`, #91)
+## Paragraph formatting (`EditorView.Paragraph.cs`)
 
 DOS editors could reformat a paragraph to a margin and align it; BlueEdit had only soft wrap.
 
 - **What a paragraph is.** Neighbouring non-blank lines. In Markdown a heading or a list item starts a paragraph of its
   own, and lines that are not prose (code blocks, tables, display formulas on their own lines, headings) are not
   touched — the same `ProseLine` test grammar checking uses. The grammar checker's own paragraph (`ParagraphAt`) is
-  not reused: it joins paragraphs across a blank line around a formula (#70), which is right for a sentence that goes
+  not reused: it joins paragraphs across a blank line around a formula, which is right for a sentence that goes
   on after a formula and wrong for reformatting.
 - **A selection** reformats each paragraph inside it on its own (joining them all into one would destroy the text),
   last first so the earlier line numbers stay valid; all of it is one undo step.
@@ -198,11 +199,11 @@ DOS editors could reformat a paragraph to a margin and align it; BlueEdit had on
 - The margin is a setting (`rightMargin`, 78 — the classic width that leaves room for a quote mark in replies), not the
   window's width: the file should not depend on how wide the terminal happened to be.
 
-## Display formulas over several rows (`LatexLayout.cs`, #49)
+## Display formulas over several rows (`LatexLayout.cs`)
 
 The reading view showed a display formula as one line of Unicode (`Latex.ToUnicode`): `\frac{x^2+1}{2x-3}` became
-`(x²+1)/(2x-3)`. In the notes it is meant for (the author's maths notes, measured 6 October 2026: 614 notes, 99,478 inline
-and 16,205 display formulas) 40 % of the display formulas have a `\frac`, 2,570 have rows (`aligned`, `gathered`,
+`(x²+1)/(2x-3)`. In the notes it is meant for (a vault of maths study notes, measured 6 October 2026: 614 notes,
+99,478 inline and 16,205 display formulas) 40 % of the display formulas have a `\frac`, 2,570 have rows (`aligned`, `gathered`,
 `array`), and `\left…\right` comes 7,348 times. A fraction read as a slash is the worst of it.
 
 - **How**: a small box layout, as sympy's pretty printer does. Each piece is rows of text with a baseline row; pieces
@@ -213,11 +214,11 @@ and 16,205 display formulas) 40 % of the display formulas have a `\frac`, 2,570 
   the right. Every character is one column.
 - **A fraction and a factor next to it** get a space between them (`6/7 x`, not `─x`), and in the one-line form a
   fraction before a factor is put in brackets: `(6/7)x^(7/2)`, not `6/7x^(7/2)`, which read as 6/(7x); `x³/3`, not
-  `(x³)/3` (10 October 2026, on the user's worked integral).
+  `(x³)/3` (10 October 2026, on a worked integral from the notes).
 - **A root of one row** is written in one row, `√3` or `√(b² - 4ac)`: a bar on a row of its own floated above the
-  sign, whose glyph does not reach the top of its cell (the user, 10 October 2026). A taller one keeps the bar.
+  sign, whose glyph does not reach the top of its cell (noticed in use, 10 October 2026). A taller one keeps the bar.
 - **Integrals** are `⌠⎮⌡` as tall as the integrand and three rows at least, the limits at its top and bottom right
-  (10 October 2026; before, a one-row `∫` beside a three-row fraction looked small, the user said). The integrand runs
+  (10 October 2026; before, a one-row `∫` beside a three-row fraction looked small). The integrand runs
   to the next relation (`dx = …`) or the next integral, so a fraction after `=` does not stretch the sign. `∮` has no
   tall form in Unicode and stays one row.
 - **Scripts stay one row**: superscript characters when Unicode has them all (`x²`, `aᵢⱼ`), otherwise the script
@@ -230,7 +231,7 @@ and 16,205 display formulas) 40 % of the display formulas have a `\frac`, 2,570 
   scripts; a space between a number and a letter goes (`2 a` is `2a`); `\text{…}` is left as written. A sign before a
   stacked fraction is set off from its bar ("- ─", not "-─", read as one longer bar). Why: a book converted from PDF in
   the vault writes `a^{2}+\frac{2 a}{n}<2`, and its formulas came out as `a²+─<2` and `2 a`, hard to read, while
-  hand-written notes with spaces looked right (the user, 11 October 2026). A monospaced terminal has no kerning: the
+  hand-written notes with spaces looked right (noticed in use, 11 October 2026). A monospaced terminal has no kerning: the
   only thing to set is these spaces.
 - **Where the rows go**: the editor lays lines out in visual rows already (soft wrap), so a formula's picture is given
   to the lines of its `$$` or `\[ … \]` block in turn, the block's last line taking the rows that are left
@@ -243,8 +244,8 @@ and 16,205 display formulas) 40 % of the display formulas have a `\frac`, 2,570 
   shown as written and a picture would have changed height under it.
 - **A line of prose with a tall inline formula** (`$…$` with a fraction, a tall integral, a script Unicode has no
   characters for, such as `x^{5/2}`) is laid out over rows too, its words on the formulas' baseline
-  (`Conceal.InlinePicture`, 10 October 2026): "Интеграл: ∫₁³ (3x^(5/2) + x²)dx" in one row was hard to read, the user
-  said. A line whose formulas all fit in one row (`x²`, `α ≤ β`) stays one row and wraps as before. In Live preview
+  (`Conceal.InlinePicture`, 10 October 2026): "Интеграл: ∫₁³ (3x^(5/2) + x²)dx" in one row was hard to
+  read. A line whose formulas all fit in one row (`x²`, `α ≤ β`) stays one row and wraps as before. In Live preview
   the caret's line is shown as written, so it becomes one row when the caret enters it.
 - **When it is not used**, the one-line form is: soft wrap off (one line is one row then); a picture wider than the window
   (a long line with a tall inline formula then wraps in one-row form).
@@ -254,10 +255,10 @@ and 16,205 display formulas) 40 % of the display formulas have a `\frac`, 2,570 
   display formulas draws in the reading view in 5 ms, the layout of every line included; pictures are cached by the
   formula's text.
 
-## Formula pictures (Sixel, #49)
+## Formula pictures (Sixel)
 
-The second step of #49: display formulas typeset, as pictures, where the terminal can show them (user docs:
-[formula-pictures.md](../formula-pictures.md)). The user asked for it as a part to switch on, not for everyone
+The second step after the text layout above: display formulas typeset, as pictures, where the terminal can show them
+(user docs: [formula-pictures.md](../formula-pictures.md)). It was asked for as a part to switch on, not for everyone
 (10 October 2026).
 
 - **An optional module, loaded from a folder** (`src/MathImages`, `FormulaImages.cs`). CSharpMath (a TeX layout
@@ -292,8 +293,8 @@ The second step of #49: display formulas typeset, as pictures, where the termina
   0.6 before the 16 shades between the background and the theme's formula colour.
 - **The terminal**: device attributes and cell size are asked after the start ([tui.md](tui.md)), only when the
   setting is on and the module present; a terminal that does not answer both gets the text layout. In UI tests the
-  module is off (`BLUEEDIT_MATHIMAGES=off`): the Windows runner works on a computer where it may be installed, and
-  the tests' screen emulator (pyte) shows no pictures.
+  module is off (`BLUEEDIT_MATHIMAGES=off`): a computer that runs the tests may have it installed, and the tests'
+  screen emulator (pyte) shows no pictures.
 - **Not done**: inline formulas (`$…$`) as pictures; pictures in the Source view; terminals other than Windows
   Terminal were not tried; the kitty graphics protocol (another way to send pictures) is not used.
 
@@ -309,7 +310,7 @@ The second step of #49: display formulas typeset, as pictures, where the termina
 - **Off by default, one setting for every file** (`lineNumbers`). Alt+G (or View → Line numbers) turns them on or off
   for all open files and saves the setting, so the next start shows them as they were left. 0.2.4–0.2.5 had them on
   for code and off for prose (`lineNumbersCode`, `lineNumbersProse`) and Alt+G for the current file only, not saved:
-  the user found the toggle lost on every file opened and the numbers in the way when reading, code included. The two
+  in use the toggle was lost on every file opened and the numbers were in the way when reading, code included. The two
   old keys are passed over without a warning.
 - **Narrow windows**: with fewer than 20 columns left for the text the numbers are not shown.
 - **Alt+G**: Alt+N (the obvious one) already makes a numbered list; G as in Ctrl+G, go to line.
@@ -327,7 +328,7 @@ The second step of #49: display formulas typeset, as pictures, where the termina
 
 - The caret is not drawn in the reading view, but the arrows used to move it as in editing: the page did not move
   until the hidden caret reached its edge, and the first arrow after the mouse wheel jumped back to where the caret
-  was (the user, 10 October 2026).
+  was (noticed in use, 10 October 2026).
 - Now the keys move the page, as in a viewer: ↑/↓ a row, PgUp/PgDn and Space/Shift+Space a page, Home/End the start
   and the end (the last page full); the wheel 3 rows, as elsewhere. The hidden caret is kept on the first row shown,
   so the status line's Ln, a search and leaving the reading view go on from what is on the screen.
@@ -341,7 +342,7 @@ than `wc -l` does.
 ## The settings window (`ShowSettings`, `OptionsDialog`)
 
 Settings live in `settings.json` with comments, as Windows Terminal and VS Code keep theirs: everything in one place,
-explained where it is, easy to copy to another computer. Tools > Settings opened that file and nothing else; the user
+explained where it is, easy to copy to another computer. Tools > Settings opened that file and nothing else; a user
 asked for a form too, or both (11 October 2026), having not found how to get back from the file to the text either
 (Esc does that now, `EditorView.EscapeCloses`).
 
@@ -354,7 +355,7 @@ their own menu already (Grammar checking, Spelling languages, Terminal font).
 
 ## Indent after a block's opener (`EditorView.BlockOpens`)
 
-Enter kept the indentation of the line above and nothing more, so after `def func():` the caret went to column 0 (the
+Enter kept the indentation of the line above and nothing more, so after `def func():` the caret went to column 0 (a
 user, 11 October 2026: "it cannot do elementary things"). Now, with `autoIndent`, a line that ends (spaces aside) in a
 block's opener gives the new line one step more (`tabSize`): `:` in Python and YAML; `{`, `[`, `(` in C#, C/C++, Java,
 JavaScript, Go, Rust, PowerShell, JSON and shell. With the caret between an opener and its closer (`{|}`, which
@@ -373,7 +374,7 @@ Asked for on 11 October 2026 ("what else does a code editor need"), taken from w
   (the key event's character 0 or "ы") still arrives as 0x13, because the console maps Ctrl+letters by the key, but
   Ctrl+/ there (the same key types ".") arrives as nothing, or as a plain ".". The terminal protocol has no code for
   Ctrl with punctuation; getting the key itself needs Windows Terminal's win32-input-mode, which other terminals
-  lack, so it is left as it is (the user agreed, 11 October 2026); a second key on a letter is the way if needed.
+  lack, so it is left as it is (agreed on 11 October 2026); a second key on a letter is the way if needed.
 - **Alt+Up / Alt+Down** move the line or the selected lines past the neighbouring one, the caret and selection with
   them. Not checked: whether Windows Terminal keeps Alt+arrows for moving between panes when a tab has several.
 - **A closer typed on an empty line** (spaces only before the caret) in a brace language goes to the indent of the
@@ -402,9 +403,9 @@ with pyright 1.1.414), csharp-ls both (0.28.0).
 
 ### Formatting programs (`Formatters.cs`)
 
-pyright has no formatter, and Python is the language used most here, so Ctrl+F12 also runs a formatting program
-(asked for on 11 October 2026: "calling outside programs is fine, as long as it is well thought out and gives the user
-no trouble").
+pyright has no formatter, and Python is the language the editor was most used with, so Ctrl+F12 also runs a
+formatting program (asked for on 11 October 2026: "calling outside programs is fine, as long as it is well thought out
+and gives the user no trouble").
 
 - **Which one.** A formatter named in the setting `formatters` comes first (the user chose it); then the language
   server's, when it has one; then the first installed default — Python: ruff, then black. ruff first: one program
@@ -433,7 +434,7 @@ Ctrl+F2 asks the server for `textDocument/rename` and applies the WorkspaceEdit 
   previous document. Ctrl+F2 keeps F2 in the name and arrives intact (`ESC [1;5Q`).
 - **First ask whether.** When the server offers `prepareRename` (pyright and csharp-ls do), it is asked before the name
   dialog: in a string or on a keyword it answers null and the note says so, instead of a dialog that leads nowhere.
-  But a null is not trusted on a name in code: on the CI runner pyright answered null on `greet` right after
+  But a null is not trusted on a name in code: on a CI machine pyright answered null on `greet` right after
   starting (why was not found; locally it answers), so there the dialog opens anyway and the rename's own answer decides;
   in a string or comment (the editor's own tokens) the note comes at once.
   Its range or placeholder gives the old name; otherwise the word at the caret. The dialog shows the old name, and
@@ -495,10 +496,10 @@ by the diagnostic's code and data, which the parsed record did not keep).
 
 ## Code tools installed by the editor (`CodeTools.cs`)
 
-How the language servers get onto a computer was the hard part (the user: "that is the million-dollar question: how to
-do it elegantly"). The NAS has no apt or opkg and no Node.js or .NET; the LAN server (Ubuntu 24.04) has node but no npm, and apt needs sudo.
-Both are x86_64 with glibc 2.39, which the projects' own builds run on, so the editor installs them itself, into one
-folder of its own, without root:
+How the language servers get onto a computer was the hard part (as a user put it, "that is the million-dollar
+question: how to do it elegantly"). It was worked out on two Linux machines: a NAS with no apt or opkg and no Node.js
+or .NET, and an Ubuntu 24.04 server with node but no npm, where apt needs sudo. Both are x86_64 with glibc 2.39, which
+the projects' own builds run on, so the editor installs them itself, into one folder of its own, without root:
 
 - **Node.js**: the newest LTS from `nodejs.org/dist/index.json`, its `.tar.gz` (no xz needed: .NET reads tar and gzip,
   not xz) or `.zip`, checked against `SHASUMS256.txt`. pyright then with that npm into `tools/npm`
@@ -515,9 +516,8 @@ folder of its own, without root:
   launcher looks for .NET there when it is not in a system place).
 - **Measured**: on Windows (PATH cut to System32) pyright and ruff installed from the menu and from the command line,
   Node.js 24.21.0, pyright 1.1.414, ruff 0.17.0 (Node.js 102 MB, pyright 19 MB, ruff 25 MB), Ctrl+F12 then formatted
-  with that ruff. On the LAN server (Ubuntu 24.04)
-  `be --install-tools` installed all three; started with only these on `PATH`: csharp-ls 0.28.0, pyright
-  1.1.414, ruff 0.17.0. Sizes there: Node.js 208 MB, pyright 38 MB, .NET 624 MB, csharp-ls 99 MB, ruff 23 MB.
+  with that ruff. On the Ubuntu 24.04 server `be --install-tools` installed all three; started with only these on
+  `PATH`: csharp-ls 0.28.0, pyright 1.1.414, ruff 0.17.0. Sizes there: Node.js 208 MB, pyright 38 MB, .NET 624 MB, csharp-ls 99 MB, ruff 23 MB.
 - **On the NAS** (busybox, no package manager): all three installed with `--install-tools`; pyright 1.1.414, ruff
   0.17.0 and csharp-ls 0.28.0 (.NET SDK 10.0.401) run with only these.
 - **TypeScript and JavaScript: TypeScript 7's own server.** typescript-language-server (the usual choice, a wrapper

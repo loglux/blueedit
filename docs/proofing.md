@@ -9,10 +9,11 @@ Checking has two independent parts:
 | | What it finds | Who checks | Where it is turned on |
 |---|---|---|---|
 | **Spelling** | misspelled words | Windows dictionaries, Microsoft Word or Hunspell | F8, **Tools → Spelling provider…** |
-| **Grammar** | agreement, punctuation, wrong words in context | LanguageTool, a language model, Edge's proofreader, Harper, any together | **Tools → Grammar checking…** |
+| **Grammar** | agreement, punctuation, wrong words in context | LanguageTool, a language model (here, on a model server or a cloud service), Harper, Edge's or Chrome's proofreader, any together | **Tools → Grammar checking…** |
 
 They work at the same time: typos are underlined in one colour, grammar in another. Everything is checked on your
-computer; the text is not sent anywhere.
+computer, and the text is sent nowhere, unless you choose a model server elsewhere or a cloud service for grammar:
+then the paragraphs being checked go there.
 
 ## Keys
 
@@ -106,7 +107,7 @@ any of your languages knows.
 ### Your own dictionary
 
 **F7 → Add to dictionary** adds the word to `%APPDATA%\blueedit\dictionary.txt`: one word per line, editable by
-hand, shared by Windows and Office. **F7 → Ignore** skips the word until the editor is closed.
+hand, shared by every spelling provider (Windows, Word, Hunspell). **F7 → Ignore** skips the word until the editor is closed.
 
 ### Not checked
 
@@ -116,7 +117,7 @@ with a Latin p) is always marked; F7 offers it in one alphabet.
 ## Grammar
 
 **Tools → Grammar checking…**: tick the checkers (any together, or none). Ones not installed are marked
-`(not installed)`; choosing one shows what to install and where. Works in Markdown and plain text.
+`(not installed)`; choosing one shows what to install and where. Works in Markdown, LaTeX and plain text.
 
 A paragraph is sent for checking once it has not been edited for about a second and a half, so the underline
 appears shortly after you stop typing, not while you type. The checkers start on first use (a few seconds; the
@@ -126,9 +127,9 @@ status line shows `GRAMMAR LT+LLM starting`) and stop with the editor.
 formula, but nothing inside a formula is underlined or changed — not by grammar, not by style suggestions. A display
 formula is part of the sentence around it, with or without blank lines: "so putting $y=0$ gives ⏎⏎ $$…$$ ⏎⏎ where c is a
 constant." is checked as one sentence — the formula joins text that has not ended (no full stop), and text after it
-that goes on in lower case joins too; a comma or full stop after a formula is checked. Measured on maths
-coursework: the language models found every error put in next to formulas and flagged nothing in correct sentences
-(details: [docs/tech/proofing-internals.md](tech/proofing-internals.md#formulas-markdown-issue-48)). `\(…\)` and `\[…\]` count as formulas
+that goes on in lower case joins too; a comma or full stop after a formula is checked. Measured on real
+academic notes in mathematics: the language models found every error put in next to formulas and flagged nothing in correct sentences
+(details: [docs/tech/proofing-internals.md](tech/proofing-internals.md#formulas-markdown)). `\(…\)` and `\[…\]` count as formulas
 too, `\[` over several lines when it begins its line. Two formulas side by side, `$a$$b$`, are two, as Obsidian
 draws them.
 
@@ -144,7 +145,8 @@ reads the formula itself. What it finds is what MathJax (Obsidian) and LaTeX sto
 
 Unknown commands are not flagged: a document may define its own. Markdown files: `$…$`, `$$…$$` (over several lines
 too), `\(…\)`, `\[…\]`, not in code; LaTeX files: formulas within a line only, not yet the display environments.
-Measured on 726 notes of maths coursework (about 134,000 formulas): 18 findings, 16 of them formulas that lost their
+Measured on 726 notes of
+mathematics (about 134,000 formulas): 18 findings, 16 of them formulas that lost their
 `\begin{aligned}` in a conversion from Word, 2 in program code left outside a code block, which Obsidian also takes
 for a formula. **Tools → Settings → Formula errors** (`latexCheck`) turns it off.
 
@@ -224,6 +226,28 @@ GPU elsewhere on the network, a cloud API. In the settings file:
 "llmApiKey": "env:OPENAI_API_KEY",          // a key if the server wants one: as it is, "env:NAME" or "file:PATH" (e.g. file:~/key.txt)
 ```
 
+**The cloud services** are asked each in its own way, as the Obsidian plugin
+[BlueProof](https://github.com/loglux/obsidian-blueproof) found works best, so the
+address is all there is to give (and the key, and the model):
+
+| Service | `llmServer` | A model it was tried with |
+|---|---|---|
+| OpenAI | `https://api.openai.com/v1` | `gpt-5.4-mini` |
+| Anthropic (Claude) | `https://api.anthropic.com/v1` — its own API, not OpenAI's form | `claude-haiku-5-5`, `claude-sonnet-5-5`, `claude-haiku-4-5` |
+| Google (Gemini) | `https://generativelanguage.googleapis.com/v1beta` — its own API; `…/v1beta/openai` is its OpenAI form | `gemini-3.5-flash-lite` |
+| DeepSeek | `https://api.deepseek.com/v1` | `deepseek-flash`, `deepseek-v4-pro` |
+
+Each answered and found the error in an English and a Russian paragraph through the editor's own code on 23 October
+2026, in 1 to 2.5 s (`CloudCheck`, `docs/tech/proofing-internals.md`); how well each does over many texts was measured by
+the plugin ([its docs/servers.md](https://github.com/loglux/obsidian-blueproof/blob/main/docs/servers.md)). Any other service with an API like OpenAI's may work too; what it refuses, the
+editor learns from its answers. **Tools → Set up grammar checking → Another model server** checks the server before
+keeping it (its list of models: whether it answers, takes the key, has the model) and says what is wrong, keeping it
+anyway if asked to. With no model named (the installer names none for Ollama, LM Studio and llama-server) the editor
+takes the one the server lists first; **Tools → Grammar model** chooses another. A key file of several lines (two keys)
+gives its first line. A key refused is said
+as such; at a service's limit of requests the status line says until when, nothing is sent till then, and the
+paragraphs are checked after.
+
 **Tools → Grammar model…** then lists the server's models under the `.gguf` files here; choosing one sets `llmModel`
 to `"server"`. With a model here chosen (or Auto), the server is used only when llama.cpp or a model is missing here or
 llama.cpp does not start, and the status line says so. Grammar and style both go there.
@@ -234,7 +258,12 @@ llama.cpp does not start, and the status line says so. Grammar and style both go
   llama.cpp's `chat_template_kwargs` (OpenAI refuses it), `temperature` (refused by reasoning models), `max_tokens`
   (sent as `max_completion_tokens` where wanted). Thinking is switched off with `reasoning_effort: "none"`: through
   Ollama, Qwen spent the whole answer limit thinking and returned nothing without it (found by the Obsidian plugin).
-- A key read from a file with a byte order mark (Notepad) is trimmed of it.
+- **The key**: one typed in **Tools → Set up grammar checking → Another model server** goes to a file of its own,
+  `llm-key` beside `settings.json`, which then says only `"file:llm-key"`: the key is not on screen when the settings
+  are opened, nor in a copy of them. On Windows the file is encrypted with DPAPI, the system's own means for saved
+  passwords: only this user on this computer can read it. On Linux it is plain text that only this user may read
+  (mode 600). `env:NAME` and a key written into the settings work as before; a key read from a file with a byte order
+  mark (Notepad) is trimmed of it.
 - The model that answered names the findings (llama-server answers with its own model whatever name is asked for).
 - **Ollama's first load can take minutes**, and Ollama gives up loading when the request waiting for it is closed;
   the editor waits 5 minutes for an answer (a style suggestion holds the screen while it waits). Measured on 6 October
@@ -305,7 +334,7 @@ Needs `harper-ls` (Harper's language server): unpack `harper-ls-x86_64-pc-window
 - One checker at a time is the default: in Tools > Grammar checking choosing one switches the others off. Its last
   line, **Several at once** (`grammarTogether`), allows more, their findings shown together.
 
-What LanguageTool adds next to a model (#94, measured on 6 October 2026 from the runs below, the current prompt): on
+What LanguageTool adds next to a model (measured on 6 October 2026 from the runs below, the current prompt): on
 the British academic set nothing — all 8 errors it found, YandexGPT and Gemma 3 12B found too; on the formula sets
 nothing; on the 69 sentences one error YandexGPT missed ("Who's book") and three Gemma 3 12B missed ("одела пальто",
 "If I would have known", "However I"). So it is mostly a second opinion on what the model already found, now and then
@@ -315,7 +344,7 @@ GPU. The Obsidian plugin chose one checker at a time; here both together stay po
 
 Code, code blocks and tables are not grammar-checked; markup, addresses and paths are hidden from the checkers.
 
-**LaTeX** (`.tex`) is checked the same way since 6 October 2026 (#78). Text: the body after `\begin{document}`;
+**LaTeX** (`.tex`) is checked the same way since 6 October 2026. Text: the body after `\begin{document}`;
 `\emph{…}`, `\textbf{…}`, `\section{…}`, `\footnote{…}`, `\item` keep their text, the commands and braces are hidden;
 `\cite{…}`, `\ref{…}`, `\eqref{…}`, `\label{…}` count as formulas (a finding touching one is dropped); `%` comments
 are hidden; `\%` is a per cent sign. Not text: the preamble, `figure`, `table`, `tabular`, `verbatim`, `lstlisting` and
@@ -339,13 +368,13 @@ maths writing — is one F7 away.
 more style rules). Its dictionary rules (`MORFOLOGIK_RULE_*`, `*_SPELLER_RULE`, `HUNSPELL_*`) are always left out:
 spelling is the spelling provider's job. Off by default: `BRE_STYLE_OXFORD_SPELLING` (it flags correct British -ise)
 and the rules about runs of spaces and sentence starts, because the editor blanks markup with spaces. The rest of the
-`TYPOS` category stays on since 6 October 2026 (#105, found by the Obsidian plugin): it also holds then/than, its/it's,
+`TYPOS` category stays on since 6 October 2026 (found by the Obsidian plugin): it also holds then/than, its/it's,
 dont → don't. Measured: English sentences 14 → 19 of 25, the British academic set 8 → 9 of 24, formulas 5 → 7 of 20,
 Russian unchanged, no new false alarm. A settings file that still lists the old default (`TYPOS` and the Oxford
 spelling) is read as the new one. The rule ids are those LanguageTool shows (F7's message line); the full list is on
 languagetool.org.
 
-**Memory**: `languageToolMemory` (Java's heap), `"768m"` by default. Measured on 6 October 2026 (#88), 400 paragraphs:
+**Memory**: `languageToolMemory` (Java's heap), `"768m"` by default. Measured on 6 October 2026, 400 paragraphs:
 Russian and English took 51 s at 512m and 52 s at 1g; five languages in turn (ru, en, de, fr, es) took 534 s at 512m
 — the server spent its time collecting garbage — 202 s at 768m and 205 s at 1g. No run ran out of memory. The process
 then holds about 0.7–1 GB.
@@ -433,8 +462,8 @@ British usage (below).
 
 ¹ with an earlier wording of the British line; ² with the old prompt, before the British line; ³ measured on 6 October
 2026, with the final full stop it drops put back; ⁴ 6 October 2026, the current prompt (the language-model ones
-through a server at an address, #95); ⁵ 6 October 2026, with the errors a model lists but leaves in its corrected text
-(#113): grammar 22 → 23 and 23 → 24, and YandexGPT's one false alarm is "The committee have agreed" → "has", which it
+through a server at an address); ⁵ 6 October 2026, with the errors a model lists but leaves in its corrected text:
+grammar 22 → 23 and 23 → 24, and YandexGPT's one false alarm is "The committee have agreed" → "has", which it
 listed without changing its text.
 
 What it shows:
@@ -476,7 +505,8 @@ Style (YandexGPT 5 Lite): 2 suggestions
 Under the list is the selected suggestion in full: was, becomes, why. **Space** ticks or unticks, **Enter** applies
 the ticked ones, **Esc** changes nothing. What was applied is undone with one **Ctrl+Z**.
 
-- Needs llama.cpp and a model, as for grammar (see [proofing-setup.md](proofing-setup.md)); grammar checking need not
+- Needs a language model, as for grammar: llama.cpp and a model here, or a model server or cloud service (see
+  [proofing-setup.md](proofing-setup.md)); grammar checking need not
   be on. The model is the one chosen in **Tools → Grammar model…**, and it sits in video memory once for both. The
   first request starts it (a few seconds), then about a second per paragraph.
 - **Tools → Style options…**: what to look for (ticks): officialese; wordiness and filler; repetition; overlong or
@@ -497,7 +527,7 @@ the ticked ones, **Esc** changes nothing. What was applied is undone with one **
   проверку документации…» became «Нужно проверить документы…», losing the purpose — check the meaning stayed. Gemma 3
   12B is more careful. Small models (Phi-4-mini, Gemma 3 4B) do worse.
 
-**Measured** on 5 October 2026 (`tests/BlueEdit.Tests/StyleBench.cs`, issue #87) on 24 British academic paragraphs
+**Measured** on 5 October 2026 (`tests/BlueEdit.Tests/StyleBench.cs`) on 24 British academic paragraphs
 (16 with 36 style problems, 8 that read well, some with formulas) and 10 Russian ones, with the default options:
 
 | Model | EN problems touched (36) | EN meaning lost | EN good paragraphs changed (8) | RU problems (11) | RU lost | RU good changed (4) | Answer |
@@ -515,13 +545,14 @@ option on, every model also catches most informal words (11–12 of 13).
 
 ## Settings file
 
-**Tools → Settings…** shows the everyday settings as a list; its last row, **Edit settings.json…**, opens `%APPDATA%\blueedit\settings.json` with all of them; F2 saves and applies it at once, Esc goes back to the text.
+**Tools → Settings…** shows the everyday settings as a list; its last row, **Edit settings.json…**, opens `%APPDATA%\blueedit\settings.json` (on Linux
+`~/.config/blueedit/settings.json`) with all of them; F2 saves and applies it at once, Esc goes back to the text.
 
 ```jsonc
 "spellCheck": true,                     // spelling on/off (same as F8)
 "spellLanguages": "auto",               // or ["ru-RU", "en-GB"]
 "spellProvider": "windows",             // or "office", "hunspell"
-"grammar": ["languagetool", "llm"],     // "off", "languagetool", "llm", "edge", "harper" or a list
+"grammar": ["languagetool", "llm"],     // "off", "languagetool", "llm", "harper", "edge", "chrome", "chromemodel" or a list
 "languageToolDir": "",                  // empty: %LOCALAPPDATA%\BlueEdit
 "llmDir": "",                           // empty: %LOCALAPPDATA%\BlueEdit\llm
 "llmModel": "",                         // empty: the best one installed (Tools → Grammar model…)

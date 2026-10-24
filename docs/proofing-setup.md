@@ -6,7 +6,8 @@ How to install everything BlueEdit checks spelling and grammar with — by scrip
 works. How to use it: [proofing.md](proofing.md); how it is built: [tech/proofing-internals.md](tech/proofing-internals.md);
 the research into Edge, Chrome and Word: [tech/browser-ai-research.md](tech/browser-ai-research.md).
 
-All of it is free, without subscriptions, runs on your computer and needs no administrator rights.
+All of it is free, without subscriptions, runs on your computer and needs no administrator rights — except a cloud
+service you may choose instead of a model here, which takes a key and is paid by use.
 
 ## The parts
 
@@ -34,7 +35,7 @@ llama.cpp + YandexGPT 5 Lite** is the fullest setup; without a GPU, LanguageTool
 | Ollama | the models of [Ollama](https://ollama.com) running on this computer (127.0.0.1:11434, or `OLLAMA_HOST` as Ollama reads it) are listed and one is chosen; embedding models are left out. Not running or no model yet: the steps (install, `ollama pull gemma3:4b`, choose again). Nothing is installed by BlueEdit, paragraphs stay on this computer |
 | LM Studio | the same for [LM Studio](https://lmstudio.ai)'s server (127.0.0.1:1234; turned on in its Developer tab or with `lms server start`) |
 | Another model server | an address (llama-server elsewhere, a cloud service), the model's name there and a key: nothing is installed, paragraphs are sent there |
-| LanguageTool | for those who want rules for 31 languages without a video card: Java 21 and LanguageTool, ~530 MB |
+| LanguageTool | for those who want rules for 31 languages without a video card: Java 21 and LanguageTool, ~540 MB |
 | Harper | rules for English, ~60 MB |
 | Remove... | what the editor installed in its own folders, each with its size, nothing ticked: llama.cpp, each model, LanguageTool with its Java, Harper, the spelling dictionaries. A ticked checker is turned off first, then deleted; a folder the settings point elsewhere (your own LanguageTool) is never offered |
 
@@ -82,7 +83,7 @@ Options:
 
 | Option | What it does |
 |---|---|
-| `-Gpu auto\|cuda\|vulkan\|cpu` | the llama.cpp build. `auto`: CUDA when an NVIDIA driver is present (CUDA 13.4 with driver 580+, else 12.4), otherwise Vulkan when Vulkan sees a video card, else the CPU build (`be --vulkan-devices` lists what it sees) |
+| `-Gpu auto\|cuda\|vulkan\|cpu` | the llama.cpp build. `auto`: CUDA when an NVIDIA driver is present (CUDA 13.4 with driver 580+, else 12.4 on Windows and 12.8 on Linux), otherwise Vulkan when Vulkan sees a video card, else the CPU build (`be --vulkan-devices` lists what it sees) |
 | `-LlamaBuild b11371\|latest` | the llama.cpp version; the default is the one BlueEdit was tested with |
 | `-Root <folder>` | where to install; default `%LOCALAPPDATA%\BlueEdit` (then nothing needs setting in BlueEdit) |
 | `-Force` | reinstall what is installed |
@@ -291,7 +292,7 @@ same flags back to **Default**, then Relaunch. Details in the research.
   `downloads` in `%LOCALAPPDATA%\BlueEdit`. Nothing stays in the registry or the system. Edge Canary uninstalls like
   any program (Settings → Apps).
 
-Space taken (on the development machine): `jre` 146 MB, `languagetool` 391 MB, `llm\bin` 712 MB (CUDA; Vulkan ~35 MB),
+Space taken (on a test machine): `jre` 146 MB, `languagetool` 391 MB, `llm\bin` 712 MB (CUDA; Vulkan ~35 MB),
 models 2.3–8.4 GB each, `edge-profile` ~1.7 GB.
 
 ## When it does not work

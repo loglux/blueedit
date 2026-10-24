@@ -2,10 +2,10 @@
 
 *По-русски: [browser-ai-research.ru.md](browser-ai-research.ru.md)*
 
-Notes from the research done for BlueEdit's spelling and grammar checking (October 2026, Windows 11, RTX 4070 12 GB,
-64 GB RAM). Everything here was observed on that machine unless marked otherwise; versions matter, because these
-features change from build to build. What was used in the editor is in [proofing-internals.md](proofing-internals.md)
-and the user guide [../proofing.md](../proofing.md).
+Notes from the research done for BlueEdit's spelling and grammar checking (October 2026, a test machine: Windows 11,
+RTX 4070 12 GB, 64 GB RAM). Everything here was observed on that machine unless marked otherwise; versions matter,
+because these features change from build to build. What was used in the editor is in
+[proofing-internals.md](proofing-internals.md) and the user guide [../proofing.md](../proofing.md).
 
 Method: only what a program shows of itself — browser pages, the DevTools protocol, strings in the program files,
 configuration files the browser downloaded. No disassembly, no patching.
@@ -156,11 +156,11 @@ centre → center, travelled, apologise). Mid-table among the local models; it f
   schema (`responseConstraint`), so it can proofread Russian too. A first try with BlueEdit's prompt: «Мы был» →
   «Мы были» (0.7 s), «сказал что» → «сказал, что» (0.8 s), "She don't" → "She does not" (0.5 s); «Я пошли» → «Мы пошли»
   (wrong: changes the meaning; this first call also took 66 s and ran on with blanks). Explanations came in English
-  whatever the prompt said. Microsoft says Aion also runs on CPU. Not measured yet (issue #37).
+  whatever the prompt said. Microsoft says Aion also runs on CPU. Not measured yet.
 - **Translator**: ru→en and en→ru `downloadable`; after the download, «Вчера мы долго гуляли по парку и разговаривали о
   книгах.» → "Yesterday we walked around the park for a long time and talked about books." (7.4 s with the download),
-  en→ru 1.2 s, good quality (issue #39).
-- **LanguageDetector**: present; returns languages with confidence and `und` (issue #40).
+  en→ru 1.2 s, good quality.
+- **LanguageDetector**: present; returns languages with confidence and `und`.
 
 ### Not to be confused with
 
@@ -169,7 +169,7 @@ centre → center, travelled, apologise). Mid-table among the local models; it f
   (for Russian the switch is greyed out). No public API.
 - **Copilot** "check your work with an AI proofreader" (microsoft.com learning centre): pasting text into the Copilot
   chat. Cloud, no API.
-- Browser extensions that popped up in the user's Edge (Reverso, Grammarly, LanguageTool) — not Edge's own.
+- Browser extensions installed in Edge (Reverso, Grammarly, LanguageTool) — not Edge's own.
 
 ## 2. Chrome
 
@@ -187,10 +187,11 @@ only, for those versions), model Gemini Nano; `includeCorrectionTypes` and `incl
 supported; local testing via `chrome://flags/#proofreader-api`. Requirements: 22 GB free; a GPU with more than 4 GB,
 or a CPU with 16 GB of RAM and 4 cores; unmetered connection.
 
-**It runs on the CPU here, GPU or not** (measured 7 October 2026, Chrome 154.0.8037.98, i9-11900KB, 64 GB, RTX 4070):
+**It runs on the CPU, GPU or not** (measured 7 October 2026 on the test machine, Chrome 154.0.8037.98, i9-11900KB,
+64 GB, RTX 4070):
 while BlueEdit's Chrome checker proofread the British academic set (59 sentences, median 0.6 s each), `nvidia-smi`
 sampled every second showed 0–83 MB of video memory in use and about 0 % load, as with Chrome idle; the GPU process was
-listed with no memory of its own. A work computer showed the same in Chrome's log: "Created TensorFlow Lite XNNPACK
+listed with no memory of its own. Another computer showed the same in Chrome's log: "Created TensorFlow Lite XNNPACK
 delegate for CPU" (XNNPACK is LiteRT's CPU back end). So a computer without a capable GPU is not why the checker fails;
 the model's download (it needs Google's servers and an unmetered connection), 16 GB of RAM and 22 GB free are.
 
@@ -220,21 +221,23 @@ What was tried in a separate profile — `Proofreader` never appeared:
 
 ### It works with the flags *and* Google's experiment configuration
 
-In the user's own Chrome 154 (how to set the flags, step by step: [../proofing-setup.md](../proofing-setup.md#chrome-being-researched-not-in-blueedit-yet)), with `#proofreader-api`, `#semantic-embedder-api` and `#gemma4-for-built-in-ai` set to
-Enabled and a full restart, the [playground](https://chrome.dev/web-ai-demos/proofreader-api-playground/) worked;
-the model was downloaded when the button was first pressed. The difference from the test profile was not the flags
-(the same three) but the **variations seed**: the experiment configuration Chrome downloads from Google's servers and
-applies at the next start (`variations_*` keys in `Local State`). A fresh profile had none — and Chrome even dropped
-the flags from it at start. Copying into a separate profile only the user's `variations_*` keys and the flag list
-(no personal data) made `Proofreader` appear there too: `en` → `downloadable`, `ru` → `unavailable`. So the API is
-turned on server side for some users on top of the flag.
+In a Chrome 154 in everyday use (how to set the flags, step by step:
+[../proofing-setup.md](../proofing-setup.md#chromes-proofreader)), with `#proofreader-api`, `#semantic-embedder-api`
+and `#gemma4-for-built-in-ai` set to Enabled and a full restart, the
+[playground](https://chrome.dev/web-ai-demos/proofreader-api-playground/) worked; the model was downloaded when the
+button was first pressed. The difference from the test profile was not the flags (the same three) but the **variations
+seed**: the experiment configuration Chrome downloads from Google's servers and applies at the next start
+(`variations_*` keys in `Local State`). A fresh profile had none — and Chrome even dropped the flags from it at start.
+Copying into a separate profile only the everyday profile's `variations_*` keys and flag list (no personal data) made
+`Proofreader` appear there too: `en` → `downloadable`, `ru` → `unavailable`. So the API is turned on server side for
+some users on top of the flag.
 
 **The model** is not Gemini Nano but a tiny one, downloaded into the user data folder:
 
 ```
-User Data\OptGuideManifestModelfe836b7…6.6.3.1603\     117 MB
+User Data\OptGuideManifestModel\6fe836b7…\2026.6.3.1603\     117 MB
     manifest.json: "Optimization Guide On-Device Tinymodel Proofreader", version 2026.6.3.1603
-    weights.bin (117 MB), cache.bin, adapter_cache.bin, encoder_cache.bin, _metadataerified_contents.json
+    weights.bin (117 MB), cache.bin, adapter_cache.bin, encoder_cache.bin, _metadata\verified_contents.json
 ```
 
 Looked into on 5 October 2026: `weights.bin` starts with `LITERTLM` — a [LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM)
@@ -243,7 +246,7 @@ container (Google's open-source, Apache-2.0 runtime for on-device models), holdi
 the model's answer — no instructions, a model trained for this one task. So it can probably run without Chrome, in
 LiteRT-LM with this template; **not tried yet**, nor whether the answer is the corrected text (as with Edge, which
 compares the texts). The weights are Google's, shipped as part of Chrome with no licence of their own: fine to try on
-one's own computer, not to ship in BlueEdit. Next to it, `OptGuideOnDeviceModel5.8.8.1141` is Gemini Nano
+one's own computer, not to ship in BlueEdit. Next to it, `OptGuideOnDeviceModel\2025.8.8.1141` is Gemini Nano
 (`BaseModelSpec` "v3Nano", 4.3 GB, `weights.bin` with no readable header), the model of the Prompt API.
 
 **It returns correction types** (Edge does not): with `includeCorrectionTypes: true`
@@ -261,7 +264,7 @@ final full stop** of "We organised the meeting at the centre." (a false alarm). 
 lower-cased "the Proofreader API" to "The proofreader API". `create()` took 3.6 s with the download. Russian:
 `NotSupportedError: The requested language options are not supported.` English only.
 
-In BlueEdit since #42 (`BrowserProofreader.Chrome`): a hidden Chrome with `%LOCALAPPDATA%\BlueEdit\chrome-profile`,
+In BlueEdit (`BrowserProofreader.Chrome`): a hidden Chrome with `%LOCALAPPDATA%\BlueEdit\chrome-profile`,
 the user's `variations_*` keys and flag list copied into its `Local State` before every start (only those). Measured
 on 6 October 2026 on the British academic set: 21 of 24 grammar errors (20 with the right fix), 2 of 3 punctuation
 errors noticed, 26 false alarms of 24 correct sentences — 20 of them the final full stop dropped; with the stop put
@@ -269,7 +272,7 @@ back (`KeepFinalStop`) 7: "committee have" / "team were" made singular, "had" dr
 capitalised, once "The" → "Few". 0.65 s a sentence. Headless Chrome worked (the earlier tries failed for want of the
 configuration, not for headless).
 
-**Without Chrome** (#104, 6 October 2026): the model runs in Google's LiteRT-LM (`pip install litert-lm`, 0.17.1).
+**Without Chrome** (6 October 2026): the model runs in Google's LiteRT-LM (`pip install litert-lm`, 0.17.1).
 Found on the way:
 - `litert-lm describe` reads the file: text only, no thinking, sampler temperature 0, top-k 3. `litert-lm run model
   --prompt "She don't like coffee, and their going home."` → "She doesn't like coffee, and they're going home." (1.3 s
@@ -310,8 +313,9 @@ Found on the way:
   `8E018A9D-2415-4677-BF08-794EA61F94BB`.
 - `ISpellChecker`: the IID first tried (`B6FD0B71-…`) gave `E_NOINTERFACE` (0x80004002); the one that works is
   `E7ED1C71-87F7-4378-A840-C9200DACEE47`.
-- Supported tags here: en-029 … en-ZW, ru-MO, ru-RU. The user's languages: `HKCU\Control Panel\International\User Profile`,
-  value `Languages` (here `en-GB`, `ru`), filtered by `IsSupported`.
+- Supported tags on the test machine: en-029 … en-ZW, ru-MO, ru-RU. The user's languages:
+  `HKCU\Control Panel\International\User Profile`, value `Languages` (on the test machine `en-GB`, `ru`), filtered by
+  `IsSupported`.
 - Windows has no grammar API.
 
 ## 5. LanguageTool (free, local)
@@ -337,10 +341,10 @@ Found on the way:
 
 ## 7. Other sources looked at
 
-- Hunspell (WeCantSpell.Hunspell 7.0.1, LibreOffice dictionaries) — for a Linux port (issue #23).
-- Harper (Apache-2.0, English, `harper-ls` / `harper-cli --format json`) (issue #24).
+- Hunspell (WeCantSpell.Hunspell 7.0.1, LibreOffice dictionaries) — for a Linux port.
+- Harper (Apache-2.0, English, `harper-ls` / `harper-cli --format json`).
 - Yandex.Speller: free cloud, 10,000 requests and 10 M characters a day, requires the credit "Проверка правописания:
-  Яндекс.Спеллер" (issue #27).
+  Яндекс.Спеллер".
 - LanguageTool cloud: free 20 requests and 75,000 characters a minute; Premium about €60 a year.
 - Not usable: Grammarly (SDK closed 10 January 2024), ORFO (no SDK), Phi Silica (being removed January 2027),
   Glavred and Litera5 (paid).

@@ -63,13 +63,35 @@ sealed partial class App
     // a model server at an address (Ollama, LM Studio, llama-server elsewhere, a cloud API): its address, model and key
     void SetUpModelServer()
     {
-        if (Dialogs.Prompt(app, T("Model server"), T("Address (OpenAI-compatible API):"),
-                settings.LlmServer.Length > 0 ? settings.LlmServer : "http://127.0.0.1:11434/v1") is not { Length: > 0 } address) return;
-        if (Dialogs.Prompt(app, T("Model server"), T("Model name there:"), settings.LlmServerModel) is not { Length: > 0 } model) return;
-        if (Dialogs.Prompt(app, T("Model server"), T("Key (empty: none; env:NAME reads a variable):"), settings.LlmApiKey) is not { } key) return;
+        string address = settings.LlmServer.Length > 0 ? settings.LlmServer : "http://127.0.0.1:11434/v1", model = settings.LlmServerModel, key = settings.LlmApiKey;
+        while (true)
+        {
+            if (Dialogs.Prompt(app, T("Model server"), T("Address (OpenAI-compatible API):"), address) is not { Length: > 0 } a) return;
+            if (Dialogs.Prompt(app, T("Model server"), T("Model name there:"), model) is not { Length: > 0 } m) return;
+            if (Dialogs.Prompt(app, T("Model server"), T("Key (empty: none; env:NAME reads a variable; kept in a file of its own):"), key) is not { } k) return;
+            (address, model, key) = (a.Trim(), m.Trim(), k.Trim());
+            // checked before it is kept (its list of models: free, a few seconds at most): a key mistyped or a server
+            // not running is said now, not as a failure on the first paragraph; kept anyway if wanted (not running yet)
+            Note(Tf("Asking {0}...", address));
+            app.Render();
+            var (found, detail) = LlmServer.Probe(new LlmEndpoint(address, model, LlmEndpoint.KeyFrom(key)));
+            Note("");
+            if (found == LlmServer.ProbeResult.Ok) break;
+            var host = new LlmEndpoint(address, model, null).Host;
+            var why = found switch
+            {
+                LlmServer.ProbeResult.Key => Tf("{0} did not take the key: {1}", host, detail),
+                LlmServer.ProbeResult.Unreachable => Tf("{0} does not answer: {1}", host, detail),
+                LlmServer.ProbeResult.Model => Tf("{0} has no model \"{1}\". It has: {2}", host, model, detail),
+                _ => Tf("{0} answered: {1}", host, detail),
+            };
+            var choice = Dialogs.Ask(app, T("Model server"), why, [T("Keep it as it is"), T("Fix it"), T("Cancel")], 2);
+            if (choice == 0) break;
+            if (choice == 2) return;
+        }
         Settings.SetValue(Settings.FilePath, "llmServer", JsonString(address.Trim()));
         Settings.SetValue(Settings.FilePath, "llmServerModel", JsonString(model.Trim()));
-        Settings.SetValue(Settings.FilePath, "llmApiKey", JsonString(key.Trim()));
+        Settings.SetValue(Settings.FilePath, "llmApiKey", JsonString(LlmEndpoint.SaveKey(key)));
         Settings.SetValue(Settings.FilePath, "llmModel", JsonString("server"));
         TurnOnGrammar("llm");
         Note(Tf("Grammar: {0} on {1}; paragraphs are sent there", model.Trim(), address.Trim()));
@@ -90,7 +112,7 @@ sealed partial class App
         if (Dialogs.Pick(app, Tf("{0}: the model for grammar checking", name), models, same ? Math.Max(0, models.IndexOf(settings.LlmServerModel)) : 0) is not int i) return;
         Settings.SetValue(Settings.FilePath, "llmServer", JsonString(url));
         Settings.SetValue(Settings.FilePath, "llmServerModel", JsonString(models[i]));
-        Settings.SetValue(Settings.FilePath, "llmApiKey", JsonString(""));
+        Settings.SetValue(Settings.FilePath, "llmApiKey", JsonString(LlmEndpoint.SaveKey("")));
         Settings.SetValue(Settings.FilePath, "llmModel", JsonString("server"));
         TurnOnGrammar("llm");
         Note(Tf("Grammar: {0} in {1}; paragraphs stay on this computer", models[i], name));

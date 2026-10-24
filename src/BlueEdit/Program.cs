@@ -28,7 +28,13 @@ if (args is ["--help" or "-h" or "-?" or "/?"])
                               names: what there is to choose); as Tools > Set up grammar
                               checking and Tools > Get spelling dictionaries do
           --vulkan-devices    the video cards Vulkan sees, a line each: type (1 integrated,
-                              2 discrete, 3 virtual, 4 the processor) and name; "none"
+                              2 discrete, 3 virtual, 4 the processor), memory (MB) and name
+          --video-card        the video card a model can use and which models fit it
+          --grammar NAME,...  the grammar checkers to have on (languagetool, llm, harper, ...)
+          --model-server ADDRESS MODEL
+                              grammar from a model server; its key, if any, in BLUEEDIT_LLM_KEY
+          --check-model-server ADDRESS MODEL
+                              whether the server answers, takes the key and has the model
 
         Press F1 in the editor for the keys.
         """);
@@ -36,6 +42,40 @@ if (args is ["--help" or "-h" or "-?" or "/?"])
 }
 // asked by ProofingTools in a process of its own: a video card's driver is loaded and may misbehave
 if (args is ["--vulkan-devices"]) { Console.WriteLine(VideoCards.Print(VideoCards.Vulkan())); return; }
+// the installer's grammar page (tools/installer): the video card, which models fit it and the one to take
+if (args is ["--video-card"]) { Console.WriteLine(ProofingTools.VideoCardReport(ProofingTools.FindVideoCard())); return; }
+// the checkers to have on, as Tools > Grammar checking sets them (the installer, once it has installed them)
+if (args is ["--grammar", var engines])
+{
+    var on = engines.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).Select(e => e.ToLowerInvariant()).ToList();
+    if (on.FirstOrDefault(e => !Settings.GrammarEngines.Contains(e)) is { } unknown)
+    {
+        Console.WriteLine($"{unknown}: unknown (known: {string.Join(", ", Settings.GrammarEngines)})");
+        Environment.Exit(1);
+    }
+    Settings.SetValue(Settings.FilePath, "grammar", "[" + string.Join(", ", on.Select(JsonString)) + "]");
+    return;
+}
+// a model server for grammar, as Tools > Set up grammar checking > Another model server sets it; the key, if any,
+// comes in BLUEEDIT_LLM_KEY, never on the command line (where other programs and logs see it)
+// the installer's check of a model server before it is kept: the first line says what was found (ok, key, unreachable,
+// model, other), the second the details; the key, as below, in BLUEEDIT_LLM_KEY
+if (args is ["--check-model-server", var checkAddress, var checkModel])
+{
+    var (found, detail) = LlmServer.Probe(new LlmEndpoint(checkAddress.Trim(), checkModel.Trim(), LlmEndpoint.KeyFrom(Environment.GetEnvironmentVariable("BLUEEDIT_LLM_KEY") ?? "")));
+    Console.WriteLine(found.ToString().ToLowerInvariant());
+    Console.WriteLine(detail.ReplaceLineEndings(" "));
+    Environment.Exit(found == LlmServer.ProbeResult.Ok ? 0 : 1);
+}
+if (args is ["--model-server", var address, var model])
+{
+    var key = Environment.GetEnvironmentVariable("BLUEEDIT_LLM_KEY") ?? "";
+    Settings.SetValue(Settings.FilePath, "llmServer", JsonString(address.Trim()));
+    Settings.SetValue(Settings.FilePath, "llmServerModel", JsonString(model.Trim()));
+    Settings.SetValue(Settings.FilePath, "llmApiKey", JsonString(LlmEndpoint.SaveKey(key)));
+    Settings.SetValue(Settings.FilePath, "llmModel", JsonString("server"));
+    return;
+}
 // --install-tools: the code tools without the editor's screen (servers, scripts): what is there is said, the rest installed
 if (args.Length >= 1 && args[0] == "--install-tools")
 {

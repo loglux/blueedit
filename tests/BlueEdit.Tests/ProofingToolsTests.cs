@@ -38,12 +38,35 @@ public sealed class ProofingToolsTests
     [Fact]
     public void Vulkan_devices_go_through_their_printed_form_and_only_a_gpu_counts()
     {
-        List<VideoCards.Device> devices = [new("NVIDIA GeForce RTX 4070", 2), new("llvmpipe (LLVM 19.1.7, 256 bits)", 4)];
+        List<VideoCards.Device> devices = [new("NVIDIA GeForce RTX 4070", 2, 12010), new("llvmpipe (LLVM 19.1.7, 256 bits)", 4, 0)];
         Assert.Equal(devices, VideoCards.Parse(VideoCards.Print(devices)));
         Assert.Equal(new[] { true, false }, devices.Select(d => d.IsGpu).ToArray());
         Assert.Empty(VideoCards.Parse(VideoCards.Print([]))!);
         Assert.Null(VideoCards.Parse(""));                                       // not be: another program, or nothing
         Assert.Null(VideoCards.Parse("Microsoft (R) Test Execution Command Line Tool"));
+    }
+
+    // what this computer's Vulkan said (23 October 2026): the integrated Intel card reports the computer's 32 GB as its
+    // own; it is no place for a model, so only the NVIDIA card counts, and without it there is none
+    [Fact]
+    public void Only_a_card_with_memory_of_its_own_counts_for_a_model()
+    {
+        List<VideoCards.Device> devices = [new("Intel(R) UHD Graphics", 1, 32524), new("NVIDIA GeForce RTX 4070", 2, 12010), new("llvmpipe", 4, 0)];
+        Assert.Equal(new ProofingTools.VideoCard("NVIDIA GeForce RTX 4070", 12010), ProofingTools.BestCard(devices));
+        Assert.Null(ProofingTools.BestCard([devices[0], devices[2]]));
+        Assert.Null(ProofingTools.BestCard([]));
+        Assert.Null(ProofingTools.BestCard(null));
+    }
+
+    // a card sold as 8 GB reports 8188 MB; the best model by the benchmark that fits is the one recommended
+    [Fact]
+    public void Models_fit_the_card_and_the_best_that_fits_is_recommended()
+    {
+        string Report(int? mb) => ProofingTools.VideoCardReport(mb is int m ? new("Card", m) : null);
+        Assert.Equal("card 12282 Card\nfits qwen3-8b\nfits yandexgpt\nfits gemma3-12b\nfits gemma3-4b\nfits phi4-mini\nrecommended yandexgpt", Report(12282));
+        Assert.Contains("fits gemma3-12b", Report(8188), StringComparison.Ordinal);
+        Assert.Equal("card 4096 Card\nneeds qwen3-8b 6\nneeds yandexgpt 6\nneeds gemma3-12b 8\nfits gemma3-4b\nfits phi4-mini\nrecommended gemma3-4b", Report(4096));
+        Assert.Equal("card none\nneeds qwen3-8b 6\nneeds yandexgpt 6\nneeds gemma3-12b 8\nneeds gemma3-4b 3\nneeds phi4-mini 3", Report(null));
     }
 
     // asked for real where the tests run: no throw and sensible answers, whatever the machine has (the Windows runner

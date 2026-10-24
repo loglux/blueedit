@@ -1,7 +1,7 @@
-# A tag vX.Y.Z: build and unit-test, publish the single-file exe, zip it, publish the Linux build into a
-# tar.gz (tools/ci/pack-linux.py), pack the formula pictures module for both, and make a DRAFT release with these four
-# and their SHA-256, on GitHub's own Windows machine. The draft is reviewed (notes written) and published by hand.
-# See docs/ci.md.
+# A tag vX.Y.Z: build and unit-test, publish the single-file exe, zip it, make its installer (tools/installer),
+# publish the Linux build into a tar.gz (tools/ci/pack-linux.py), pack the formula pictures module for both, and
+# make a DRAFT release with these five and their SHA-256, on GitHub's own Windows machine. The draft is reviewed
+# (notes written) and published by hand. See docs/ci.md.
 name: release
 
 on:
@@ -51,6 +51,16 @@ jobs:
           "zip=$zip" >> $env:GITHUB_OUTPUT
           "sha=$sha" >> $env:GITHUB_OUTPUT
           "$name  SHA-256 $sha"
+          # the installer (tools/installer, Inno Setup 6; docs/tech/installer.md): the same be.exe and scripts, with PATH,
+          # the Start menu and the checkers to choose; Inno Setup comes from Chocolatey where the machine lacks it
+          if (-not (Get-Command ISCC.exe -ErrorAction SilentlyContinue) -and -not (Test-Path "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe") -and -not (Test-Path "$env:LOCALAPPDATA\Programs\Inno Setup 6\ISCC.exe")) {
+            choco install innosetup --no-progress -y | Out-Null
+          }
+          $setup = ./tools/installer/build.ps1 -Source $out -Output (Join-Path $env:RUNNER_TEMP 'installer') -Version '${{ github.ref_name }}'.TrimStart('v') | Select-Object -Last 1
+          $shaSetup = (Get-FileHash $setup).Hash.ToLower()
+          "setup=$setup" >> $env:GITHUB_OUTPUT
+          "shaSetup=$shaSetup" >> $env:GITHUB_OUTPUT
+          "$(Split-Path $setup -Leaf)  SHA-256 $shaSetup"
           # Linux: the same build for linux-x64 (.NET cross-publishes from Windows), packed with the execute bits set
           $outLinux = Join-Path $env:RUNNER_TEMP 'release-linux'
           dotnet publish -c Release -r linux-x64 --self-contained -p:PublishSingleFile=true -o $outLinux -nologo -v q
@@ -85,5 +95,5 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          $notes = "Draft made by the release workflow from ${{ github.ref_name }}. Write the notes, then publish.`n`nSHA-256 of the Windows zip: ``${{ steps.zip.outputs.sha }}```nSHA-256 of the Linux tar.gz: ``${{ steps.zip.outputs.shaLinux }}```nSHA-256 of the formula pictures module, Windows: ``${{ steps.zip.outputs.shaMiZip }}```nSHA-256 of the formula pictures module, Linux: ``${{ steps.zip.outputs.shaMiTgz }}``"
-          gh release create '${{ github.ref_name }}' '${{ steps.zip.outputs.zip }}' '${{ steps.zip.outputs.tgz }}' '${{ steps.zip.outputs.miZip }}' '${{ steps.zip.outputs.miTgz }}' --draft --prerelease --title "BlueEdit $('${{ github.ref_name }}'.TrimStart('v')) (preview)" --notes $notes
+          $notes = "Draft made by the release workflow from ${{ github.ref_name }}. Write the notes, then publish.`n`nSHA-256 of the Windows installer: ``${{ steps.zip.outputs.shaSetup }}```nSHA-256 of the Windows zip: ``${{ steps.zip.outputs.sha }}```nSHA-256 of the Linux tar.gz: ``${{ steps.zip.outputs.shaLinux }}```nSHA-256 of the formula pictures module, Windows: ``${{ steps.zip.outputs.shaMiZip }}```nSHA-256 of the formula pictures module, Linux: ``${{ steps.zip.outputs.shaMiTgz }}``"
+          gh release create '${{ github.ref_name }}' '${{ steps.zip.outputs.setup }}' '${{ steps.zip.outputs.zip }}' '${{ steps.zip.outputs.tgz }}' '${{ steps.zip.outputs.miZip }}' '${{ steps.zip.outputs.miTgz }}' --draft --prerelease --title "BlueEdit $('${{ github.ref_name }}'.TrimStart('v')) (preview)" --notes $notes

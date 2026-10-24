@@ -11,10 +11,14 @@ checking and language servers. User docs: [README.md](README.md) and [docs/](doc
 | `ui <pytest args>` | some UI tests on a fresh build: `ui test_lsp.py`, `ui test_markdown.py -k grammar` |
 | `test-all` | everything incl. all UI tests, ~5 min |
 | `publish` / `publish-linux` | the Windows build in `publish\`, the Linux build and its tar.gz in `publish-linux\` |
+| `installer`, `installer-sandbox` | the Windows installer in `publish-installer\` (needs Inno Setup 6: `winget install JRSoftware.InnoSetup`); the same tried on a clean Windows in Windows Sandbox |
 | `sandbox`, `newcomer`, `dialogs` | the setup scripts, a new user's first minutes, the dialogs in Russian — on a clean Windows in Windows Sandbox |
 | `newcomer-linux` | a new user's first minutes with the Linux release in clean containers (a Linux host with Docker: `BLUEEDIT_LINUX_HOST`) |
 | `lang-template` | `lang/template/strings.json` written anew after interface strings change (a new language starts from it) |
 | `setup`, `setup-proofing`, `setup-lsp` | the optional checkers and language servers (Linux: `tools/proofing-setup/install.sh`) |
+| `setup-math` | build the formula pictures module (`src/MathImages`) into `%LOCALAPPDATA%\BlueEdit\mathimages` |
+| `status` | recent CI runs, open pull requests, the checkers and servers installed |
+| `pr`, `merge`, `release <x.y.z>` | the maintainer's: push the branch and open its pull request; wait for its checks and squash-merge; tag a release |
 
 On Linux: `tools/ci/check-linux.sh` (`--fast`: build and unit tests). UI tests drive the real executable in a
 pseudo-console; once: `pip install -r tests/ui/requirements.txt`.
@@ -36,6 +40,10 @@ None is needed to use the editor; they move its folders, switch things for tests
 | `BLUEEDIT_TIMING=1` | View > Show timing from the start |
 | `BLUEEDIT_TIMELOG=<file>` | wall-clock stamps of each key's arrival (K) and frame drawn (D), for measuring the terminal around the editor |
 | `BLUEEDIT_LINUX_HOST=user@host` | the Linux host with Docker for `tasks newcomer-linux` |
+| `BLUEEDIT_LLM_KEY` | the key for `be --model-server` and `be --check-model-server` (the installer passes it so, never on a command line) |
+| `BLUEEDIT_VIDEO_CARD="MB name"` / `none` | the video card `be --video-card` reports, for trying the installer's page without one (`tasks installer-sandbox`) |
+| `BLUEEDIT_CLOUD_CHECK="address\|model\|key;…"` | `CloudCheck`: a paragraph to each cloud service through the editor's code, for real |
+| `BLUEEDIT_EXE` | the editor the UI tests run (`tasks ui` sets it to a fresh build) |
 | `BLUEEDIT_UI_PATIENCE`, `BLUEEDIT_NO_TIMING=1`, `BLUEEDIT_NO_CLIPBOARD=1` | UI tests: wait longer on a loaded machine; skip the millisecond tests; skip the one that uses the real clipboard |
 | `BLUEEDIT_PROOF_BENCH*`, `BLUEEDIT_MATH_BENCH*`, `BLUEEDIT_STYLE_BENCH*`, `BLUEEDIT_LATEX_BENCH*`, `BLUEEDIT_BENCH_CASES`, `BLUEEDIT_BENCH_SETS`, `BLUEEDIT_MATH_CORPUS`, `BLUEEDIT_FASTTEXT_REF`, `BLUEEDIT_EDGE_PROFILE` | the benchmarks in `tests/BlueEdit.Tests` (each file's summary says how) |
 
@@ -60,7 +68,7 @@ None is needed to use the editor; they move its folders, switch things for tests
 - A design decision (why this way, what was measured, what was rejected) goes into `docs/tech/*.md`.
 - Facts in docs come from measurements or the code; say what was not checked.
 
-## Pitfalls met here
+## Known pitfalls
 
 - **A fresh Windows has only Windows PowerShell 5.1**: setup scripts must run there — a UTF-8 BOM on any script with
   non-ASCII text, HTTP answers decoded as UTF-8 explicitly.

@@ -2,8 +2,8 @@
 
 *In English: [browser-ai-research.md](browser-ai-research.md)*
 
-Записи исследования, сделанного для проверки орфографии и грамматики в BlueEdit (октябрь 2026, Windows 11,
-RTX 4070 12 ГБ, 64 ГБ памяти). Всё наблюдалось на этой машине, если не сказано иное; версии важны — эти функции
+Записи исследования, сделанного для проверки орфографии и грамматики в BlueEdit (октябрь 2026, тестовая машина:
+Windows 11, RTX 4070 12 ГБ, 64 ГБ памяти). Всё наблюдалось на этой машине, если не сказано иное; версии важны — эти функции
 меняются от сборки к сборке. Что из этого вошло в редактор — в [proofing-internals.md](proofing-internals.md)
 (на английском) и в руководстве [../proofing.ru.md](../proofing.ru.md).
 
@@ -157,11 +157,11 @@ Microsoft объявила Aion 1.0 на Build 2026 (2 июня) и обещал
   JSON-схемой (`responseConstraint`), поэтому может проверять и русский. Первая проба с промптом BlueEdit: «Мы был» →
   «Мы были» (0,7 с), «сказал что» → «сказал, что» (0,8 с), «She don't» → «She does not» (0,5 с); «Я пошли» →
   «Мы пошли» (неверно: меняет смысл; этот первый вызов шёл 66 с и дописывал пробелы). Пояснения — по-английски, что
-  бы ни просил промпт. По словам Microsoft, Aion работает и на процессоре. Замер ещё не сделан (задача #37).
+  бы ни просил промпт. По словам Microsoft, Aion работает и на процессоре. Замер ещё не сделан.
 - **Translator**: ru→en и en→ru `downloadable`; после загрузки «Вчера мы долго гуляли по парку и разговаривали о
   книгах.» → «Yesterday we walked around the park for a long time and talked about books.» (7,4 с вместе с загрузкой),
-  en→ru 1,2 с, качество хорошее (задача #39).
-- **LanguageDetector**: есть; возвращает языки с уверенностью и `und` (задача #40).
+  en→ru 1,2 с, качество хорошее.
+- **LanguageDetector**: есть; возвращает языки с уверенностью и `und`.
 
 ### С чем не путать
 
@@ -170,11 +170,11 @@ Microsoft объявила Aion 1.0 на Build 2026 (2 июня) и обещал
   английского (для русского переключатель неактивен). Публичного API нет.
 - **Copilot** «check your work with an AI proofreader» (справочный центр microsoft.com): вставить текст в чат Copilot.
   Облако, API нет.
-- Расширения в Edge пользователя (Reverso, Grammarly, LanguageTool) — не сам Edge.
+- Расширения, установленные в Edge (Reverso, Grammarly, LanguageTool), — не сам Edge.
 
 ## 2. Chrome
 
-Chrome **154.0.8037.58**, скрытый, со своим профилем, локальная страница:
+Chrome **154.0.8037.58** (стабильная версия), скрытый, со своим профилем, локальная страница:
 
 | API | Есть сразу |
 |---|---|
@@ -189,12 +189,12 @@ Chrome **154.0.8037.58**, скрытый, со своим профилем, ло
 Требования: 22 ГБ свободного места; видеокарта больше 4 ГБ или процессор с 16 ГБ памяти и 4 ядрами; безлимитное
 подключение.
 
-**Здесь она работает на процессоре, есть видеокарта или нет** (замер 7 октября 2026, Chrome 154.0.8037.98,
-i9-11900KB, 64 ГБ, RTX 4070): пока проверка Chrome в BlueEdit шла по британскому академическому набору (59 предложений,
-медиана 0,6 с), `nvidia-smi` раз в секунду показывал 0–83 МБ занятой видеопамяти и около 0 % нагрузки — как при
-простаивающем Chrome; процесс видеокарты Chrome значился без своей памяти. На рабочем компьютере в журнале Chrome то же
-самое: «Created TensorFlow Lite XNNPACK delegate for CPU» (XNNPACK — процессорный движок LiteRT). Так что отказ проверки
-объясняет не отсутствие подходящей видеокарты, а скачивание модели (нужны серверы Google и безлимитное подключение),
+**Она работает на процессоре, есть видеокарта или нет** (замер 7 октября 2026 на тестовой машине, Chrome
+154.0.8037.98, i9-11900KB, 64 ГБ, RTX 4070): пока проверка Chrome в BlueEdit шла по британскому академическому
+набору (59 предложений, медиана 0,6 с), `nvidia-smi` раз в секунду показывал 0–83 МБ занятой видеопамяти и около 0 %
+нагрузки — как при простаивающем Chrome; процесс видеокарты Chrome значился без своей памяти. На другом компьютере в
+журнале Chrome то же самое: «Created TensorFlow Lite XNNPACK delegate for CPU» (XNNPACK — процессорный движок LiteRT).
+Так что отказ проверки объясняет не отсутствие подходящей видеокарты, а скачивание модели (нужны серверы Google и безлимитное подключение),
 16 ГБ памяти и 22 ГБ свободного места.
 
 В 154 код на месте — в `chrome.dll` есть `blink::Proofreader`, `blink::Proofreader::proofread`,
@@ -222,21 +222,23 @@ with a built-in small expert model…». Рядом в `chrome://flags` — `#se
 
 ### Работает с флагами *и* конфигурацией экспериментов Google
 
-В обычном Chrome 154 пользователя (как включить флаги — по шагам в [../proofing-setup.ru.md](../proofing-setup.ru.md#chrome-исследуется-в-blueedit-пока-нет)) с включёнными `#proofreader-api`, `#semantic-embedder-api` и
-`#gemma4-for-built-in-ai` и полным перезапуском [площадка](https://chrome.dev/web-ai-demos/proofreader-api-playground/)
-заработала; модель скачалась при первом нажатии кнопки. От тестового профиля отличались не флаги (те же три), а
-**конфигурация экспериментов (variations seed)**, которую Chrome скачивает с серверов Google и применяет при
-следующем запуске (ключи `variations_*` в `Local State`). В новом профиле её не было — и Chrome даже стирал из него
-флаги при запуске. Когда в отдельный профиль скопировали только ключи `variations_*` пользователя и список флагов (без
-личных данных), `Proofreader` появился и там: `en` → `downloadable`, `ru` → `unavailable`. Значит, поверх флага API
-включается на стороне сервера, у части пользователей.
+В Chrome 154, которым пользуются каждый день (как включить флаги — по шагам в
+[../proofing-setup.ru.md](../proofing-setup.ru.md#корректор-chrome)), с включёнными `#proofreader-api`,
+`#semantic-embedder-api` и `#gemma4-for-built-in-ai` и полным перезапуском
+[площадка](https://chrome.dev/web-ai-demos/proofreader-api-playground/) заработала; модель скачалась при первом
+нажатии кнопки. От тестового профиля отличались не флаги (те же три), а **конфигурация экспериментов (variations
+seed)**, которую Chrome скачивает с серверов Google и применяет при следующем запуске (ключи `variations_*` в
+`Local State`). В новом профиле её не было — и Chrome даже стирал из него флаги при запуске. Когда в отдельный профиль
+скопировали только ключи `variations_*` повседневного профиля и его список флагов (без личных данных), `Proofreader`
+появился и там: `en` → `downloadable`, `ru` → `unavailable`. Значит, поверх флага API включается на стороне сервера,
+у части пользователей.
 
 **Модель** — не Gemini Nano, а крошечная, скачивается в папку данных:
 
 ```
-User Data\OptGuideManifestModelfe836b7…6.6.3.1603\     117 МБ
+User Data\OptGuideManifestModel\6fe836b7…\2026.6.3.1603\     117 МБ
     manifest.json: "Optimization Guide On-Device Tinymodel Proofreader", версия 2026.6.3.1603
-    weights.bin (117 МБ), cache.bin, adapter_cache.bin, encoder_cache.bin, _metadataerified_contents.json
+    weights.bin (117 МБ), cache.bin, adapter_cache.bin, encoder_cache.bin, _metadata\verified_contents.json
 ```
 
 Посмотрели 5 октября 2026: `weights.bin` начинается с `LITERTLM` — это контейнер
@@ -246,7 +248,7 @@ User Data\OptGuideManifestModelfe836b7…6.6.3.1603\     117 МБ
 вероятно, можно запустить и без Chrome — в LiteRT-LM с этим шаблоном; **ещё не пробовали**, как и то, что ответ — это
 исправленный текст (как у Edge, который сравнивает тексты). Веса принадлежат Google и идут в составе Chrome без
 отдельной лицензии: попробовать на своём компьютере можно, включать в BlueEdit — нет. Рядом,
-`OptGuideOnDeviceModel5.8.8.1141`, — Gemini Nano (`BaseModelSpec` «v3Nano», 4,3 ГБ, у `weights.bin` нет читаемого
+`OptGuideOnDeviceModel\2025.8.8.1141`, — Gemini Nano (`BaseModelSpec` «v3Nano», 4,3 ГБ, у `weights.bin` нет читаемого
 заголовка), модель Prompt API.
 
 **Возвращает типы исправлений** (Edge — нет): с `includeCorrectionTypes: true`
@@ -264,7 +266,7 @@ their going home.» → «doesn't», «they're» (1,7 с); британские 
 API» → «The proofreader API». `create()` вместе с загрузкой — 3,6 с. Русский: `NotSupportedError: The requested
 language options are not supported.` Только английский.
 
-В BlueEdit с #42 (`BrowserProofreader.Chrome`): скрытый Chrome с `%LOCALAPPDATA%\BlueEdit\chrome-profile`, в `Local State`
+В BlueEdit (`BrowserProofreader.Chrome`): скрытый Chrome с `%LOCALAPPDATA%\BlueEdit\chrome-profile`, в `Local State`
 которого перед каждым запуском копируются ключи `variations_*` и список флагов пользователя (только они). Замер 6
 октября 2026 на британском академическом наборе: 21 из 24 грамматических ошибок (20 с верным исправлением), 2 из 3
 пунктуационных замечены, 26 ложных тревог на 24 верных предложениях — 20 из них убранная точка в конце; с возвращённой
@@ -272,7 +274,7 @@ language options are not supported.` Только английский.
 «student handbook», один раз «The» → «Few». 0,65 с на предложение. Скрытый (headless) Chrome работает (прежние попытки
 не удавались из-за отсутствия конфигурации, а не из-за headless).
 
-**Без Chrome** (#104, 6 октября 2026): модель работает в LiteRT-LM от Google (`pip install litert-lm`, 0.17.1).
+**Без Chrome** (6 октября 2026): модель работает в LiteRT-LM от Google (`pip install litert-lm`, 0.17.1).
 Выяснилось по ходу:
 - `litert-lm describe` читает файл: только текст, без рассуждений, температура выборки 0, top-k 3. `litert-lm run model
   --prompt "She don't like coffee, and their going home."` → «She doesn't like coffee, and they're going home.» (1,3 с
@@ -313,8 +315,9 @@ language options are not supported.` Только английский.
   `8E018A9D-2415-4677-BF08-794EA61F94BB`.
 - `ISpellChecker`: первый испробованный IID (`B6FD0B71-…`) дал `E_NOINTERFACE` (0x80004002); рабочий —
   `E7ED1C71-87F7-4378-A840-C9200DACEE47`.
-- Поддерживаемые здесь теги: en-029 … en-ZW, ru-MO, ru-RU. Языки пользователя: `HKCU\Control Panel\International\User Profile`,
-  значение `Languages` (здесь `en-GB`, `ru`), с фильтром по `IsSupported`.
+- Теги, поддерживаемые на тестовой машине: en-029 … en-ZW, ru-MO, ru-RU. Языки пользователя:
+  `HKCU\Control Panel\International\User Profile`, значение `Languages` (на тестовой машине `en-GB`, `ru`), с фильтром
+  по `IsSupported`.
 - API грамматики в Windows нет.
 
 ## 5. LanguageTool (бесплатный, локальный)
@@ -340,10 +343,10 @@ language options are not supported.` Только английский.
 
 ## 7. Что ещё смотрели
 
-- Hunspell (WeCantSpell.Hunspell 7.0.1, словари LibreOffice) — для переноса на Linux (задача #23).
-- Harper (Apache-2.0, английский, `harper-ls` / `harper-cli --format json`) (задача #24).
+- Hunspell (WeCantSpell.Hunspell 7.0.1, словари LibreOffice) — для переноса на Linux.
+- Harper (Apache-2.0, английский, `harper-ls` / `harper-cli --format json`).
 - Яндекс.Спеллер: бесплатное облако, 10 000 запросов и 10 млн символов в сутки, обязательна подпись «Проверка
-  правописания: Яндекс.Спеллер» (задача #27).
+  правописания: Яндекс.Спеллер».
 - LanguageTool в облаке: бесплатно 20 запросов и 75 000 символов в минуту; Premium около 60 € в год.
 - Не подходят: Grammarly (SDK закрыт 10 января 2024), ОРФО (нет SDK), Phi Silica (убирают в январе 2027), Главред и
   Литера5 (платные).

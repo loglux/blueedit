@@ -223,24 +223,42 @@ def test_get_dictionaries_lists_the_languages(editor, make_file):
 
 
 def test_set_up_grammar_offers_the_ways_and_sets_a_model_server(editor, make_file):
-    # A new user gets grammar checking working from one window (Tools > Set up grammar checking)
+    # A new user gets grammar checking working from one window (Tools > Set up grammar checking). The address offered
+    # is one where nothing listens (Ollama's own may be running on this computer), so the check says so every time
+    os.makedirs(os.environ["BLUEEDIT_CONFIG_DIR"], exist_ok=True)
+    with open(settings_path(), "w", encoding="utf-8") as f:
+        f.write('{ "llmServer": "http://127.0.0.1:9/v1" }\n')
     t = editor(make_file("a.txt", "hello\n"))
     t.send(alt("t"), 0.8); t.send("u", 1.5)
     text = t.text()
     for way in ("A language model here", "Ollama", "LM Studio", "Another model server", "LanguageTool", "Harper"):
         assert way in text, text
     t.send(DOWN * 3, 0.3); t.send("\r", 0.8)                      # another model server
-    t.send("\r", 0.6)                                             # the address offered (Ollama here)
+    t.send("\r", 0.6)                                             # the address offered (the last one)
     t.send("my-model", 0.4); t.send("\r", 0.6)
-    t.send("\r", 1.0)                                             # no key
+    t.send("sk-test-secret", 0.4); t.send("\r", 1.0)               # a key: to a file of its own
+    # checked first: nothing listens there, which is said, and kept anyway (the first button)
+    for _ in range(50):
+        if "does not answer" in t.text():
+            break
+        time.sleep(0.2)
+    assert "does not answer" in t.text() and "Keep it as it is" in t.text(), t.text()
+    t.send("\r", 1.0)
     # the last writes may come later on a busy computer (the CI runner once read the file before them)
     for _ in range(25):
         s = open(settings_path(), encoding="utf-8").read()
         if '"llmModel": "server"' in s and '"grammar": ["llm"]' in s:
             break
         time.sleep(0.2)
-    assert '"llmServer": "http://127.0.0.1:11434/v1"' in s and '"llmServerModel": "my-model"' in s, s
+    assert '"llmServer": "http://127.0.0.1:9/v1"' in s and '"llmServerModel": "my-model"' in s, s
     assert '"llmModel": "server"' in s and '"grammar": ["llm"]' in s, s
+    assert '"llmApiKey": "file:llm-key"' in s and "sk-test-secret" not in s, s
+    key_file = os.path.join(os.path.dirname(settings_path()), "llm-key")
+    key = open(key_file, "rb").read()
+    if WINDOWS:
+        assert b"sk-test-secret" not in key, key                   # encrypted (DPAPI)
+    else:
+        assert key == b"sk-test-secret" and os.stat(key_file).st_mode & 0o777 == 0o600, key
 
 
 class FakeOllama:

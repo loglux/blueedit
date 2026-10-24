@@ -25,7 +25,7 @@ are shown typeset instead, as LaTeX prints them, in the Latin Modern font (Live 
   ```
 
   On Linux: `tar xzf blueedit-mathimages-*-linux-x64.tar.gz -C blueedit-*-linux-x64` (`mathimages/` beside
-  `blueedit`). The editor also looks in `%LOCALAPPDATA%\BlueEdit\mathimages` (`~/.local/share/BlueEdit/mathimages`),
+  `be`). The editor also looks in `%LOCALAPPDATA%\BlueEdit\mathimages` (`~/.local/share/BlueEdit/mathimages`),
   where `.\tasks.ps1 setup-math` builds it from the source, and where `BLUEEDIT_MATHIMAGES` points (`off` turns it
   off). The editor checks the module's interface number (`Api`), not its release: a module from another release
   works as long as that number is the same (it has been 1 since the module first shipped). A module with another
@@ -44,4 +44,4 @@ are shown typeset instead, as LaTeX prints them, in the Latin Modern font (Live 
 - Pictures are as sharp as the terminal allows: Windows Terminal draws Sixel on a grid of 10 × 20 pixels per cell
   whatever the font, and scales it to the font, so a larger font makes them softer.
 
-The design, the choices and the measurements: [tech/editing.md](tech/editing.md#formula-pictures-sixel-49).
+The design, the choices and the measurements: [tech/editing.md](tech/editing.md#formula-pictures-sixel).

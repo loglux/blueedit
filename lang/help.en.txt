@@ -126,7 +126,7 @@ SPELLING
                                root; those the system has are not downloaded again.
   Tools > Grammar checking     LanguageTool, a model, Edge, Chrome, Harper: findings
                                underlined in another colour; F7 shows why and the fix.
-  Tools > Grammar model        which language model (Auto: the best one installed)
+  Tools > Grammar model        the model: here (Auto: the best one) or a server's
   A paragraph is checked in its language among the spelling ones: by its letters, else
   by a built-in model (English or German...). Markdown: "language: de" on top says it.
   Tools > Ignored rules        what F7 > Never show this hid; untick to see it again

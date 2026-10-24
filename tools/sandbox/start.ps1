@@ -12,7 +12,7 @@
 .EXAMPLE
   .\tools\sandbox\start.ps1
 #>
-param([int]$TimeoutMinutes = 30, [switch]$Newcomer, [switch]$Dialogs)
+param([int]$TimeoutMinutes = 30, [switch]$Newcomer, [switch]$Dialogs, [switch]$Installer)
 $ErrorActionPreference = 'Stop'
 $repoTools = Split-Path $PSScriptRoot
 $work = Join-Path ([IO.Path]::GetTempPath()) 'blueedit-sandbox'
@@ -27,9 +27,9 @@ if (Get-Command wsb -ErrorAction SilentlyContinue) { if (wsb list) { throw 'a sa
 
 $release = Join-Path $work 'release'
 $inside = 'inside.ps1'
-if ($Newcomer -or $Dialogs) {
+if ($Newcomer -or $Dialogs -or $Installer) {
     # the zip as the release workflow makes it: be.exe and the setup scripts
-    $inside = if ($Dialogs) { 'dialogs.ps1' } else { 'newcomer.ps1' }
+    $inside = if ($Dialogs) { 'dialogs.ps1' } elseif ($Installer) { 'installer.ps1' } else { 'newcomer.ps1' }
     $repo = Split-Path $repoTools
     $build = Join-Path $work 'build'
     foreach ($d in $release, $build) { if (Test-Path $d) { Remove-Item $d -Recurse -Force } }
@@ -41,6 +41,8 @@ if ($Newcomer -or $Dialogs) {
     Copy-Item -Recurse (Join-Path $repoTools 'proofing-setup'), (Join-Path $repoTools 'lsp-setup') (Join-Path $stage 'tools')
     New-Item -ItemType Directory $release | Out-Null
     Compress-Archive -Path (Join-Path $stage '*') -DestinationPath (Join-Path $release 'blueedit-dev-win-x64.zip')
+    # the installer as the release workflow makes it (tools/installer)
+    if ($Installer) { & (Join-Path $repoTools 'installer\build.ps1') -Source $build -Output $release | Out-Null }
 } else { New-Item -ItemType Directory -Force $release | Out-Null }
 
 $wsb = Join-Path $work 'test.wsb'

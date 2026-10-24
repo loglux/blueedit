@@ -41,13 +41,16 @@ sealed partial class LlmGrammarChecker : IGrammarChecker
         "Qwen_Qwen3-14B-Q4_K_M.gguf", "google_gemma-3-4b-it-Q4_K_M.gguf", "microsoft_Phi-4-mini-instruct-Q4_K_M.gguf",
     };
 
+    /// <summary>A model file's place in <see cref="Preferred"/>; after them all when it is not there.</summary>
+    internal static int Rank(string file) => Array.FindIndex(Preferred, p => p.Equals(file, StringComparison.OrdinalIgnoreCase)) is int i and >= 0 ? i : int.MaxValue;
+
     /// <summary>All model files in models\, the preferred ones first in their order, then the others by name.</summary>
     public static IReadOnlyList<string> ModelsIn(string dir)
     {
         var models = Path.Combine(dir, "models");
         if (!Directory.Exists(models)) return Array.Empty<string>();
         return Directory.EnumerateFiles(models, "*.gguf")
-            .OrderBy(f => Array.FindIndex(Preferred, p => p.Equals(Path.GetFileName(f), StringComparison.OrdinalIgnoreCase)) is int i and >= 0 ? i : int.MaxValue)
+            .OrderBy(f => Rank(Path.GetFileName(f)))
             .ThenBy(f => f, StringComparer.OrdinalIgnoreCase).ToList();
     }
 
@@ -143,6 +146,16 @@ sealed partial class LlmGrammarChecker : IGrammarChecker
         foreach (var (text, lang) in _work.GetConsumingEnumerable())
         {
             try { _done[(text, lang)] = Proofread(text, lang); }
+            // the service's limit of requests: said once, nothing sent until the time it gave, then this paragraph is
+            // asked again (not left as "nothing found")
+            catch (LimitReachedException ex)
+            {
+                LastFailure = "language model: " + ex.Message;
+                Interlocked.Increment(ref _version);
+                while (DateTime.Now < ex.Until && !_work.IsAddingCompleted) Thread.Sleep(1000);
+                if (!_work.IsAddingCompleted) _work.Add((text, lang));
+                continue;
+            }
             // ArgumentException and IndexOutOfRangeException too: a model's answer this code reads wrongly costs that
             // paragraph its findings, never the editor (an exception on this thread would end the process)
             catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException or InvalidOperationException

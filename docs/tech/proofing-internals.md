@@ -65,14 +65,15 @@ a set of queued texts (so a text is sent once), a `volatile` status string and a
   an address; it does not flag the address, and the gap does not upset it.)
 - **The paragraph's language**: below, "The language of a paragraph".
 
-### The language of a paragraph (#40)
+### The language of a paragraph
 
-Until October 2026 it was "Russian when Cyrillic letters outnumber Latin, otherwise the user's English": right for the
-author's two languages, wrong for anyone else (Ukrainian checked as Russian, German as English; and a checker given
+Until October 2026 it was "Russian when Cyrillic letters outnumber Latin, otherwise the user's English": right for
+Russian and English, wrong for anyone else (Ukrainian checked as Russian, German as English; and a checker given
 the wrong language is silent: the Obsidian plugin saw LanguageTool find nothing in a Russian paragraph sent as
-`en-GB`). Now the same rules as the plugin BlueEdit shares its proofing with (obsidian-blueproof,
-`src/prose/language.ts`, `detect.ts`, measured there; its `docs/design.md`, "The language of a paragraph"), in
-`ParagraphLanguage.cs` and `EditorView.Language.cs`:
+`en-GB`). Now the same rules as the plugin BlueEdit shares its proofing with, the Obsidian plugin BlueProof
+([loglux/obsidian-blueproof](https://github.com/loglux/obsidian-blueproof): `src/prose/language.ts`, `detect.ts`,
+measured there; its `docs/design.md`, "The language of a paragraph"), in `ParagraphLanguage.cs` and
+`EditorView.Language.cs`:
 
 1. **The candidates**: the languages the Markdown front matter states (`language:` or `lang:`, as Obsidian notes say
    it; `de` spelled `de-DE` when that is a spelling language), else the spelling languages. Not read yet: LaTeX's
@@ -80,7 +81,7 @@ the wrong language is silent: the Obsidian plugin saw LanguageTool find nothing 
 2. **By script**: the candidates written in the script most of the paragraph's letters are in (formulas blanked out:
    their variables would count as Latin). One left is the answer; this is all Russian and English ever need, so for
    them nothing else runs. None left (Russian text, only English listed): guessed as with no list. (The plugin keeps
-   a single listed language even then; here the old rule's behaviour, Russian text checked as Russian, is kept.)
+   a single listed language even then; BlueEdit keeps the old rule's behaviour, Russian text checked as Russian.)
 3. **Several of one script**: a candidate whose alphabet lacks a letter of the text is dropped ("ё", "ы", "э" are not
    Bulgarian; "і", "ї", "є" not Russian; "ъ" as a vowel not Russian: the plugin saw a Russian note with formulas
    called Bulgarian in six paragraphs of seven), then fastText's language identification model picks the likeliest
@@ -115,7 +116,7 @@ the language model and the style model are told the language by name: the instru
 English, and for any other language the same rules naming it ("The user's text is in German: write in German, never
 translate"), not measured. Spelling is not per paragraph yet: a word is accepted when any spelling language knows it.
 
-### Formulas (Markdown, issue #48)
+### Formulas (Markdown)
 
 Maths notes mix prose and LaTeX: "where $x$ is the length", "substituting gives ⏎ $$…$$ ⏎ so the area is…". A formula
 is not prose, but it is part of the sentence. What the editor does (`EditorView.Grammar.cs`):
@@ -126,28 +127,28 @@ is not prose, but it is part of the sentence. What the editor does (`EditorView.
 - **A display formula does not split a paragraph**: a `$$` block with text right above or below (no blank line)
   belongs to the text's paragraph, so "gives ⏎ $$…$$ ⏎ so the answer is 3." is one sentence and the punctuation after
   a formula is checked. A paragraph that is only formulas is not checked.
-- **Nor do blank lines around it** (#70), as maths is usually written ("…so putting $y=0$ gives ⏎⏎ $$…$$ ⏎⏎ where c is a
+- **Nor do blank lines around it**, as maths is usually written ("…so putting $y=0$ gives ⏎⏎ $$…$$ ⏎⏎ where c is a
   constant."): a display formula joins the text above it when that text has not ended (no `.` `!` `?` at its end);
   formulas after it join too (a calculation going on); text below joins when it goes on in lower case ("where",
   "and"), and so does text that starts with a formula ("$$r=7$$ and slant height", which before was not checked at
-  all). Inside such a paragraph a blank line becomes a space, so LanguageTool reads one sentence. Measured on the
-  user's coursework before choosing the rule: 1084 display formulas stand between blank lines; the text before had
+  all). Inside such a paragraph a blank line becomes a space, so LanguageTool reads one sentence. Measured on real
+  academic maths notes before choosing the rule: 1084 display formulas stand between blank lines; the text before had
   not ended in 906 (a word 684, `:` 156, `,` 66; `.` 55), the text after started in lower case in 92 and with a capital
   in 815 (`ParagraphAt`, `FormulaAfter`, `FormulaBefore`, `EndsSentence`, `GoesOn`).
 - **A finding on markup alone is dropped**: the checker saw `**` or `- ` as spaces, so a change there is about the
-  editor's blanking (the model did that on the user's notes); an insertion such as a missing comma is kept.
+  editor's blanking (the model did that on real notes); an insertion such as a missing comma is kept.
 - **LaTeX spoilt by JSON escapes is put back** (`LlmGrammarChecker.RepairLatexEscapes`): a model copies `\frac` into its
   JSON answer without doubling the backslash, which reads back as a form feed and `rac` (`\neq` as a line break, `\right`
   as a carriage return, `\times` as a tab, `\beta` as a backspace). Those "changes" were dropped as touching a formula,
   but enough of them tripped the rewrite guard and lost the real fixes. Found by the Obsidian plugin.
 - **An answer cut off at the token limit** (`finish_reason: "length"`; Gemma 3 12B writing `\n` on and on after a display
-  formula, found by the plugin, #74) is reported as such for that paragraph instead of as broken JSON.
-- **…and then asked again with each formula as one word** (#126; `LlmGrammarChecker.WithoutFormulas`, `MapBack`). A
+  formula, found by the plugin) is reported as such for that paragraph instead of as broken JSON.
+- **…and then asked again with each formula as one word** (`LlmGrammarChecker.WithoutFormulas`, `MapBack`). A
   model can loop while it copies a formula into `corrected` (YandexGPT 5 Lite: `\text{ }` 3,292 tokens on, to the
   limit) and the whole paragraph had no findings. The loop comes and goes with any change of the prompt, so it is
   caught where it shows: on a cut-off answer the paragraph is sent once more with every `$…$`, `$$…$$`, `\(…\)`,
   `\[…\]` and equation environment as `X`; the findings are moved back by the formulas' lengths, and any on an `X`
-  dropped, as a finding on a formula is. Formulas as placeholders were measured slightly worse as the default (#48:
+  dropped, as a finding on a formula is. Formulas as placeholders were measured slightly worse as the default (below:
   YandexGPT 15 of 16 vs 16 as is), but here they only touch paragraphs that are otherwise lost. Measured with
   `MathBench` (10 October 2026), the formula way *as is*:
 
@@ -164,7 +165,7 @@ is not prose, but it is part of the sentence. What the editor does (`EditorView.
   its own text through `Issues(Func<MathView, string>, …)`). Today every checker gets the formula **as it is**.
 - **Any finding that touches a formula is dropped** (`Prose.Touches`), and so is any style suggestion (Ctrl+F7):
   nothing inside a formula is ever changed or underlined.
-- **What counts is the part a fix changes** (`Prose.ChangesFormula`, #158, found by BlueProof for Obsidian): the word
+- **What counts is the part a fix changes** (`Prose.ChangesFormula`, found by the Obsidian plugin): the word
   diff puts a mark put in after a formula together with its closing `$` (`$a=b$` → `$a=b$,`), so a model's comma
   after a formula ("Пусть $a=b$ тогда…") was dropped as touching it. What a fix keeps at the start and at the end of a
   finding is not counted, and a mark put in at a formula's edge is outside it; one put in before the closing `$`
@@ -172,13 +173,13 @@ is not prose, but it is part of the sentence. What the editor does (`EditorView.
 - **A mark moved into a formula** (gpt-5.4-mini, 3 of 3 times: `…\right)$.` → `…\right).$`) comes out of the diff as a
   change inside the formula, dropped, and the full stop removed after it, which alone read as "possibly delete '.'",
   without the model's reason and wrong for an inline formula. A removal of one or two characters right after a
-  formula is dropped when a finding inside that formula was. Unit tests only (BlueProof's cases and this answer); not
+  formula is dropped when a finding inside that formula was. Unit tests only (the plugin's cases and this answer); not
   run with a live model in BlueEdit.
-- **A change that only puts in or takes out `{ } ^ _ $ \`** is no finding (#192, found by BlueProof: Gemini 3.5
+- **A change that only puts in or takes out `{ } ^ _ $ \`** is no finding (found by the Obsidian plugin: Gemini 3.5
   Flash-Lite put a `}` after a right display formula); with the fix above such a change at a formula's edge would
   have been kept.
 
-### Formula errors without a model (#192)
+### Formula errors without a model
 
 `LatexCheck.cs` reads each formula once with a stack of groups (`{`, `\left`, `\begin`) and what is still wanted
 (the arguments of `\frac`, of `^`). It reports only what stops MathJax and LaTeX, with MathJax's messages, so a finding
@@ -187,7 +188,7 @@ is never a guess; a model is the wrong tool here (it rewrites what is right). Re
 The findings are diagnostics with the source "LaTeX" (`EditorView.LatexCheck.cs`), next to a language server's, so
 underlining, Shift+F7, F7 and the status count come for free; found again for the whole file after each edit.
 
-**Measured** with `tests/BlueEdit.Tests/LatexBench.cs` (`BLUEEDIT_LATEX_BENCH`) on the user's 726 notes, about 134,000
+**Measured** with `tests/BlueEdit.Tests/LatexBench.cs` (`BLUEEDIT_LATEX_BENCH`) on 726 real academic notes, about 134,000
 formulas, 12 October 2026: first 33 findings, 13 of them false — `$\$ 14.8$`, where `Prose.MathRx` ended the formula at
 the escaped dollar (it now lets `\$` stand inside, which the drawing and the grammar checkers share). After that 18:
 16 real (two pandoc files whose `\begin{aligned}` was lost, `&` left bare), 2 in JavaScript written as text, which
@@ -210,14 +211,14 @@ formulas; now `*` needs an operand on both sides and a formula of dots alone is 
 **Measured** (`tests/BlueEdit.Tests/MathBench.cs`, run with `BLUEEDIT_MATH_BENCH`; 5 October 2026). Four ways of handing a
 formula to a checker:
 
-- *spaces*: the formula as spaces, BlueEdit before #48;
+- *spaces*: the formula as spaces, BlueEdit's way before this measurement;
 - *plugins*: the formula as text, findings that start inside it hidden — what the two Obsidian LanguageTool plugins do
   (wrenger/obsidian-languagetool 1.4.2, Clemens-E/obsidian-languagetool-plugin 0.3.7, read in their code);
 - *placeholder*: a word in its place ("X" and spaces, same length), findings touching it dropped — what TeXtidote and
   LanguageTool's own LaTeX support do;
 - *as is*: the formula as it is, findings touching it dropped — chosen.
 
-On the first shared cases (34 texts: the author's own coursework sentences, the same with an error put in, and
+On the first shared cases (34 texts: sentences from real academic maths notes, the same with an error put in, and
 written ones; 16 errors, 18 correct texts — since October 2026 kept outside the public repository):
 
 | Checker | Way | Errors found | False alarms on correct texts | Off target |
@@ -233,8 +234,8 @@ written ones; 16 errors, 18 correct texts — since October 2026 kept outside th
 | Gemma 3 12B | placeholder | 13 | 0 | 0 |
 | Gemma 3 12B | **as is** | **14** | **0** | **0** |
 
-After #70 (blank-line formulas joined, LaTeX escapes repaired, markup-only findings dropped), on the same kind of set
-(38 texts, 19 errors, 19 correct texts; *fixed* = the first suggested fix gives the expected text):
+After the next changes (blank-line formulas joined, LaTeX escapes repaired, markup-only findings dropped), on the same
+kind of set (38 texts, 19 errors, 19 correct texts; *fixed* = the first suggested fix gives the expected text):
 
 | Checker | Way | Found | Fixed | False alarms on correct texts |
 |---|---|---|---|---|
@@ -245,11 +246,11 @@ After #70 (blank-line formulas joined, LaTeX escapes repaired, markup-only findi
 | Gemma 3 12B | placeholder | 14 | 14 | 0 |
 | Gemma 3 12B | **as is** | **17** | **17** | **0** |
 
-The three errors after a display formula with blank lines around it (the author's style) were found by both models, and
-neither flagged the correct text of that kind; LanguageTool found none of them.
+The three errors after a display formula with blank lines around it (as those notes write maths) were found by both
+models, and neither flagged the correct text of that kind; LanguageTool found none of them.
 
 On the public sets `math-en.json` and `math-ru.json` (23 October 2026: written sentences of the same kinds in place of
-the author's; 42 texts, 22 errors, 20 correct texts; `BLUEEDIT_BENCH_SETS="en-math;ru-math"`):
+the notes' own; 42 texts, 22 errors, 20 correct texts; `BLUEEDIT_BENCH_SETS="en-math;ru-math"`):
 
 | Checker | Way | Found | Fixed | False alarms on correct texts | Off target |
 |---|---|---|---|---|---|
@@ -266,10 +267,10 @@ the author's; 42 texts, 22 errors, 20 correct texts; `BLUEEDIT_BENCH_SETS="en-ma
 
 The choice holds: *as is* finds every error with both models, and for them *spaces* finds the fewest with the most
 false alarms (*plugins*, not listed, also found all 22, with 1 and 5 false alarms). Gemma
-flags more correct texts here than on the author's sentences (5 of 20, before 0 of 19). The first run of this set also
+flags more correct texts here than on the notes' sentences (5 of 20, before 0 of 19). The first run of this set also
 found a crash: Gemma's answer to a text with blanked formulas threw while its changes were joined (`JoinByNotes`, fixed).
 
-On the author's own maths notes (coursework in English, notes in Russian — not in the repository; 1397
+On real academic maths notes (course work in English, notes in Russian — not in the repository; 1397
 paragraphs with formulas, about 18,000 words; no ground truth there, so these are counts of findings, not of errors):
 
 | Checker | spaces | plugins | placeholder | as is |
@@ -283,7 +284,7 @@ cases, where "as is" found more with no false alarms, decide.
 
 The run also found a bug: one paragraph whose answer from the model was cut off ("Expected end of string, but reached
 end of data") switched the model checker off for the rest of the session, silently. LanguageTool and Edge's
-proofreader had the same flaw (#73). Now a failed paragraph is only that paragraph's (`IGrammarChecker.LastFailure`,
+proofreader had the same flaw. Now a failed paragraph is only that paragraph's (`IGrammarChecker.LastFailure`,
 shown once in the message line); only a server that does not start switches a checker off.
 
 What it says:
@@ -298,36 +299,37 @@ What it says:
   one sentence, "into⏎X ⏎     ⏎and…" two. So in the forms where a display formula is blanked its line breaks become
   spaces.
 
-Also in #70: `\(…\)` and `\[…\]` on one line are formulas too (mathpix and pandoc write them: 45 and 26 in the
-user's work, against 2491 `$…$`); shell code outside a code block (`$(addprefix --profile ,$(VARS))`: a `$(` and a word
-of three letters or more, or ` --` inside) is not taken for a formula — 5 such in the user's notes, all in one file.
-Commas before a display formula were measured, not changed: of the findings on the user's notes, 9 of 204 (the model)
+Also with the blank-line rule: `\(…\)` and `\[…\]` on one line are formulas too (mathpix and pandoc write them: 45 and
+26 in the same notes, against 2491 `$…$`); shell code outside a code block (`$(addprefix --profile ,$(VARS))`: a `$(`
+and a word of three letters or more, or ` --` inside) is not taken for a formula — 5 such in the notes, all in one file.
+Commas before a display formula were measured, not changed: of the findings on the notes, 9 of 204 (the model)
 and 5 of 89 (LanguageTool) sit right before a `$$` — "Thus" → "Thus,", "so" → "so,", a matter of taste that **Never show
-this** switches off (#69). One limit of not reading formulas: in "если мы знаем, что $$a \times b = c,$$ то…" the comma
+this** switches off. One limit of not reading formulas: in "если мы знаем, что $$a \times b = c,$$ то…" the comma
 is inside the formula, and LanguageTool asks for one before "то".
 
-Not done: `.tex` files (grammar is not checked there at all): the user writes none (only pandoc's debug files of one
-assignment), so it is its own issue.
+Not done then: `.tex` files (grammar was not checked there at all; the notes measured had none, only pandoc's debug
+files of one assignment), so they were left for later (LaTeX, below).
 
-**#128** (found by the Obsidian plugin, 8 October 2026): `$a$$b$` was read as `$a` (nothing: the closing `$` was
-followed by `$`) and then `$$b$` as a display formula to the end of the line, so the words after it went unchecked;
-the highlighter even took that `$$` for the opening of a block and coloured the rest of the file as a formula.
-Obsidian 1.14.4 draws two inline formulas. Now the inline `$…$` has no "not next to a `$`" ends, `$$…$$` is tried
-first so a real one is still whole, and the highlighter steps over inline formulas before it looks for an opening `$$`
-(`Lang.Opaque`). `\[` over several lines (Mathpix and pandoc write `\[`, the formula, `\]` on lines of their own) is a
-block as `$$` is, but only when `\[` begins its line (`Block.AtLineStart`): elsewhere in Markdown `\[` is an escaped
-bracket ("see \[1\]"), and an unclosed one would have made the rest of the file a formula. The plugin opens a `\[`
-block anywhere on a line. Cases `side-by-side` and `bracket-block` in `math-en.json`. Not changed: the Live view shows
-a `\[` block as written (Obsidian does not draw one either).
+**Two inline formulas side by side** (found by the Obsidian plugin, 8 October 2026): `$a$$b$` was read as `$a` (nothing:
+the closing `$` was followed by `$`) and then `$$b$` as a display formula to the end of the line, so the words after it
+went unchecked; the highlighter even took that `$$` for the opening of a block and coloured the rest of the file as a
+formula. Obsidian 1.14.4 draws two inline formulas. Now the inline `$…$` has no "not next to a `$`" ends, `$$…$$` is
+tried first so a real one is still whole, and the highlighter steps over inline formulas before it looks for an opening
+`$$` (`Lang.Opaque`). `\[` over several lines (Mathpix and pandoc write `\[`, the formula, `\]` on lines of their own)
+is a block as `$$` is, but only when `\[` begins its line (`Block.AtLineStart`): elsewhere in Markdown `\[` is an
+escaped bracket ("see \[1\]"), and an unclosed one would have made the rest of the file a formula. The plugin opens a
+`\[` block anywhere on a line. Cases `side-by-side` and `bracket-block` in `math-en.json`. Not changed: the Live view
+shows a `\[` block as written (Obsidian does not draw one either).
 
-**The shared cases** (#75): `tools/proofbench/cases/*.json`, one file per set, in the form the Obsidian plugin proposed:
+**The shared cases**: `tools/proofbench/cases/*.json`, one file per set, in the form the Obsidian plugin proposed:
 `{ "name", "language", "math", "cases": [ { "id", "text", "source", "errors": [ { "wrong", "nth"?, "kind", "ok": [...] } ] } ] }`
 — `wrong` the wrong text (its nth occurrence), `kind` grammar / spelling / punctuation, `ok` fragments of which the
 text must contain one once the first suggested fix is put in (so a benchmark counts *fixed* as well as *found*), no
-errors = a correct text. `math-en.json`, `math-ru.json` (the user's coursework and written sentences, blank-line
-cases of #70 among them). Change cases here first, then in the plugin.
+errors = a correct text. `math-en.json`, `math-ru.json` (written sentences, the blank-line cases above among them;
+the first sets, of sentences from real notes, are not in the public repository). Change cases here first, then in the
+plugin.
 
-### LaTeX (`EditorView.Tex.cs`, `Prose.LatexPlain`, issue #78)
+### LaTeX (`EditorView.Tex.cs`, `Prose.LatexPlain`)
 
 The Markdown machinery with LaTeX's idea of text, so paragraphs, formulas, offsets and checkers are shared:
 - `Prose.LatexPlain` keeps a line's length (offsets map back as for Markdown): the comment (an unescaped `%`), command
@@ -339,7 +341,7 @@ The Markdown machinery with LaTeX's idea of text, so paragraphs, formulas, offse
   `\begin{document}` when there is one), environments with no prose (math, `figure`, `table`, `verbatim`, `tabular`,
   `tikzpicture`…), `\[ … \]` and `$$ … $$` over lines, comment lines.
 - Display formulas (math environments and `\[ … \]`) are `MathBlockLine`s, the whole line a formula, so a sentence
-  goes on across them as across a Markdown `$$` block (#70). Measured: before this, "We define the function by
+  goes on across them as across a Markdown `$$` block. Measured: before this, "We define the function by
   \begin{equation}…\end{equation} which are continuous" was missed by every checker ("which are continuous" alone);
   after it YandexGPT found it (10 of 11 on tex-en.json instead of 9). A `figure` or `table` does not join.
 - `\section{…}` and the like are paragraphs of their own (the next line starts a new one), `\item` starts one,
@@ -442,11 +444,12 @@ text. BlueEdit adds explanations by asking for JSON.
   every language: written for the benchmark's two languages and left in. Now the language is put in for each
   paragraph: "proofreader of Russian", "of German", "of British English (en-GB spelling)", "of English (Australia)
   (en-AU spelling)" (a region only when it is not the language's home: "Portuguese (Brazil)"), explanations asked in
-  it, "канцелярит" only for Russian. The rules themselves are unchanged. Not measured here after the change (the run
-  was stopped by a memory shortage on this computer); the Obsidian plugin measured the same change with no regression.
+  it, "канцелярит" only for Russian. The rules themselves are unchanged. Not measured in BlueEdit after the change
+  (the run was stopped by a memory shortage on the test machine); the Obsidian plugin measured the same change with
+  no regression.
   Before, on 21 October 2026 (`ProofBench`, found / fixed): en-gb-academic grammar Gemma 3 12B 25/25, YandexGPT 5
   Lite 24/22, Gemma 3 4B 23/19; context-ru 8/6, 10/9, 3/2 — the numbers to compare a later run with.
-- **American English** (`InstructionsFor`, #124, found by the Obsidian plugin): a paragraph in `en-US` gets "American
+- **American English** (`InstructionsFor`, found by the Obsidian plugin): a paragraph in `en-US` gets "American
   English (en-US spelling)" and "-ize, -or, -er, traveled, program, license, defense are American spellings" in place
   of the British sentences (en-GB and plain `en` keep the British ones). Before, en-US text was asked for
   British spelling too. Measured on 9 October 2026 (`ProofBench`, `BLUEEDIT_BENCH_SETS=en-us-academic`: 16 correct
@@ -460,11 +463,11 @@ text. BlueEdit adds explanations by asking for JSON.
   Before, both models "fixed" color, center, analyzed, traveled into British spellings. (gpt-5.4-mini's "There
   findings" → "These findings" is right too: the case takes both.) en-GB and Russian get the same prompt as before,
   so they were not measured again.
-- **Sentences checked against each other** (#121, found and measured first by the Obsidian plugin): after "keep line
+- **Sentences checked against each other** (found and measured first by the Obsidian plugin): after "keep line
   breaks" the prompt says to read the whole text first, as a sentence can be wrong only because of an earlier one —
   pronouns, gender and number agreeing with who and what was named before, tenses with the time words. Without it the
   models checked sentences one by one: «Анна пришла домой поздно. Потом сразу лёг спать», "Mary finished the report.
-  Then he sent it" passed. Measured here on 8 October 2026 (`ProofBench`, `MathBench`; the plugin's pair and long
+  Then he sent it" passed. Measured in BlueEdit on 8 October 2026 (`ProofBench`, `MathBench`; the plugin's pair and long
   paragraph sets added to `tools/proofbench/cases`), before → after:
 
   | Set | YandexGPT 5 Lite | Gemma 3 12B |
@@ -483,10 +486,10 @@ text. BlueEdit adds explanations by asking for JSON.
   `\begin{equation}` stay in the paragraph the checker gets; Markdown's LaTeX is all inside dollars) gets one more
   sentence (`LatexInstructions`): it comes from a LaTeX document, copy every command, brace, formula, `\cite` and
   `\ref` exactly, correct only the words around them. A change that puts a LaTeX command where there was none is
-  dropped (`AddsLatex`: Gemma put `\\` between the rows of an `align`). The user's suggestion (#115).
+  dropped (`AddsLatex`: Gemma put `\\` between the rows of an `align`). A user's suggestion.
 - **From answer to findings** (`IssuesFrom`):
   1. `TextDiff.Changes(paragraph, corrected)` → the changed stretches with positions in the paragraph. Changes with
-     only whitespace between them are joined into one (#141, found by the Obsidian plugin): neighbouring words
+     only whitespace between them are joined into one (found by the Obsidian plugin): neighbouring words
      rewritten at once otherwise came out as pieces each wrong alone — "что бы подготовится" → "чтобы подготовиться"
      as three findings, and taking the first gave "чтобы бы подготовится". Changes with a word between them stay
      apart ("Мы был на лекцие" keeps two). Any two runs of whitespace pair up and the original's is kept: Gemma 3 12B
@@ -501,7 +504,7 @@ text. BlueEdit adds explanations by asking for JSON.
 
      | | Findings | Errors fixed by one finding | Findings over two marked errors | Findings adding a line break |
      |---|---|---|---|---|
-     | Pieces (before #141) | 3,248 | 2,207 | 1 | 37 |
+     | Pieces (before) | 3,248 | 2,207 | 1 | 37 |
      | Joined | 3,005 | 2,269 | 1 | 37 |
      | Joined, blanks paired | 3,005 | 2,269 | 1 | 21 |
 
@@ -527,7 +530,7 @@ text. BlueEdit adds explanations by asking for JSON.
      in 24 characters of the paragraph from outside its own stretch (a stretch copied without quotes, where the
      widened insertion overlapped the next change). Not taken: counting inserted text in the rewrite guard — it would
      also drop right fixes of short sentences ("He explained me the rule" → "He explained the rule to me", 0.52).
-  1b. **A translation or a changed number** is no finding (#123, found by the Obsidian plugin). `ChangesScript`: a
+  1b. **A translation or a changed number** is no finding (found by the Obsidian plugin). `ChangesScript`: a
      change from Latin to Cyrillic or back — Gemma 3 12B put "gradient descent" into Russian, Phi-4-mini answered
      English sentences in Russian; a word of both scripts at once ("Pис" with a Latin P) is a typo and stays.
      `ChangesNumbers`: other digits — Gemma 3 12B "corrected" a right "314 cubic centimetres" to 209. **Measured** on
@@ -537,13 +540,13 @@ text. BlueEdit adds explanations by asking for JSON.
      marked error, none of them a fix; no marked error lost its fix.
   2. **Rewrite guard**: if more than half the text changed (`MaxChangedShare = 0.5`), the answer is dropped — the
      model rewrote instead of correcting.
-  2a. **The pieces of a moved word are one change** (`JoinByNotes`, #149, found by the Obsidian plugin). A moved word
+  2a. **The pieces of a moved word are one change** (`JoinByNotes`, found by the Obsidian plugin). A moved word
      comes out of the diff in pieces with words between them, which step 1 does not cross: "where is the station" →
      "where the station is" gave "is " → "" and "station" → "station is", each wrong alone ("where the station",
      "where is the station is"), both with the note's explanation. When the model's `errors[]` names a fragment that
      holds two or more changes, and a word one of them takes out another puts in (`MovesWord`), they become one from
      the first to the last ("is the station" → "the station is"). Done after the guard, because the words the join
-     takes in between were not rewritten: before it, the two-error sentence of #149 (35 characters) counted as more
+     takes in between were not rewritten: before it, the plugin's two-error sentence (35 characters) counted as more
      than half changed and lost both fixes.
 
      **Rejected: joining every change inside a listed fragment** (the plugin's rule). The real-model test caught it:
@@ -556,8 +559,8 @@ text. BlueEdit adds explanations by asking for JSON.
      measurement are pairs of texts without the list, so they could not be measured. Case `order-1` in
      `academic-en-gb.json`.
   3. Changes in whitespace only are skipped (the blanks of hidden markup).
-  4. Each change gets the explanation (and alternatives) of the `errors[]` entry that fits it best (`NoteFor`, #130,
-     found by the Obsidian plugin): the entry with this wrong text and this fix; else one whose `original`, with the
+  4. Each change gets the explanation (and alternatives) of the `errors[]` entry that fits it best (`NoteFor`, found
+     by the Obsidian plugin): the entry with this wrong text and this fix; else one whose `original`, with the
      fix put in, gives its `replacement` ("home," with "," → "" gives "home"), or whose `replacement` holds the fix;
      else one whose `original` holds the wrong text, when that has a letter. "Holds" means as whole words. Otherwise
      "Possibly: …" / «Возможно, должно быть: …», and for a deletion "Possibly delete: “…”" / «Возможно, лишнее: «…»»
@@ -582,7 +585,7 @@ text. BlueEdit adds explanations by asking for JSON.
      ("and␣␣takes" → "andtakes" after `\emph{and}`) is not one.
 - Paragraphs over 3,000 characters are left to the other checkers.
 
-**Step 7, why and what it costs** (6 October 2026, #113). Gemma 3 12B on a LaTeX footnote answered `"errors": [{"original":
+**Step 7, why and what it costs** (6 October 2026). Gemma 3 12B on a LaTeX footnote answered `"errors": [{"original":
 "were", "replacement": "was"}]` with "were" still in `corrected`, and the error was lost: findings came from the diff
 alone. The models do this on plain prose too. Measured with `ProofBench` (British academic set) and `MathBench`, the
 two local models before → after: British set grammar Gemma 3 12B 23 → 24 of 24 (`amount` → `number`), YandexGPT 5
@@ -602,10 +605,10 @@ grammar 23 → 22. (2) *Asking again at a higher temperature* after a cut-off: a
 `\cite` sentence looped every time; the `equation` one got out at 0.7 but with the formula rewritten. YandexGPT 5 Lite,
 the editor's first choice, finds 10 of the 11 anyway.
 
-**What worked: saying it is LaTeX** (same day, #115). With the LaTeX sentence in the instructions Gemma stopped
-looping on both. Measured with `MathBench`, the two local models: given to *every* paragraph, Gemma's LaTeX set 8 → 10
-of 11 but 3 false alarms (`\\` put into an `align`), YandexGPT 10 of 11 with one false alarm less, and on the Markdown
-formula sets nothing more found and 3 more findings off target. Given only to LaTeX-document paragraphs, with
+**What worked: saying it is LaTeX** (same day, a user's suggestion). With the LaTeX sentence in the instructions Gemma
+stopped looping on both. Measured with `MathBench`, the two local models: given to *every* paragraph, Gemma's LaTeX set
+8 → 10 of 11 but 3 false alarms (`\\` put into an `align`), YandexGPT 10 of 11 with one false alarm less, and on the
+Markdown formula sets nothing more found and 3 more findings off target. Given only to LaTeX-document paragraphs, with
 `AddsLatex`: Gemma 8 → 10 of 11 with no false alarm, YandexGPT 10 of 11 as before, the Markdown sets unchanged (Gemma
 16, YandexGPT 20 of 20, nothing off target). The British set has no backslash: the sentence never reaches it.
 
@@ -617,7 +620,7 @@ formula sets nothing more found and 3 more findings off target. Given only to La
 - Its stdin, stdout and stderr are pipes, its output read and dropped (`BrowserProofreader.StartInfo`). With the
   editor's terminal inherited, Chrome's log was drawn over the editor on a work computer (6 October 2026):
   `ERROR:google_apis\gcm\…` lines where its push service could not reach Google, and "Created TensorFlow Lite XNNPACK
-  delegate for CPU". Here it logs nothing, which is why it went unseen.
+  delegate for CPU". On the development machine it logs nothing, which is why it went unseen.
 - Reads the port from `<profile>\DevToolsActivePort`, finds the page in `GET /json`, opens a `ClientWebSocket` to
   its `webSocketDebuggerUrl` and sends `Runtime.evaluate` (`awaitPromise`, `returnByValue`, `userGesture: true`).
 - Waits for the page to load (`document.readyState`), checks `Proofreader.availability({expectedInputLanguages:['en']})`
@@ -653,21 +656,59 @@ memory once; it is replaced when `llmDir`/`llmModel` change and stopped when gra
 (style starts it again when asked). `LlmGrammarChecker(dir, model)` still makes a server of its own, for use
 elsewhere.
 
-**A server at an address** (#95, `LlmEndpoint`, `LlmServer.At`): BlueEdit starts nothing and sends the same request
+**A server at an address** (`LlmEndpoint`, `LlmServer.At`): BlueEdit starts nothing and sends the same request
 to its chat completions, plus the model's name, the key (`Authorization: Bearer`) and `reasoning_effort: "none"`.
 Why each piece, from the Obsidian plugin's measurements and ours:
-- llama.cpp here stays first: it holds the model as long as the editor runs and was measured; a server is chosen
+- The local llama.cpp stays first: it holds the model as long as the editor runs and was measured; a server is chosen
   (`llmModel: "server"`) or takes over when llama.cpp is missing or does not start (`Fallback`, said once in the status).
 - What a server refuses comes back as `400` with `error.param` (OpenAI: `chat_template_kwargs`; reasoning models:
   `temperature`; newer models want `max_completion_tokens`): `Adapt` leaves the field out for this server and the
-  request goes again. llama.cpp here gets exactly the old request — no `model`, no `reasoning_effort` — so what was
+  request goes again. The local llama.cpp gets exactly the old request — no `model`, no `reasoning_effort` — so what was
   measured is what runs.
 - `reasoning_effort: "none"` is Ollama's switch for thinking (it ignores `chat_template_kwargs`): without it Qwen spent
   the whole limit thinking and answered nothing. Tested with qwen3.5:9b: one-second answers.
-- The key may be `env:NAME`, so it need not sit in settings.json; it is trimmed of a byte order mark.
+- The key may be `env:NAME` or `file:PATH`, so it need not sit in settings.json; it is trimmed of a byte order mark.
+  One typed in the editor goes to `llm-key` in the settings folder (`LlmEndpoint.SaveKey`, `KeyFile`) and the setting
+  says `"file:llm-key"`. Why: settings.json is opened in the editor (on screen, shared screens included) and copied
+  whole (to another computer, into a bug report); a file of its own is neither. How it is kept follows what programs
+  that hold a key usually do with what the system already has, nothing installed: on Windows DPAPI
+  (`CryptProtectData`, the way Windows keeps saved passwords; Azure CLI keeps its tokens so), so a copy of the file is
+  useless to another user or computer; on Linux plain text with mode 600, as command-line tools keep tokens where no
+  keyring runs (a session over SSH has none). Rejected: the Windows Credential Manager and the Secret Service
+  (GNOME Keyring, KWallet) — the second is missing on servers and over SSH, and two stores for one key is more to go
+  wrong than it is worth; an encryption of our own — its key would sit in the program. Neither way stops a program
+  running as the same user: it can read the key as the editor does. A file written by hand is read as plain text.
 - Paragraphs leave the computer only for an address outside it and the local network (`LlmEndpoint.Private`); the
   status line says where.
-- The HTTP timeout is 5 minutes: Ollama's first load of a model took 6 min 45 s here, and closing the request makes
+- **The cloud services in their own ways** (`LlmServer.Cloud.cs`, 23 October 2026), carried over from the Obsidian
+  plugin (its [`src/checkers/llm.ts`](https://github.com/loglux/obsidian-blueproof/blob/main/src/checkers/llm.ts)),
+  which measured them on 10–16 October; until then the editor asked every server in OpenAI's form, and Claude could
+  not be used at all. Known by the address:
+  - Anthropic: its Messages API (`x-api-key`, `anthropic-version`); the answer as the input of a tool the model must
+    call, or, for Haiku 5.5 and Sonnet 5.5, which refuse the forced tool, by Anthropic's schema format with room to think.
+  - Google: Interactions, its own API (`x-goog-api-key`, `store: false`): through its OpenAI form gemini-3.5-flash-lite
+    lost a long Russian paragraph's errors in 2 runs of 3, through this in none of 3 (the plugin). The OpenAI form
+    (`…/openai`) still works.
+  - DeepSeek: no schema in `response_format`; the answer as a strict function call at its `/beta` address, or any JSON
+    should that fail.
+  - What each refuses is known before the first request (the plugin's `KNOWN_PROFILES`: OpenAI's
+    `max_completion_tokens` and strict schema, Gemini 3's default temperature and thinking room, …); the rest is learnt
+    from 400 answers as before, now in Anthropic's, Google's and DeepSeek's words too.
+- `CloudCheck` asks each for real (`BLUEEDIT_CLOUD_CHECK="address|model|key;…"`): one English and one Russian paragraph
+  with an error. 23 October 2026, all found both errors: gpt-5.4-mini 0.9–1.3 s; claude-haiku-5-5 1.5–1.6 s,
+  claude-sonnet-5-5 2.0–2.4 s, claude-haiku-4-5 1.6–2.1 s; gemini-3.5-flash-lite 0.9–1.0 s, both ways; deepseek-flash
+  1.4 s, deepseek-v4-pro 1.5 s. Not measured in BlueEdit: how each does over many texts (the plugin's benchmark is).
+- Also from the plugin, found by comparing the editor's older code with it line by line: a key refused (401, 403) and
+  no model named are said as such; at a limit of requests (429) nothing is sent until the time the service gave
+  (`Retry-After`, "try again in 1.2s", Google's "retry in 54m9s" or `retryDelay`; else a minute) and the paragraph is
+  asked again then — before, every paragraph asked and failed alike and was left as "nothing found"; a server's list of
+  models leaves out those that write no text (embeddings, speech, pictures, OpenAI's realtime and -pro ones: the
+  plugin's list, `LlmServer.IsTextModel`); and Google's OpenAI form is `…/v1beta/openai/chat/completions` — the editor
+  had added a `/v1`, which Google took anyway, so only a unit test showed it.
+- It found a bug: a key file of two lines (two Gemini keys) went into the header whole, and the exception ended the
+  editor from the checker's thread. Now the first line is the key, and a key a header cannot carry fails that request
+  with a message.
+- The HTTP timeout is 5 minutes: Ollama's first load of a model took 6 min 45 s in a test, and closing the request makes
   Ollama abandon the load. A longer wait would hold the screen during a style suggestion; the docs say to load a new
   model once by hand.
 
@@ -685,7 +726,7 @@ translate" YandexGPT and Gemma rewrote Russian paragraphs in English. The answer
    with a British ending — -isation, -ise, -yse, -our, -tre, -lled, -ence, -ogue, -mme — spelt the American way).
    This runs before the joining below, or the respelling would ride along inside a real change next to it.
 3. Changes at most one word apart are **joined** into one, so a reworded phrase is one suggestion, not five; and
-   **all changes in one sentence** are one (#96): a reordered sentence ("was substituted by us" → "we substituted")
+   **all changes in one sentence** are one: a reordered sentence ("was substituted by us" → "we substituted")
    came as pieces several words apart that only make sense together, and taking some gave a broken sentence (seen in
    the Obsidian plugin with Qwen3 14B). Measured on the style sets, four models: the text with every change taken is
    the same (102 of 102 paragraphs), the number of changes halves (Gemma 3 12B 38 → 19 in English, 15 → 9 in Russian),
@@ -695,7 +736,7 @@ translate" YandexGPT and Gemma rewrote Russian paragraphs in English. The answer
    when it is a joined sentence, its pieces that keep the markup are offered one by one instead.
 5. Reasons are matched to changes by text, as for grammar.
 
-Why the filter and the two instruction lines (measured on 5 October 2026, #87, `tests/BlueEdit.Tests/StyleBench.cs`
+Why the filter and the two instruction lines (measured on 5 October 2026, `tests/BlueEdit.Tests/StyleBench.cs`
 on `tools/proofbench/cases/style-academic-en-gb.json` and `style-ru.json`): YandexGPT turned correct British text American
 ("organisation analysed … behaviour") and put contractions into formal text ("cannot" → "can't"). The line "keep the
 register" stopped the contractions for every model; the British line helped Gemma and Qwen but YandexGPT kept
@@ -731,45 +772,45 @@ Decisions:
 
 - **No default model.** The list shows each model's size and licence and the user picks: the one best at Russian
   (YandexGPT 5 Lite) has Yandex's own licence, Gemma 3 Google's terms; Qwen3 8B (Apache 2.0) and Phi-4-mini (MIT) are
-  open. The user asked for the choice (20 October 2026).
+  open. A user asked for the choice (20 October 2026).
 - **LanguageTool is offered, not pushed**: a module for those who want rules in many languages without a video card
   (Java, ~530 MB). It is the free LGPL edition, run locally, no account.
-- **Ollama and LM Studio are choices of their own** (20 October 2026, the user's wish: a choice, not everything at
+- **Ollama and LM Studio are choices of their own** (20 October 2026, a user's wish: a choice, not everything at
   once). Before, they were behind "a model server (API)", where the address and the model's exact name had to be
   typed — which a new user does not know. Now the editor asks the program at its usual address (Ollama 127.0.0.1:11434
   or `OLLAMA_HOST`, the variable Ollama itself reads; LM Studio 127.0.0.1:1234) for `/v1/models` and lists them; names
-  with "embed" or "minilm" are left out (embedding models cannot write; this PC's Ollama listed four). Nothing
+  with "embed" or "minilm" are left out (embedding models cannot write; the test machine's Ollama listed four). Nothing
   answers, or no model: a text with the steps instead of an error. The question is asked while the dialog is open
   (the user is not typing), as Tools → Grammar model does; a refused connection to 127.0.0.1 takes about 2 s on
   Windows (measured with curl), long enough that "Asking … for its models" is shown first. Nothing is installed for
   them by BlueEdit: they are programs of their own with their own installers.
-- **What was installed can be removed** (Set up grammar checking → Remove…; the user asked for it, 20 October 2026: a
+- **What was installed can be removed** (Set up grammar checking → Remove…; a user asked for it, 20 October 2026: a
   model is 2–8 GB). Only BlueEdit's own folders are looked in (`%LOCALAPPDATA%\BlueEdit`: `llm\bin`, each
   `llm\models\*.gguf`, `languagetool` + `jre`, `harper`, our Hunspell dictionaries), never a folder the settings point
   elsewhere: that may be the user's own install. A ticked checker is first taken out of `grammar` (a model here only
   when it is the one in use; a server at an address stays), so `ApplySettings` ends its process, then the files go in
   the background, each tried for 3 s while a process lets go. Not tested by a UI test beyond opening the list: the CI
-  runner is this computer, and its own models would be listed; the listing and deleting are unit-tested on folders of
-  their own.
+  runner that has the checkers installed would list its own models; the listing and deleting are unit-tested on
+  folders of their own.
 - **A model server (API) is one of the choices**, not hidden in settings.json: many computers have no video card, and
   any OpenAI-compatible address works (Ollama, LM Studio, a cloud service). Nothing is installed for it.
 - **The video card decides the llama.cpp build**, as in the scripts: CUDA with an NVIDIA driver (13.4 from driver 580),
-  else Vulkan when Vulkan sees a video card, else the CPU build (said to be slow, and the set-up list says so).
-  Vulkan is asked as llama.cpp asks it (`VideoCards.cs`): an instance from the loader, its physical devices, each
-  one's type; a type CPU (llvmpipe, SwiftShader) is software drawing and does not count. The loader alone said
-  nothing: Windows Sandbox has `System32\vulkan-1.dll` from its host and no device under it (22 October 2026), and
-  until then Windows always took the Vulkan build, so the sandbox's list said "uses the video card (vulkan)". The
-  asking runs in a process of its own (`be --vulkan-devices`): it loads the video card's drivers into the process,
-  and one that misbehaves must not take the editor's unsaved text with it. It is slow the first time after Windows
-  starts (2.7 s, nvidia-smi 0.7 s; then 0.27 s and 0.05 s, measured on this computer), so it is done once a run, in
-  the background, started when a menu first opens; the set-up list waits only for what is left. Vulkan not asked
-  (the probe gave no answer): Windows keeps the Vulkan build, which also runs on the processor, Linux the CPU build.
-  `install.ps1` asks the same through `Add-Type`; `install.sh` reads the device types from `vulkaninfo --summary`
-  (Mesa's llvmpipe answers `vulkaninfo` too). What `be --vulkan-devices` gave (23 October 2026): this computer
-  Intel UHD (type 1, twice, by two drivers) and the RTX 4070 (2); Windows Sandbox "none", and its set-up list said
-  "no video card found"; a Linux server on the LAN and WSL only `llvmpipe` (4); the NAS "none" (no libvulkan). Not
-  tried: an AMD card, or Intel alone without NVIDIA.
-- **llama-server is started once after installing** (`--version`): on the NAS the CPU build needed `libgomp.so.1`,
+  else Vulkan when Vulkan sees a video card, else the CPU build (said to be slow, and the set-up list says so). Vulkan
+  is asked as llama.cpp asks it (`VideoCards.cs`): an instance from the loader, its physical devices, each one's type; a
+  type CPU (llvmpipe, SwiftShader) is software drawing and does not count. The loader alone said nothing: Windows
+  Sandbox has `System32\vulkan-1.dll` from its host and no device under it (22 October 2026), and until then Windows
+  always took the Vulkan build, so the sandbox's list said "uses the video card (vulkan)". The asking runs in a process
+  of its own (`be --vulkan-devices`): it loads the video card's drivers into the process, and one that misbehaves must
+  not take the editor's unsaved text with it. It is slow the first time after Windows starts (2.7 s, nvidia-smi 0.7 s;
+  then 0.27 s and 0.05 s, measured on a Windows 11 test machine with an RTX 4070), so it is done once a run, in the
+  background, started when a menu first opens; the set-up list waits only for what is left. Vulkan not asked (the probe
+  gave no answer): Windows keeps the Vulkan build, which also runs on the processor, Linux the CPU build. `install.ps1`
+  asks the same through `Add-Type`; `install.sh` reads the device types from `vulkaninfo --summary` (Mesa's llvmpipe
+  answers `vulkaninfo` too). What `be --vulkan-devices` gave (23 October 2026): that test machine Intel UHD (type 1,
+  twice, by two drivers) and the RTX 4070 (2); Windows Sandbox "none", and its set-up list said "no video card found"; a
+  Linux server and WSL only `llvmpipe` (4); a Linux NAS "none" (no libvulkan). Not tried: an AMD card, or Intel alone
+  without NVIDIA.
+- **llama-server is started once after installing** (`--version`): on a Linux NAS the CPU build needed `libgomp.so.1`,
   which that system lacks (measured 20 October 2026); a missing library is said at once, not at the first paragraph.
 - **The Microsoft Visual C++ runtime on Windows, next to the programs** (`EnsureVcRuntime`): harper-ls needs
   `vcruntime140.dll`; llama.cpp's DLLs need it, `vcruntime140_1.dll` and `msvcp140.dll` too (read from their import
@@ -787,33 +828,33 @@ Decisions:
   Windows Sandbox Windows names the DLLs' signer "CN=Microsoft Windows, O=Microsoft Corporation" (its own catalog
   knows them), so the organisation is compared, not the name.
   First done by running the installer (`/install /passive`, for every user): Windows asks for an administrator, the one
-  step that would — the user asked why (20 October 2026), and it was changed. Rejected: shipping the DLLs in BlueEdit's
+  step that would — a user asked why (20 October 2026), and it was changed. Rejected: shipping the DLLs in BlueEdit's
   zip (the single-file editor becomes a folder of files for a part most users never install). Harper is started once
   after installing too (`--version`), as llama-server is, and a program that exits with `STATUS_DLL_NOT_FOUND` is said
   to miss a system library. Checked in Windows Sandbox: the three DLLs (14.44) next to harper-ls, System32 unchanged,
   Harper ran. Not checked there: llama.cpp (its model is gigabytes); a llama.cpp or Harper copied in by hand without
   the DLLs still fails.
 - **Downloads go on after a break**, with a Range request, up to five tries: languagetool.org's answer once ended
-  after 2.7 MB of 240 on the NAS (the next try and curl got all of it); a model is 2–7 GB.
+  after 2.7 MB of 240 on that NAS (the next try and curl got all of it); a model is 2–7 GB.
 - **Paths do not depend on the folder existing**: on Linux .NET gives an empty string for the local data folder when
   `~/.local/share` (or `$XDG_DATA_HOME`) does not exist yet, and the editor then put `BlueEdit/` into the current folder
-  (found installing into an empty test folder on the NAS). All such paths now use `SpecialFolderOption.DoNotVerify`,
+  (found installing into an empty test folder on that NAS). All such paths now use `SpecialFolderOption.DoNotVerify`,
   the settings' folder too.
 
 - **Spelling dictionaries too** (Tools → Get spelling dictionaries): on Linux spelling needed `apt install
-  hunspell-ru`, which needs root — not there on the NAS, nor for a user without sudo. LibreOffice's dictionaries come
+  hunspell-ru`, which needs root — not there on that NAS, nor for a user without sudo. LibreOffice's dictionaries come
   from [LibreOffice/dictionaries](https://github.com/LibreOffice/dictionaries) at a pinned commit (`DictionaryCommit`)
   through raw.githubusercontent.com; the repository publishes no sums, so the SHA-256 of each .dic and .aff at that
   commit are in the code (computed 20 October 2026). Eleven languages, each saved under its tag (`de_DE_frami.dic` →
   `de_DE.dic`, `fr.dic` → `fr_FR.dic`) so `HunspellSpell` finds it. A language with a dictionary in any folder
-  Hunspell reads (the system's too) is not downloaded again and not ticked at first (the user's wish). The .aff goes
+  Hunspell reads (the system's too) is not downloaded again and not ticked at first (a user's wish). The .aff goes
   first: a .dic alone is not taken, so a broken-off install leaves nothing half-used.
 
-Checked on 20 October 2026: on the NAS (Linux, no video card) Harper, LanguageTool and Java, llama.cpp's CPU build and
+Checked on 20 October 2026: on that NAS (Linux, no video card) Harper, LanguageTool and Java, llama.cpp's CPU build and
 Phi-4-mini into an empty folder, 50 s; on Windows the list (the CUDA 13.4 build chosen) and Harper. Not checked: a model
 installed on Windows from the editor's window, Vulkan on Linux, a CUDA install from scratch, macOS.
 
-Dictionaries, checked on the NAS (Celeron J4125) the same day: ru-RU, en-GB, uk-UA, de-DE, fr-FR and pt-BR downloaded in
+Dictionaries, checked on that NAS (Celeron J4125) the same day: ru-RU, en-GB, uk-UA, de-DE, fr-FR and pt-BR downloaded in
 4.5 s; in the editor F7 on a misspelt word in each gave Hunspell's suggestions (Hauss → Haus). Russian and English
 together were ready within 2 s of the start; all six took longer than 4 s and under 25 s (not measured closer). Not
 checked: the window's download on Windows, es-ES, it-IT, pt-PT, pl-PL and en-US loaded in the editor.
@@ -834,7 +875,7 @@ killed — Windows closes the job handle and ends them. `Dispose` also kills the
 | `ignoredRules` | rule ids / fixes never shown, filtered by the editor (`EditorView.IgnoredRules`) for every checker |
 
 **F7 → Ignore** (until the editor closes) is filtered by the editor too, as `rule@text`: the finding's rule and the
-text it flags (`EditorView.IgnoredHere`, #129, found by the Obsidian plugin). Before, each checker was told to ignore
+text it flags (`EditorView.IgnoredHere`, found by the Obsidian plugin). Before, each checker was told to ignore
 the rule. LanguageTool's rule ids are general (`COMMA_PARENTHESIS_WHITESPACE`), so one Ignore hid the rule in every
 paragraph, which is what Never show this is for. A model's rule (`LLM:wrong→fix`) already names the text, so for it
 nothing changes. The checkers no longer keep ignore lists of their own (`IGrammarChecker.IgnoreRule` is gone).
@@ -852,15 +893,15 @@ Checkers side by side: `tests/BlueEdit.Tests/ProofBench.cs` runs the sets withou
 (`"math": false`, first `academic-en-gb.json`: British academic English) through every checker installed — the
 spelling providers as the editor underlines words, the grammar checkers as it asks them — one at a time (six models at
 once do not fit in 12 GB of video memory). Per kind of error found and fixed, false alarms, the median time.
-Findings on a text with an error that are not on it are split, as the plugin's benchmark does since its #47: *next to
+Findings on a text with an error that are not on it are split, as the plugin's benchmark does: *next to
 an error* (in its sentence — often the rest of the same fix, «Он поставил… ушёл» → «Она… ушла») and *off target*
 (elsewhere; `MathBench.NextToError`, the same in MathBench). The sets `context-en.json`, `context-ru.json` (pairs of
 sentences where the second is wrong only because of the first) and `long-made-en.json`, `long-made-ru.json` (long
-paragraphs with formulas) were written by the plugin (#121):
+paragraphs with formulas) were written by the plugin:
 `$env:BLUEEDIT_PROOF_BENCH='report.md'`, optionally `BLUEEDIT_PROOF_BENCH_CHECKERS` (windows, office, hunspell,
 languagetool, llm, edge, harper, server) and `BLUEEDIT_PROOF_BENCH_MODELS`, then `dotnet test tests\BlueEdit.Tests --filter ProofBench`.
 A model on a server: `BLUEEDIT_PROOF_BENCH_SERVER='https://api.openai.com/v1|gpt-5.4-mini'` and
-`BLUEEDIT_PROOF_BENCH_KEY='file:~/.blueproof/llm-key.txt'`; MathBench takes them too, with
+`BLUEEDIT_PROOF_BENCH_KEY='file:~/keys/openai.txt'`; MathBench takes them too, with
 `BLUEEDIT_MATH_BENCH_MODELS=server` (that model only) and `BLUEEDIT_MATH_BENCH_WAYS=placeholder` (one way of four).
 `BLUEEDIT_BENCH_CASES` adds folders of sets (the plugin's `scripts/bench/cases`; a set of a name already read is
 skipped). Both keep the models' answers in `<report>.answers.jsonl`, so the way answers become findings can be measured

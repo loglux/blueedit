@@ -72,11 +72,13 @@ anything a library would give for free (wide characters, for one) has to be adde
 - **Window size** is polled every 60 ms by its own thread. Windows consoles in VT-input mode send no resize events,
   and polling also spares a SIGWINCH handler on Unix.
 
-### Key events on Windows (`WindowsKeys`, #184)
+### Key events on Windows (`WindowsKeys`)
 
 A terminal program gets text, and text has no code for Ctrl with punctuation: with the Russian layout the "/" key
 types ".", and Ctrl+/ arrived as "." or nothing. Far's shortcuts work in any layout because Far reads key events.
-`"keyEvents": true` (the default; `BLUEEDIT_KEY_EVENTS=1` or `0` overrides it) does the same. It was a trial, off by default, for an evening: the user tried Ctrl+/ with the Russian layout in Windows Terminal 1.25.2733 (2026-10-18), it worked, and asked for it to be the default.
+`"keyEvents": true` (the default; `BLUEEDIT_KEY_EVENTS=1` or `0` overrides it) does the same. It was a trial, off by
+default, for an evening: Ctrl+/ with the Russian layout was tried by hand in Windows Terminal 1.25.2733 (2026-10-18),
+it worked, and it was made the default.
 
 **Measured** (2026-10-18) with a probe in a pseudo-console (pywinpty, as the UI tests), sent keys as Windows Terminal
 sends them (win32-input-mode), read with `ReadConsoleInputW`:
@@ -92,10 +94,10 @@ sends them (win32-input-mode), read with `ReadConsoleInputW`:
 | the answer to `ESC [ c` (device attributes) | its characters | **nothing** |
 | the answers to `ESC [ 16 t` and OSC 4 | their characters | their characters, vk 0 |
 
-The earlier note in #184 said key records keep their vk with VT input on; this probe did not see that, with one
+An earlier note said key records keep their vk with VT input on; this probe did not see that, with one
 exception: with VT input on, NUL (Ctrl+Space) comes as the console's own Ctrl+@ (vk 0x40, no character), which
-`ReadConsoleW` read as NUL. The first version dropped it and broke Ctrl+Space (CI, PR #214). The key that types "@"
-depends on the layout (on the CI runner it was not vk 0x40), so any Ctrl record without a character is NUL now.
+`ReadConsoleW` read as NUL. The first version dropped it and broke Ctrl+Space (caught by CI). The key that types "@"
+depends on the layout (on a CI machine it was not vk 0x40), so any Ctrl record without a character is NUL now.
 
 **How it works.** The records are turned back into the VT text the parser already reads, so nothing after the
 platform changes: special keys into xterm sequences; Ctrl or Alt with punctuation or a digit into CSI u with the key's
@@ -106,12 +108,12 @@ Ctrl+Enter must still be Enter. Mouse records become SGR reports (presses and re
 held, a move with a button held is a drag, the wheel). Text that starts with ESC and has no key code is the
 terminal's answer and passes as it is.
 
-**A paste** (measured in Windows Terminal 1.25.2733 with a probe the user ran, 2026-10-18): the console turns it into
+**A paste** (measured with a probe run in Windows Terminal 1.25.2733 itself, 2026-10-18): the console turns it into
 key records, a press and a release for each character, hundreds in one read (512 at a time to a probe asking for
 512). Characters the active layout has no key for (Latin letters under the Russian layout) come with vk 0; the rest
 (space, Enter, digits, punctuation) with the key the console found for them. Typing gives one record a read. The first
 version took only vk-0 characters for a paste, so every Enter of a paste was a typed Enter with auto-indent: a
-staircase (the user's screenshot). Now text (plain characters, Enter, Tab, keyless characters) is collected over one
+staircase (seen on a screenshot). Now text (plain characters, Enter, Tab, keyless characters) is collected over one
 read. What a paste typed in would harm is its line breaks, so it goes out as one bracketed paste when it has a line
 break, or 16 presses or more; a short line is typed (completion opens, and a closing bracket of the text steps over
 the one paired typing added). An Enter that ends it stays a typed Enter: a name and Enter typed in a burst (the UI
@@ -127,7 +129,7 @@ keys as Windows Terminal does); a UI test that types Ctrl+/ with the Russian lay
 typing, with auto-indent), conhost without Windows Terminal, ConEmu, and Windows Terminal 1.25's kitty protocol.
 Over SSH to Linux only a terminal protocol can help: the next section.
 
-### The kitty keyboard protocol on Linux and macOS (#184)
+### The kitty keyboard protocol on Linux and macOS
 
 Over SSH the editor gets what the terminal sends as text, so Ctrl+/ with the Russian layout is a ".". The kitty keyboard
 protocol lets a program ask for keys as `ESC [ code : shifted : base ; mods u`, where *base* is the key in the
@@ -137,7 +139,8 @@ alternate keys), and the pop `ESC [ < u` when the setting goes off and on exit. 
 only the query, which such terminals ignore (Neovim sends the same). With Ctrl or Alt the parser takes the base key;
 plain text, Enter, Tab and Backspace still arrive as before (flag 8, all keys as codes, is not asked for).
 
-Measured on 19 October 2026 with a probe on the NAS, `ssh` from Windows Terminal 1.25 (PowerShell tab):
+Measured on 19 October 2026 with a probe on a Linux server reached over SSH, `ssh` from Windows Terminal 1.25
+(PowerShell tab):
 
 | key | arrived |
 |---|---|
@@ -156,7 +159,7 @@ Terminal runs its own console (OpenConsole), which knows the protocol; the syste
 Windows the editor uses its own key events (above), so the protocol is asked for only where those are not.
 
 **Checked**: the unit tests (`InputParserTests` with the measured sequences, `KittyKeysTests` for the query, push and
-pop); by the user on 20 October 2026, the Linux build over SSH to the NAS in Windows Terminal 1.25: Ctrl+/ with the
+pop); by hand on 20 October 2026, the Linux build over SSH to that server in Windows Terminal 1.25: Ctrl+/ with the
 Russian layout comments a line, the rest of the keys as before. **Not checked**: kitty, WezTerm, foot, Ghostty.
 
 ### The main loop (`TuiApp`)
@@ -174,7 +177,7 @@ Russian layout comments a line, the rest of the keys as before. **Not checked**:
   open.
 - **Dialogs** (`RunModal`) run a nested loop and return their result directly, so code reads
   `if (Dialogs.Pick(...) is int i) ...`.
-- The file picker (`FileDialog`, #92) follows Far: Enter goes into a folder, `..` up and from a drive's root to the
+- The file picker (`FileDialog`) follows Far: Enter goes into a folder, `..` up and from a drive's root to the
   list of drives (Alt+F1 jumps there), F7 makes a folder. With a file name it is Save as: a name field under the list
   takes what is typed, Tab moves between them. It does not ask itself: whether to replace a file or make a typed
   path's missing folder is asked by the caller (`Dialogs.SaveFile`) with button dialogs, and a No reopens the picker
