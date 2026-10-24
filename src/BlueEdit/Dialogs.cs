@@ -15,8 +15,18 @@ static class Dialogs
     public static int Ask(TuiApp app, string title, string message, string[] buttons, int cancel) =>
         app.RunModal(new ButtonDialog(title, message, buttons, cancel)).Result;
 
-    public static int? Pick(TuiApp app, string title, IList<string> items, int selected = 0) =>
-        app.RunModal(new ListDialog(title, items.ToList(), selected)).Result;
+    /// <summary>One of a list; <paramref name="buttons"/> (actions, not entries) give <c>items.Count + their index</c>.
+    /// <paramref name="current"/>: the entry that is the setting now, marked "(now)": the highlight alone, where the
+    /// list opens, did not say it was the one in use.</summary>
+    public static int? Pick(TuiApp app, string title, IList<string> items, int selected = 0, IList<string>? buttons = null, int current = -1) =>
+        app.RunModal(new ListDialog(title, items.Select((x, i) => i == current ? x + "   " + Ui.T("(now)") : x).ToList(), selected,
+            buttons: buttons?.ToList())).Result;
+
+    /// <summary>A finding: its fixes as buttons, the explanation, the other actions and who found it. Returns a fix's
+    /// index, then an action's (after the fixes), or null on Esc.</summary>
+    public static int? Fix(TuiApp app, string title, IList<string> fixes, string message, IList<string> actions, string info,
+        string? none = null, bool table = false) =>
+        app.RunModal(new FixDialog(title, fixes.ToList(), message, actions.ToList(), info, none, table)).Result;
 
     public static void ShowText(TuiApp app, string title, IList<string> lines) => app.RunModal(new TextDialog(title, lines.ToList()));
 

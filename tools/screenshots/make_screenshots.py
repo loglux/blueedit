@@ -8,6 +8,7 @@ Needs the published exe (dotnet publish ... -o publish) and: pip install pywinpt
 server pictures need pyright and csharp-ls (tasks setup-lsp). docs/screenshots/formula-pictures.png is not made here:
 Sixel pictures need a real terminal, so it is a capture of a Windows Terminal window showing samples/math.md.
 """
+import json
 import os
 import re
 import shutil
@@ -82,6 +83,18 @@ def paint_box(d, ch, px, py, fg):
             d.line([x0, y0, x1, y1], fill=fg, width=1 if weight == 1 else 3)
 
 
+# Task boxes are painted too: Cascadia Mono has none, and the fallback font's are wider than a cell, cut to a "⊏"
+CHECKBOX = {"☐", "☑"}
+
+
+def paint_checkbox(d, ch, px, py, fg):
+    side = CW - 2
+    x0, y0 = px + 1, py + (CH - side) // 2
+    d.rectangle([x0, y0, x0 + side - 1, y0 + side - 1], outline=fg, width=1)
+    if ch == "☑":
+        d.line([(x0 + 2, y0 + side // 2), (x0 + side // 2 - 1, y0 + side - 3), (x0 + side - 2, y0 + 2)], fill=fg, width=2)
+
+
 def font_for(ch: str):
     cp = ord(ch)
     for font, cps in FONTS:
@@ -117,6 +130,8 @@ def render(term: Term, path: Path, title: str):
                 ch = cell.data or " "
                 if ch in BOX:
                     paint_box(d, ch, px, py, fg)
+                elif ch in CHECKBOX:
+                    paint_checkbox(d, ch, px, py, fg)
                 elif ch != " ":
                     d.text((px, py + 1 + ascent), ch, font=font_for(ch), fill=fg, anchor="ls")
                 if cell.underscore:
@@ -127,6 +142,7 @@ def render(term: Term, path: Path, title: str):
 
 # ---------------------------------------------------------------- scenarios
 def start(*files: str) -> Term:
+    shutil.rmtree(WORK / "recovery", ignore_errors=True)     # the scenario before left unsaved text: not offered back
     t = Term([harness.EDITOR, *files], dims=(ROWS, COLS), cwd=str(WORK))
     assert t.wait_for("Ln ", 40), t.text()
     time.sleep(1.0)
@@ -139,6 +155,14 @@ def wait_status(t: Term, test, seconds: float = 60):
     while time.time() < deadline and not test(t.status()):
         time.sleep(0.5)
     assert test(t.status()), t.status()
+
+
+def write_settings(**values):
+    """The pictures' settings: English spelling only (not the languages of the Windows the pictures are made on), and
+    the values given."""
+    config = WORK / "config"
+    config.mkdir(parents=True, exist_ok=True)
+    (config / "settings.json").write_text(json.dumps({"spellLanguages": ["en-GB"], **values}), encoding="utf-8")
 
 
 def shot(t: Term, name: str, title: str, settle: float = 0.8):
@@ -154,11 +178,15 @@ if __name__ == "__main__":
     WORK = Path(tempfile.mkdtemp(prefix="blueedit-shots-"))
     os.environ["BLUEEDIT_CONFIG_DIR"] = str(WORK / "config")      # default settings, whatever the user has
     os.environ["BLUEEDIT_WT_FRAGMENTS"] = str(WORK / "wt")        # never touch the real Windows Terminal profile
+    # the editors are killed with unsaved text (the completion scenarios): their copies in the user's recovery folder
+    # made the next start of any BlueEdit ask "Recover", and that question held up the language servers here
+    os.environ["BLUEEDIT_RECOVERY_DIR"] = str(WORK / "recovery")
     os.environ.pop("WT_SESSION", None)
     os.environ["BLUEEDIT_WELCOME"] = "0"                          # no welcome over the pictures (a first start here)
     for f in SAMPLES.iterdir():
         shutil.copy(f, WORK / f.name)
     notes, code = str(WORK / "notes.md"), str(WORK / "Parser.cs")
+    write_settings()
 
     # 1. Markdown live preview: markup hidden except on the caret line (a list item with the typo)
     t = start(notes)
@@ -179,9 +207,9 @@ if __name__ == "__main__":
     t.send(alt("e"), 0.8)
     shot(t, "code-and-menu.png", "Parser.cs — syntax highlighting, tabs, menu")
 
-    # 4. Spelling suggestions for a Russian word
+    # 4. Spelling suggestions for the typo in the list
     t = start(notes)
-    t.send(ctrl("f"), 0.6); t.send("превет"); t.send("\r", 0.8)      # Find leaves the caret on the word
+    t.send(ctrl("f"), 0.6); t.send("recieve"); t.send("\r", 0.8)     # Find leaves the caret on the word
     t.send(F7, 1.0)
     shot(t, "spell-suggestions.png", "F7 — spelling suggestions (Windows dictionaries)")
 
@@ -230,5 +258,27 @@ if __name__ == "__main__":
     t = start(notes)
     t.send(F1, 1.0)
     shot(t, "help.png", "F1 — keys and commands")
+
+    # 11. Grammar from a cloud model: "its worked examples checks" underlined in the grammar colour, F7 on it. The
+    # model and its key come from BLUEEDIT_SHOTS_GRAMMAR, "address|model|key" (the key as the setting takes it,
+    # file:~/keys/anthropic.txt), so none is in this repository; without it the picture is left as it was
+    if grammar := os.environ.get("BLUEEDIT_SHOTS_GRAMMAR"):
+        address, model, key = (grammar.split("|") + ["", ""])[:3]
+        write_settings(grammar=["llm"], llmModel="server", llmServer=address, llmServerModel=model, llmApiKey=key)
+        t = start(notes)
+        deadline = time.time() + 60
+        found = None
+        while time.time() < deadline and not found:
+            time.sleep(0.5)
+            found = next(((y, r.index("checks")) for y, r in enumerate(t.rows()) if "examples checks" in r), None)
+            if found and not (t.cell(*found).underscore and t.cell(*found).fg == "ffff55"):
+                found = None
+        assert found, "the model did not underline \"checks\": " + t.status()
+        t.send(ctrl("f"), 0.6); t.send("checks"); t.send("\r", 0.8)
+        t.send(F7, 1.5)
+        shot(t, "grammar-cloud.png", f"F7 — grammar from a cloud model ({model})")
+        write_settings()
+    else:
+        print("grammar-cloud.png left as it was: set BLUEEDIT_SHOTS_GRAMMAR=\"address|model|key\" to make it")
 
     shutil.rmtree(WORK, ignore_errors=True)

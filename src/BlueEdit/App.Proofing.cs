@@ -38,7 +38,8 @@ sealed partial class App
             // typed partly in the other layout: offer the word in one alphabet first
             var fixedWord = Lookalike.Fix(mw.Word);
             var options = (fixedWord != null ? new[] { fixedWord } : Array.Empty<string>()).Concat(spell.Available ? spell.Suggest(mw.Word) : new()).Distinct().ToList();
-            if (Dialogs.Pick(app, $"\"{mw.Word}\": Latin and Cyrillic letters mixed", options) is int k) editor.ReplaceWord(mw.Start, mw.Length, options[k]);
+            if (Dialogs.Fix(app, Tf("Spelling: \"{0}\"", mw.Word), options, T("Latin and Cyrillic letters mixed: typed partly in the other layout."), [], "") is int k)
+                editor.ReplaceWord(mw.Start, mw.Length, options[k]);
             return;
         }
         if (!spell.Available) { Note(spell.Error is { } e ? Tf("Spell check unavailable: {0}", e.Trim()) : T("Spell check unavailable")); return; }
@@ -52,8 +53,9 @@ sealed partial class App
         if (spell.IsCorrect(w.Word) == true) { Note(Tf("\"{0}\" is correct", w.Word)); return; }
         if (spell.Name != "Windows") { Note(Tf("Asking {0}...", spell.Name)); app.Render(); }
         var sugg = spell.Suggest(w.Word);
-        var items = sugg.Concat(new[] { "[ Add to dictionary ]", "[ Ignore ]" }).ToList();
-        var pick = Dialogs.Pick(app, $"\"{w.Word}\" — {spell.Name} spelling", items);
+        // as the grammar window: the suggestions as buttons, then the dictionary and Ignore, the speller at the right
+        var pick = Dialogs.Fix(app, Tf("Spelling: \"{0}\"", w.Word), sugg, "",
+            [T("Add to dictionary"), T("Ignore")], Tf("{0} spelling", spell.Name));
         if (pick is not int i) return;
         if (i < sugg.Count) editor.ReplaceWord(w.Start, w.Length, sugg[i]);
         else if (i == sugg.Count) spell.AddToDictionary(w.Word);
@@ -67,27 +69,34 @@ sealed partial class App
         Note(editor.GoToNextProblem(backward) ?? (editor.GrammarOn ? T("No problems found (grammar may still be checking)") : T("No spelling problems found")));
     }
 
-    // F7 on a grammar finding: the fixes all checkers suggest there (each applies to its own stretch of text),
-    // the first explanation as the title, the others next to their fixes.
+    // F7 on a grammar finding: the fixes all checkers suggest there (each applies to its own stretch of text) and
+    // their explanations, each once.
     void GrammarFix(IReadOnlyList<GrammarIssue> issues, int first, int last)
     {
         var options = new List<(GrammarIssue Issue, string Fix)>();
         foreach (var iss in issues)
             foreach (var r in iss.Replacements)
                 if (!options.Any(o => o.Fix == r && o.Issue.Offset == iss.Offset && o.Issue.Length == iss.Length)) options.Add((iss, r));
-        // every line says which checker it comes from: the title is the first finding, each fix names its checker
-        // (and its own explanation when that is a different one)
-        static string Signed(GrammarIssue iss) => iss.Source.Length > 0 ? iss.Source + ": " + iss.Message : iss.Message;
-        var main = Signed(issues[0]);
-        var items = options.Select(o => (o.Fix.Length == 0 ? "(remove)" : o.Fix) + "   — "
-            + (Signed(o.Issue) == main ? (o.Issue.Source.Length > 0 ? o.Issue.Source : o.Issue.Message) : Signed(o.Issue))).ToList();
-        items.Add("[ Ignore ]   (until the editor closes)");
-        items.Add("[ Never show this ]");
-        // LanguageTool's rule id and category in the message line: what "Never show this" (or the settings) switch off
+        // the window (docs/tech/editing.md): the words in question in the title, the fixes as buttons, the explanation,
+        // then Ignore / Never show this with the checkers at the right, in grey — information, not a choice
+        string Was(GrammarIssue iss) { var w = editor.GrammarText(iss, first).Replace('\n', ' '); return w.Length > 30 ? w[..29] + "…" : w; }
+        bool Same(GrammarIssue iss) => iss.Offset == issues[0].Offset && iss.Length == issues[0].Length;
+        // a fix of another stretch of the text says what it changes: "checks → check"
+        var fixes = options.Select(o => (Same(o.Issue) ? "" : Was(o.Issue) + " → ") + (o.Fix.Length == 0 ? T("(remove)") : o.Fix)).ToList();
+        // each explanation once; another checker's signed with its name
+        var explained = new List<string>();
+        foreach (var iss in issues)
+        {
+            var line = iss == issues[0] || iss.Source.Length == 0 ? iss.Message : iss.Source + ": " + iss.Message;
+            if (iss.Message.Length > 0 && !explained.Contains(line) && !explained.Contains(iss.Message)) explained.Add(line);
+        }
+        // LanguageTool's rule id after its name: what "Never show this" (or the settings) switches off
+        var who = string.Join(" · ", issues.Select(x => x.Source == "LanguageTool" && x.Rule.Length > 0 ? x.Source + " · " + x.Rule : x.Source)
+            .Where(x => x.Length > 0).Distinct());
         var lt = issues.FirstOrDefault(x => x.Source == "LanguageTool");
-        Note(main + (lt != null ? $"   [{lt.Rule}{(lt.Category.Length > 0 ? " · " + lt.Category : "")}]" : ""));
-        var title = main.Length > 70 ? main[..69] + "…" : main;
-        if (Dialogs.Pick(app, title, items) is not int i) return;
+        Note(issues[0].Message + (lt != null && lt.Category.Length > 0 ? $"   [{lt.Rule} · {lt.Category}]" : ""));
+        var title = Tf("Grammar: \"{0}\"", Was(issues[0]));
+        if (Dialogs.Fix(app, title, fixes, string.Join("\n", explained), [T("Ignore"), T("Never show this")], who) is not int i) return;
         if (i < options.Count) editor.FixGrammar(options[i].Issue, first, options[i].Fix);
         else if (i == options.Count) editor.IgnoreHere(issues, first, last);
         else

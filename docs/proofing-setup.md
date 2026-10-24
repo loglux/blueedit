@@ -37,7 +37,7 @@ llama.cpp + YandexGPT 5 Lite** is the fullest setup; without a GPU, LanguageTool
 | Another model server | an address (llama-server elsewhere, a cloud service), the model's name there and a key: nothing is installed, paragraphs are sent there |
 | LanguageTool | for those who want rules for 31 languages without a video card: Java 21 and LanguageTool, ~540 MB |
 | Harper | rules for English, ~60 MB |
-| Remove... | what the editor installed in its own folders, each with its size, nothing ticked: llama.cpp, each model, LanguageTool with its Java, Harper, the spelling dictionaries. A ticked checker is turned off first, then deleted; a folder the settings point elsewhere (your own LanguageTool) is never offered |
+| **Remove what was installed here...** (a button under the list, Tab) | what the editor installed in its own folders, each with its size, nothing ticked: llama.cpp, each model, LanguageTool with its Java, Harper, the spelling dictionaries. A ticked checker is turned off first, then deleted; a folder the settings point elsewhere (your own LanguageTool) is never offered |
 
 All of it in the background (the steps in the status line, typing goes on), from the sources and with the checksums of
 the scripts below, into the same folders. The same in a shell, e.g. on a server without the editor's screen:

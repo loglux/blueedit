@@ -148,7 +148,7 @@ def test_grammar_checking_is_one_at_a_time_unless_several_are_allowed(editor, ma
     t.send(" ", 0.3)                                              # LanguageTool on
     t.send(DOWN, 0.2); t.send(" ", 0.3)                           # the model on: LanguageTool off
     text = t.text()
-    assert "[ ] LanguageTool" in text and "[x] Language model" in text
+    assert "( ) LanguageTool" in text and "(•) Language model" in text  # one of them: round marks
     t.send(END, 0.2); t.send(" ", 0.3)                            # Several at once
     t.send(UP, 0.2); t.send(" ", 0.3)                             # Chrome on, the model stays
     text = t.text()
@@ -205,7 +205,7 @@ def test_code_tools_lists_each_tool_where_it_is_found_or_what_it_needs(editor, m
     for name in ("pyright", "ruff", "csharp-ls"):
         row = next((r for r in t.rows() if name in r), "")
         assert "found: " in row or "not installed, " in row, row      # where it is, or what installing it takes
-    assert "[ Install all that are missing ]" in t.text() and "[ Remove what was installed here ]" in t.text()
+    assert "Install the missing" in t.text() and "Remove what was installed here" in t.text()   # buttons under the table
     t.send(ESC, 0.5)
     assert not t.has_dialog()
 
@@ -322,12 +322,12 @@ def test_remove_lists_what_is_installed_and_esc_removes_nothing(editor, make_fil
     # the listing and deleting are unit-tested on folders of their own (ProofingToolsTests)
     t = editor(make_file("a.txt", "hello\n"))
     t.send(alt("t"), 0.8); t.send("u", 1.5)
-    assert "Remove..." in t.text(), t.text()
-    t.send(DOWN * 6, 0.3); t.send("\r", 1.5)                      # the last row
+    assert "Remove what was installed here..." in t.text(), t.text()
+    t.send("\t", 0.3); t.send("\r", 1.5)                          # Tab to the button under the list
     text = t.text()
-    assert "Remove what was installed here" in text or "Nothing is installed here" in text, text
+    assert t.has_dialog("Remove what was installed here") or "Nothing is installed here" in text, text
     t.send(ESC, 0.6)
-    assert "Remove what was installed here" not in t.text()
+    assert not t.has_dialog()
 
 
 def test_the_first_start_welcomes_once_and_its_language_button_sets_the_interface(editor, make_file, tmp_path):

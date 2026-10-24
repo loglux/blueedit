@@ -41,7 +41,8 @@ public sealed class PromptDialog(string title, string label, string initial = ""
 /// it gets the states and the item's index and changes the states.
 /// </summary>
 public sealed class CheckListDialog(string title, IReadOnlyList<string> items, IReadOnlyList<bool> initial, bool firstIsExclusive = false,
-    string hint = "Space = on/off   Enter = OK   Esc = cancel", Func<int, string>? details = null, Action<bool[], int>? flip = null) : Modal
+    string hint = "Space = on/off   Enter = OK   Esc = cancel", Func<int, string>? details = null, Action<bool[], int>? flip = null,
+    Func<bool[], int, bool>? radio = null) : Modal
 {
     const int DetailRows = 6;
 
@@ -70,7 +71,9 @@ public sealed class CheckListDialog(string title, IReadOnlyList<string> items, I
         var r = Tui.Draw.Centered(s, w, rows + 4 + extra, title);
         Tui.Draw.Box(s, r, title, t.Dialog, t.DialogTitle);
         _listRect = new Rect(r.X + 2, r.Y + 1, r.W - 4, rows);
-        _list.Items = items.Select((x, i) => $"[{(_on[i] ? 'x' : ' ')}] {x}").ToList();
+        // a row that is one of a choice of one (the caller says when) has a round mark, "(•)": square boxes said
+        // several could be ticked, and ticking one cleared the others
+        _list.Items = items.Select((x, i) => radio?.Invoke(_on, i) == true ? $"({(_on[i] ? '•' : ' ')}) {x}" : $"[{(_on[i] ? 'x' : ' ')}] {x}").ToList();
         _list.Draw(s, _listRect, t.Dialog, t.ListSelected);
         if (details != null && (uint)_list.Selected < (uint)items.Count)
         {
@@ -365,19 +368,134 @@ public sealed class ButtonDialog : Modal
     }
 }
 
-/// <summary>Pick one entry from a list. Enter or a double click chooses, Esc cancels (Result stays null).</summary>
+/// <summary>A finding and what to do about it, laid out as the Obsidian plugin's popup: the fixes first, as buttons
+/// (what to do), the explanation under them (why), then the other actions with, at the right in grey, who says so
+/// (a checker, a model: information, nothing to choose). As a list of rows the fixes, the checker's name and the
+/// actions all read as one kind of thing, the highlighted row as a field to type into. Result: a fix's index, then
+/// an action's (after the fixes); null on Esc. <paramref name="none"/>: the line in place of no fixes ("" for none);
+/// <paramref name="table"/>: the message's lines kept as they are, the window as wide as the longest (a table to
+/// read above buttons, as Tools > Code tools).</summary>
+public sealed class FixDialog : Modal
+{
+    readonly string _title, _message, _info;
+    readonly string? _none;
+    readonly bool _table;
+    readonly IReadOnlyList<string> _fixes, _actions;
+    int _focus;
+    readonly List<(int X, int Y, int W, int Row)> _slots = new();
+
+    public FixDialog(string title, IReadOnlyList<string> fixes, string message, IReadOnlyList<string> actions, string info = "",
+        string? none = null, bool table = false)
+    {
+        _title = title; _fixes = fixes; _message = message; _actions = actions; _info = info; _none = none; _table = table;
+    }
+
+    public int? Result { get; private set; }
+
+    int Count => _fixes.Count + _actions.Count;
+
+    static string Label(string text, bool focused) => focused ? $"[► {text} ◄]" : $"[  {text}  ]";
+
+    protected internal override void Draw(Screen s, Theme t)
+    {
+        int actionsW = _actions.Sum(a => a.Length + 7) + (_info.Length > 0 ? _info.Length + 2 : 0);
+        int fixW = _fixes.Count > 0 ? _fixes.Max(f => f.Length) + 6 : 0;
+        int tableW = _table ? _message.Split('\n').Max(l => l.Length) + 4 : 0;
+        int w = Math.Min(s.Width - 4, Math.Max(Math.Max(Math.Max(60, _title.Length + 6), Math.Max(actionsW, fixW) + 4), tableW));
+        int inner = w - 4;
+        // the fixes in rows as wide as the window, a long one cut ("…") rather than the window wider than the screen
+        var fixes = _fixes.Select(f => f.Length > inner - 6 ? f[..Math.Max(1, inner - 7)] + "…" : f).ToList();
+        var fixRows = new List<List<int>>();
+        int used = inner;
+        for (int i = 0; i < fixes.Count; i++)
+        {
+            int bw = fixes[i].Length + 6;
+            if (used + 1 + bw > inner) { fixRows.Add(new()); used = -1; }
+            fixRows[^1].Add(i);
+            used += 1 + bw;
+        }
+        var none = _none ?? Strings.T("No fix offered: the checker only names the problem.");
+        var message = _message.Length == 0 ? new List<string>()
+            : _table ? _message.Split('\n').Select(l => l.Length > inner ? l[..(inner - 1)] + "…" : l).ToList() : Tui.Draw.Wrap(_message, inner);
+        int fixLines = fixRows.Count > 0 ? fixRows.Count + 1 : none.Length > 0 ? 2 : 0;
+        int h = 2 + 1 + fixLines + (message.Count > 0 ? message.Count + 1 : 0) + 1;
+        var r = Tui.Draw.Centered(s, w, Math.Min(s.Height - 2, h), _title);
+        Tui.Draw.Box(s, r, _title, t.Dialog, t.DialogTitle);
+        _slots.Clear();
+        int y = r.Y + 2, x0 = r.X + 2;
+        if (fixRows.Count == 0 && none.Length > 0) s.Text(x0, y++, none, t.Dialog);
+        for (int row = 0; row < fixRows.Count; row++, y++)
+        {
+            int x = x0;
+            foreach (int i in fixRows[row])
+            {
+                var text = Label(fixes[i], i == _focus);
+                s.Text(x, y, text, i == _focus ? t.ButtonFocused : t.Button);
+                _slots.Add((x, y, text.Length, row));
+                x += text.Length + 1;
+            }
+        }
+        if (fixLines > 0) y++;
+        foreach (var line in message) s.Text(x0, y++, line, t.Dialog);
+        if (message.Count > 0) y++;
+        y = Math.Min(y, r.Y + r.H - 2);
+        int ax = x0;
+        for (int a = 0; a < _actions.Count; a++)
+        {
+            int i = _fixes.Count + a;
+            var text = Label(_actions[a], i == _focus);
+            s.Text(ax, y, text, i == _focus ? t.ButtonFocused : t.Button);
+            _slots.Add((ax, y, text.Length, fixRows.Count));
+            ax += text.Length + 1;
+        }
+        // who found it: dim, at the right of the actions, as the plugin's footer
+        if (_info.Length > 0 && ax + 1 + _info.Length <= r.X + r.W - 2) s.Text(r.X + r.W - 2 - _info.Length, y, _info, t.MenuShortcut);
+        Tui.Draw.Shadow(s, r, t.Shadow);
+    }
+
+    protected internal override void Handle(InputEvent ev)
+    {
+        if (Count == 0) { if (ev is KeyInput { Key: Key.Escape or Key.Enter }) Closed = true; return; }
+        switch (ev)
+        {
+            case KeyInput { Key: Key.Enter }: Result = _focus; Closed = true; return;
+            case KeyInput { Key: Key.Escape }: Closed = true; return;
+            case KeyInput { Key: Key.Left } or KeyInput { Key: Key.Tab, Mods: Mods.Shift }: _focus = (_focus + Count - 1) % Count; return;
+            case KeyInput { Key: Key.Right } or KeyInput { Key: Key.Tab }: _focus = (_focus + 1) % Count; return;
+            // up and down: to the first button of the row above or below (the fixes, the actions)
+            case KeyInput { Key: Key.Up or Key.Down } k when _slots.Count == Count:
+                int row = _slots[_focus].Row + (k.Key == Key.Down ? 1 : -1);
+                int next = _slots.FindIndex(sl => sl.Row == row);
+                if (next >= 0) _focus = next;
+                return;
+            case MouseInput { Kind: MouseKind.Down, Button: 0 } m:
+                for (int i = 0; i < _slots.Count; i++)
+                    if (m.Y == _slots[i].Y && m.X >= _slots[i].X && m.X < _slots[i].X + _slots[i].W) { Result = i; Closed = true; return; }
+                return;
+        }
+    }
+}
+
+/// <summary>Pick one entry from a list. Enter or a double click chooses, Esc cancels (Result stays null).
+/// <paramref name="buttons"/>: actions that are not one of the entries (Remove…), as buttons under the list, reached
+/// with Tab; one pressed gives <c>items.Count + its index</c>. As a row of the list such an action read as one more
+/// thing to choose.</summary>
 public class ListDialog : Modal
 {
     readonly string _title;
     readonly string? _header;
+    readonly IReadOnlyList<string> _buttons;
+    int _button = -1;                                                   // the focused button, -1: the list
+    readonly List<(int X, int W)> _slots = new();
+    int _buttonsY = -1;
     protected ListBox List { get; } = new();
     Rect _listRect;
 
     public int? Result { get; protected set; }
 
-    public ListDialog(string title, IReadOnlyList<string> items, int selected = 0, string? header = null)
+    public ListDialog(string title, IReadOnlyList<string> items, int selected = 0, string? header = null, IReadOnlyList<string>? buttons = null)
     {
-        _title = title; _header = header;
+        _title = title; _header = header; _buttons = buttons ?? Array.Empty<string>();
         List.Items = items;
         List.Selected = Math.Clamp(selected, 0, Math.Max(0, items.Count - 1));
         List.Activated += OnActivated;
@@ -387,13 +505,24 @@ public class ListDialog : Modal
 
     protected virtual string? Header => _header;
     protected virtual bool HeaderKeepsEnd => false;
-    protected virtual string Hint => "";
-    /// <summary>Rows under the list for a subclass's own controls, drawn by <see cref="DrawBelow"/>.</summary>
-    protected virtual int RowsBelow => 0;
-    protected virtual void DrawBelow(Screen s, Theme t, int x, int y, int width) { }
+    protected virtual string Hint => _buttons.Count > 0 ? Strings.T("Enter = choose   Tab = the buttons   Esc = cancel") : "";
+    /// <summary>Rows under the list for a subclass's own controls, drawn by <see cref="DrawBelow"/> (the buttons').</summary>
+    protected virtual int RowsBelow => _buttons.Count > 0 ? 2 : 0;
+    protected virtual void DrawBelow(Screen s, Theme t, int x, int y, int width)
+    {
+        _slots.Clear();
+        _buttonsY = y + 1;
+        for (int i = 0; i < _buttons.Count; i++)
+        {
+            var text = i == _button ? $"[► {_buttons[i]} ◄]" : $"[  {_buttons[i]}  ]";
+            s.Text(x, _buttonsY, text, i == _button ? t.ButtonFocused : t.Button);
+            _slots.Add((x, text.Length));
+            x += text.Length + 1;
+        }
+    }
 
     /// <summary>Width and height as a share of the screen (0..1), or absolute when greater than 1.</summary>
-    protected virtual (double W, double H) Size => (0.6, Math.Min(List.Items.Count + 4 + (Header != null ? 1 : 0) + (Hint.Length > 0 ? 1 : 0), 22));
+    protected virtual (double W, double H) Size => (0.6, Math.Min(List.Items.Count + (_buttons.Count > 0 ? 2 : 4) + (Header != null ? 1 : 0) + (Hint.Length > 0 ? 1 : 0) + RowsBelow, 22));
 
     protected internal override void Draw(Screen s, Theme t)
     {
@@ -401,6 +530,8 @@ public class ListDialog : Modal
         int w = sw <= 1 ? (int)(s.Width * sw) : (int)sw;
         // a share of the screen grows to the longest item (and the title), never past the screen: rows are not cut
         if (sw <= 1 && List.Items.Count > 0) w = Math.Max(w, Math.Min(s.Width - 4, Math.Max(List.Items.Max(i => i.Length), _title.Length + 4) + 6));
+        // and to the line of keys under it ("Save as": it ran past the frame)
+        if (sw <= 1) w = Math.Max(w, Math.Min(s.Width - 4, Hint.Length + 4));
         int h = sh <= 1 ? (int)(s.Height * sh) : (int)sh;
         var r = Tui.Draw.Centered(s, Math.Max(20, w), Math.Max(5, h), _title);
         Tui.Draw.Box(s, r, _title, t.Dialog, t.DialogTitle);
@@ -416,7 +547,7 @@ public class ListDialog : Modal
         _listRect = new Rect(r.X + 2, top, r.W - 4, Math.Max(1, bottom - top));
         List.Draw(s, _listRect, t.Dialog, t.ListSelected);
         if (RowsBelow > 0) DrawBelow(s, t, r.X + 2, bottom, r.W - 4);
-        if (Hint.Length > 0) s.Text(r.X + 2, r.Y + r.H - 2, Hint, t.Dialog);
+        if (Hint.Length > 0) s.Text(r.X + 2, r.Y + r.H - 2, Hint.Length > r.W - 4 ? Hint[..(r.W - 4)] : Hint, t.Dialog);
         Tui.Draw.Shadow(s, r, t.Shadow);
     }
 
@@ -425,7 +556,20 @@ public class ListDialog : Modal
         switch (ev)
         {
             case KeyInput { Key: Key.Escape }: Closed = true; return;
-            case MouseInput { Kind: MouseKind.Down, Button: 0 } m when _listRect.Contains(m.X, m.Y): List.ClickRow(m.Y - _listRect.Y); return;
+            case MouseInput { Kind: MouseKind.Down, Button: 0 } m when _listRect.Contains(m.X, m.Y): _button = -1; List.ClickRow(m.Y - _listRect.Y); return;
+            case MouseInput { Kind: MouseKind.Down, Button: 0 } m when m.Y == _buttonsY:
+                for (int i = 0; i < _slots.Count; i++)
+                    if (m.X >= _slots[i].X && m.X < _slots[i].X + _slots[i].W) { Result = List.Items.Count + i; Closed = true; return; }
+                return;
+            // Tab: the list, then each button, round again
+            case KeyInput { Key: Key.Tab } k when _buttons.Count > 0:
+                _button = (_button + 1 + (k.Mods == Mods.Shift ? _buttons.Count : 1)) % (_buttons.Count + 1) - 1;
+                return;
+            case KeyInput { Key: Key.Left or Key.Right } k when _button >= 0:
+                _button = (_button + (k.Key == Key.Right ? 1 : _buttons.Count - 1)) % _buttons.Count;
+                return;
+            case KeyInput { Key: Key.Up } when _button >= 0: _button = -1; return;
+            case KeyInput { Key: Key.Enter } when _button >= 0: Result = List.Items.Count + _button; Closed = true; return;
             default: List.Handle(ev); return;
         }
     }

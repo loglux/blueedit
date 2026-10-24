@@ -353,6 +353,72 @@ at once, as View > Theme always has. So there is one store, and whatever the win
 language servers, models, colours) stays in the file. Not in the window: lists and paths, and the settings that have
 their own menu already (Grammar checking, Spelling languages, Terminal font).
 
+## The look of the windows, and the F7 window (`Draw.Box`, `FixDialog`)
+
+The windows keep their DOS look: a light window with a heavy frame, the title set into it, and a dark shadow right of
+and below it, falling on the text. On 24 October 2026 a Far-like look was tried beside it (a margin of 2 columns and
+1 row round a thin double frame, the title centred), both captured in a real console in Windows Sandbox: the user saw
+hardly any difference, and the margin cost room (the tall windows, Settings and Help, then covered the menu and key
+bars). So it stayed as it was.
+
+What was wrong was the F7 window. It was a list: the fixes, then `[ Ignore ]` and `[ Never show this ]` as rows, with
+the checker's explanation in the title, cut to the frame's width ("The plural subject "examples" takes the plural
+verb…"). Looking at it the user found three things unclear: the highlighted row, a full-width blue bar, read as a field
+to type into; a fix, `check`, read as a command or the word being checked; and the model's name next to it
+(`check — claude-haiku-5-5: …`) as a second thing to choose, though the model is set in the settings and cannot be
+changed there. Marking the selected row with `►` and adding a line of keys under the list did not help: it was still
+not a list of like things.
+
+The window now follows the Obsidian plugin's popup (`obsidian-blueproof`, `src/editor/popup.ts`): what to do, then
+why, then, small, who says so and how to hide it. `FixDialog`:
+
+```
+┏┥Grammar: "checks"┝━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                          ┃
+┃ [► check ◄]                                              ┃   the fixes, as buttons
+┃                                                          ┃
+┃ The plural subject "examples" takes the plural verb      ┃   the explanation, whole, wrapped at words
+┃ "check", not "checks".                                   ┃
+┃                                                          ┃
+┃ [  Ignore  ] [  Never show this  ]     claude-haiku-5-5  ┃   the actions; at the right, in grey, who found it
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+```
+
+- The buttons look and behave as in the other questions (`ButtonDialog`): `► ◄` on the one Enter presses; Tab and
+  ← → go along all of them, ↑ ↓ to the first button of the row above or below, Esc closes. No letter keys: the fixes
+  are words, and their first letters would clash.
+- The title names the words in question. A fix of another stretch of the text (another checker's finding nearby)
+  says what it changes: `examples checks → examples check`. Each checker's explanation is shown once, another
+  checker's signed with its name. The right of the bottom row lists the checkers, LanguageTool with its rule
+  (`LanguageTool · AGREEMENT_SENT_START`): what *Never show this* switches off.
+- With no fix (LanguageTool often only names the problem) the fixes' row says so.
+- The spelling window (`Spelling: "recieve"`: the suggestions, *Add to dictionary*, *Ignore*, `Windows spelling` at
+  the right), the mixed-alphabet word and a formula's rule of writing (`LaTeX`) use the same window.
+
+The other lists (the outline, the file picker, the encodings, the models) stay lists, without the marker: there the
+rows are like things, one picked from many, and ↑ ↓ move along them.
+
+The other windows were looked at the same way on 24 October 2026, each opened and captured (a script driving the
+editor in a pseudo-console); four had the same fault in smaller ways:
+
+- **Tools > Code tools** listed the tools and, as rows of the same list, *Install all that are missing* and *Remove*;
+  Enter on a tool's row installed it, which nothing said. Now the tools are a table to read (found where, installed
+  here, or what installing takes), with the buttons *Install the missing*, *Remove what was installed here* and
+  *Close* under it (`FixDialog` with `table`: the lines kept, the window as wide as they are).
+- **Tools > Set up grammar checking** had *Remove...* as a row among the ways to check grammar: now a button under
+  the list (`ListDialog` with `buttons`, reached with Tab, the keys said under it).
+- **Tools > Grammar checking** had square boxes, which say several can be ticked, but ticking one cleared the others
+  until the last row, *Several at once*, was ticked. Now the checkers have round marks, `(•)`, while one is the rule,
+  and boxes, `[x]`, once several are allowed (`CheckListDialog` with `radio`).
+- **Lists of one choice** (encodings, the spelling provider, the grammar model, a server's models, the interface
+  language) opened on the value in use, but the highlight alone did not say it was the one in use: that row now ends
+  in `(now)`.
+- **Save as**: its line of keys ran past the frame; a list window is now at least as wide as that line.
+
+The rest were left as they are: the questions with buttons (unsaved changes, the terminal profile, `be` on `PATH`),
+the fields (Find, Replace, Go to line), Settings (a value changed with ‹ ›, what the row means under the list), the
+check lists (dictionaries, spelling languages, style) and the plain lists (the outline, the files).
+
 ## Indent after a block's opener (`EditorView.BlockOpens`)
 
 Enter kept the indentation of the line above and nothing more, so after `def func():` the caret went to column 0 (a

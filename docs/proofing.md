@@ -31,17 +31,25 @@ then the paragraphs being checked go there.
 
 Every finding is signed with its source:
 
-- F7 on a typo: `"speling" — Windows spelling` (or `Office spelling`, `Hunspell spelling`);
-- F7 on grammar: the title is `LanguageTool: …`, and each fix says who suggested it:
+- F7 opens one window for a typo and for grammar: the fixes as buttons, the explanation whole under them, then
+  *Ignore* and *Never show this* (for a typo: *Add to dictionary*, *Ignore*), and at the right, in grey, who found
+  it: `Windows spelling` (or `Office spelling`, `Hunspell spelling`), the model, `LanguageTool · ` and its rule:
 
   ```
-  LanguageTool: Possible agreement error
-    were   — Gemma 3 12B: The plural subject needs "were"
-    [ Ignore ]   (until the editor closes)
-    [ Never show this ]
+  ┏┥Grammar: "checks"┝━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+  ┃                                                          ┃
+  ┃ [► check ◄]                                              ┃
+  ┃                                                          ┃
+  ┃ The plural subject "examples" takes the plural verb      ┃
+  ┃ "check", not the third-person singular "checks".         ┃
+  ┃                                                          ┃
+  ┃ [  Ignore  ] [  Never show this  ]      claude-haiku-5-5 ┃
+  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
   ```
 
-  The message line also shows LanguageTool's rule and its category, e.g. `[AGREEMENT_SENT_START · GRAMMAR]`.
+  Enter takes the fix with `► ◄`; Tab or ← → go to the next button, ↓ to the actions, Esc closes. *Ignore* lasts until
+  the editor closes. The message line also shows LanguageTool's rule and its category, e.g.
+  `[AGREEMENT_SENT_START · GRAMMAR]`.
 
 - the status line after Shift+F7: `Spelling (Windows): speling`, `Grammar (LanguageTool): …`,
   `Grammar (Gemma 3 12B): …`.
@@ -331,8 +339,9 @@ Needs `harper-ls` (Harper's language server): unpack `harper-ls-x86_64-pc-window
   (Russian 3 of 18 against 18), but without false alarms, and in some 30 languages.
 - **Harper**: the same for English only, faster still.
 - **Edge's proofreader**: for American English.
-- One checker at a time is the default: in Tools > Grammar checking choosing one switches the others off. Its last
-  line, **Several at once** (`grammarTogether`), allows more, their findings shown together.
+- One checker at a time is the default: in Tools > Grammar checking the checkers have round marks, `(•)`, and
+  choosing one switches the others off. Its last line, **Several at once** (`grammarTogether`), allows more: the
+  marks become boxes, `[x]`, and the findings are shown together.
 
 What LanguageTool adds next to a model (measured on 6 October 2026 from the runs below, the current prompt): on
 the British academic set nothing — all 8 errors it found, YandexGPT and Gemma 3 12B found too; on the formula sets
@@ -576,7 +585,7 @@ The results was good, and I recieved them yesterday.
 
 What should happen:
 
-1. **Превет**, **sentense**, **recieved** are underlined as typos; F7 shows fixes under `"sentense" — Windows spelling`.
+1. **Превет**, **sentense**, **recieved** are underlined as typos; F7 shows the fixes as buttons in the window `Spelling: "sentense"`, `Windows spelling` at its bottom right.
 2. **Я пошли**, **Мы был**, **сказал что**, **have**, **results was** are grammar, underlined in another colour after
    1–3 seconds (longer on first start). What is found depends on the checker: the model usually finds all of them,
    LanguageTool some, not always with a fix.

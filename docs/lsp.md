@@ -68,9 +68,9 @@ these into its own folder — `%LOCALAPPDATA%\BlueEdit\tools` on Windows, `~/.lo
 | csharp-ls | C#: errors, completion, fixes… | the .NET SDK 10 (from Microsoft's release list) | 720 MB |
 | typescript | JavaScript, TypeScript: errors, completion, definitions, rename… | — (TypeScript 7, one native program, from the npm registry) | 27 MB |
 
-The window shows each tool as found (and where: one already on `PATH` is used as it is) or what installing it takes;
-Enter on it installs or updates it, **Install all that are missing** does the rest, **Remove what was installed here**
-deletes the folder. It runs in the background with the steps in the status line, and the servers are started when it
+The window is a table of the tools, each found (and where: one already on `PATH` is used as it is), installed here,
+or what installing it takes, with buttons under it: **Install the missing**, **Remove what was installed here**
+(deletes the folder), **Close**. It runs in the background with the steps in the status line, and the servers are started when it
 ends. `be --install-tools pyright,ruff` installs only those. Node.js and ruff are checked against the SHA-256
 sums their projects publish, the .NET SDK against the SHA-512 in Microsoft's release list, TypeScript against the
 SHA-512 the npm registry publishes; what went wrong is in `install.log` in the folder.

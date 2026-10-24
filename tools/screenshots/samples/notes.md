@@ -1,25 +1,22 @@
-# Project notes
+# Week 3: sequences and series
 
-Live preview hides the **markup** on every line except the one with the caret,
-so *emphasis*, `inline code` and [links](https://example.com) read like a document.
+The lecture built the **sum of a series** out of its partial sums. I need to read
+chapter 4 of *Calculus* before Thursday; its worked examples checks answers with `numpy`.
+Slides are on the [course page](https://example.com/calculus/week-3).
 
-## Tasks
+## To do
 
-- [x] Own terminal layer: ~5 ms from key to screen
-- [x] Spell checking with the Windows dictionaries
-- [ ] Settings and themes
-- Plain bullet with a typo: recieve
+- [x] Watch the recording of Tuesday's lecture
+- [x] Problem sheet 2, questions 1 to 4
+- [ ] Questions 5 to 8, once I recieve the marked sheet back
+- [ ] Ask about convergence tests in the tutorial
 
-> Quotes get a bar, horizontal rules become a line.
+> A series converges when the sequence of its partial sums has a limit.
 
 ---
 
-## Math
+## Formulas
 
-The energy is $E = mc^2$, and the series $\sum_{i=1}^{n} i = \frac{n(n+1)}{2}$.
+The partial sums of 1 + 2 + 3 + … are $S_n = \sum_{i=1}^{n} i = \frac{n(n+1)}{2}$, which grow without bound.
 
-$$x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$$
-
-## По-русски
-
-Проверка орфографии понимает и русский текст: ошибка в слове превет подчёркнута.
+$$\sum_{k=0}^{\infty} r^k = \frac{1}{1 - r}$$

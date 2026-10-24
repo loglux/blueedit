@@ -46,6 +46,11 @@ away: **Tools → Set up grammar checking** ([docs/proofing.md](docs/proofing.md
 
 ![Live preview](docs/screenshots/markdown-live-preview.png)
 
+**Grammar from a language model** — here a cloud one (Claude Haiku); a model on your own video card, Ollama or
+LM Studio work the same way. F7 on the underlined place gives the fix and says why.
+
+![Grammar from a cloud model](docs/screenshots/grammar-cloud.png)
+
 | | |
 |---|---|
 | ![Reading mode](docs/screenshots/markdown-reading.png) **Reading mode** (Ctrl+E) | ![Code and menu](docs/screenshots/code-and-menu.png) **Syntax highlighting, tabs, menus** |
@@ -59,7 +64,8 @@ away: **Tools → Set up grammar checking** ([docs/proofing.md](docs/proofing.md
 The screenshots are generated, not hand-made: `python tools/screenshots/make_screenshots.py` runs the published
 editor in a pseudo-console, plays the scenarios and renders the screen. Rerun it after UI changes. The formula
 pictures are the one exception: they are Sixel graphics, which the emulated screen does not draw, so that one is a
-capture of a real Windows Terminal window.
+capture of a real Windows Terminal window. The grammar picture asks a real model: it is made only when
+`BLUEEDIT_SHOTS_GRAMMAR` names one, `"address|model|key"`.
 
 ## Command line
 

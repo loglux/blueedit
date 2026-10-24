@@ -109,7 +109,8 @@ sealed partial class App
         Note("");
         if (models.Count == 0) { Dialogs.ShowText(app, name, help); return; }
         bool same = settings.LlmModel == "server" && settings.LlmServer.TrimEnd('/') == url;
-        if (Dialogs.Pick(app, Tf("{0}: the model for grammar checking", name), models, same ? Math.Max(0, models.IndexOf(settings.LlmServerModel)) : 0) is not int i) return;
+        int now = same ? models.IndexOf(settings.LlmServerModel) : -1;
+        if (Dialogs.Pick(app, Tf("{0}: the model for grammar checking", name), models, Math.Max(0, now), current: now) is not int i) return;
         Settings.SetValue(Settings.FilePath, "llmServer", JsonString(url));
         Settings.SetValue(Settings.FilePath, "llmServerModel", JsonString(models[i]));
         Settings.SetValue(Settings.FilePath, "llmApiKey", JsonString(LlmEndpoint.SaveKey("")));
@@ -171,9 +172,9 @@ sealed partial class App
             Row(T("Another model server"), T("an address: a cloud service, a server on the network")),
             Row("LanguageTool", T("rules for 31 languages; no video card (Java, ~530 MB)")) + Have(ProofingTools.HasLanguageTool(h)),
             Row("Harper", T("fast rules for English; no video card (~60 MB)")) + Have(ProofingTools.HasHarper(h)),
-            Row(T("Remove..."), T("what was installed here: models, LanguageTool, Harper, dictionaries")),
         };
-        if (Dialogs.Pick(app, T("Set up grammar checking"), items) is not int i) return;
+        // Remove is not a way to check grammar: a button under the list, not a row of it
+        if (Dialogs.Pick(app, T("Set up grammar checking"), items, buttons: [T("Remove what was installed here...")]) is not int i) return;
         switch (i)
         {
             case 0: SetUpModelHere(); break;
@@ -313,7 +314,8 @@ sealed partial class App
             }
             if (on[i] && !on[together]) for (int k = 0; k < together; k++) on[k] = k == i;
         }
-        var d = app.RunModal(new CheckListDialog(T("Grammar checking"), items, initial, hint: T("Space on/off   Enter OK   Esc cancel   (none = off)"), flip: Flip));
+        var d = app.RunModal(new CheckListDialog(T("Grammar checking"), items, initial, hint: T("Space on/off   Enter OK   Esc cancel   (none = off)"), flip: Flip,
+            radio: (on, i) => i < together && !on[together]));
         if (d.Checked is not { } c) return;
         var missing = new List<string>();
         if (c[0] && !ltInstalled) missing.AddRange(new[] { "  " + Tf("LanguageTool needs, in {0}:", ltHome), "    jre\\            " + T("Java 21 JRE (e.g. the Eclipse Temurin zip)"), "    languagetool\\   " + T("LanguageTool-stable.zip from languagetool.org"), "" });
@@ -394,7 +396,11 @@ sealed partial class App
         var current = LlmGrammarChecker.ModelIn(home, settings.LlmModel);
         int selected = settings.LlmModel == "server" ? firstServed + Math.Max(0, served.IndexOf(settings.LlmServerModel))
             : string.IsNullOrWhiteSpace(settings.LlmModel) || models.Count == 0 ? 0 : 1 + models.ToList().FindIndex(m => string.Equals(m, current, StringComparison.OrdinalIgnoreCase));
-        if (Dialogs.Pick(app, T("Grammar model"), items, Math.Max(0, selected)) is not int i) return;
+        // the one in use, when it is in the list: Auto when none is named
+        int now = settings.LlmModel == "server" ? (served.IndexOf(settings.LlmServerModel) is >= 0 and var k ? firstServed + k : -1)
+            : string.IsNullOrWhiteSpace(settings.LlmModel) ? (models.Count > 0 ? 0 : -1)
+            : models.ToList().FindIndex(m => string.Equals(m, current, StringComparison.OrdinalIgnoreCase)) is >= 0 and var j ? 1 + j : -1;
+        if (Dialogs.Pick(app, T("Grammar model"), items, Math.Max(0, selected), current: now) is not int i) return;
         static string Json(string v) => "\"" + v.Replace("\\", "\\\\", StringComparison.Ordinal).Replace("\"", "\\\"", StringComparison.Ordinal) + "\"";
         string name;
         if (i >= firstServed)
@@ -447,7 +453,7 @@ sealed partial class App
             $"{"Hunspell",-17}" + Tf("LibreOffice dictionaries in {0}", @"%LOCALAPPDATA%\BlueEdit\hunspell"),
         };
         int current = settings.SpellProvider switch { "office" => 1, "hunspell" => 2, _ => 0 };
-        if (Dialogs.Pick(app, T("Spelling provider"), items, current) is not int i) return;
+        if (Dialogs.Pick(app, T("Spelling provider"), items, current, current: current) is not int i) return;
         if (i == 1 && !word) { Note(T("Microsoft Word is not installed")); return; }
         Settings.SetValue(Settings.FilePath, "spellProvider", i switch { 1 => "\"office\"", 2 => "\"hunspell\"", _ => "\"windows\"" });
         ReloadSettings();

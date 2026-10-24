@@ -203,7 +203,8 @@ sealed partial class App
     int? PickEncoding(string title)
     {
         var items = FileEncodings.All.Select(c => c.Label).ToList();
-        return Dialogs.Pick(app, title, items, Math.Max(0, FileEncodings.IndexOf(editor.Encoding)));
+        int now = FileEncodings.IndexOf(editor.Encoding);
+        return Dialogs.Pick(app, title, items, Math.Max(0, now), current: now);
     }
 
     // The file opened as the wrong code page (mojibake): read the same bytes again in another one.

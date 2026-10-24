@@ -116,7 +116,7 @@ def test_a_rule_of_writing_in_a_formula_is_a_warning_f7_puts_in_its_fix(editor, 
     t.send(SHIFT_F7, 0.8)
     assert "Warning (LaTeX): <= is set as 2 separate characters" in t.status()
     t.send(F7, 1.0)
-    assert t.has_dialog("<= is set as") and "\\le" in t.text()
+    assert t.has_dialog("LaTeX") and "<= is set as 2 separate characters" in t.text() and "\\le" in t.text()
     t.send("\r", 0.8)
     assert t.body()[2].startswith("Then $a \\le b$ holds.") and "TeX" not in t.status()
 
@@ -166,11 +166,10 @@ def test_misspelled_words_are_underlined_and_f7_fixes_them(editor, make_file):
     # caret onto "helo": Home, then Ctrl+Right twice
     t.send(HOME); t.send(CTRL_RIGHT)                                    # caret on "helo"
     t.send(F7, 1.0)
-    assert t.has_dialog('"helo"')
+    assert t.has_dialog('Spelling: "helo"')
     # the suggestions depend on the dictionaries installed (en-GB offers "hello" first, en-US "Help"): take the first
-    rows = t.rows()
-    title = next(i for i, r in enumerate(rows) if '"helo"' in r)
-    first = rows[title + 1].split("┃")[1].strip()
+    # (buttons, the first one focused: "[► hello ◄]")
+    first = re.search(r"\[► (.+?) ◄\]", t.text()).group(1)
     assert first and first != "helo"
     t.send("\r", 0.8)
     assert f"Some {first} text here" in t.body()[1]
@@ -347,7 +346,7 @@ def test_shift_f7_walks_through_problems_and_f7_repairs_a_mixed_layout_word(edit
     t.send(SHIFT_F7, 0.8)
     assert "mixed" in t.status() and t.pos()[0] == 3
     t.send(F7, 1.0)
-    assert t.has_dialog('"пpивет"') and "Latin and Cyrillic letters mixed" in t.text()
+    assert t.has_dialog('Spelling: "пpивет"') and "Latin and Cyrillic letters mixed" in t.text()
     t.send("\r", 0.8)                                                   # the word in one alphabet
     assert "with привет here" in t.body()[2]
     t.send(SHIFT_F7, 0.8)

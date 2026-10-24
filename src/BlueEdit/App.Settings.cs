@@ -123,7 +123,7 @@ sealed partial class App
                 var languages = Ui.Available(Settings.Directory);
                 var items = languages.Select(Native).ToList();
                 int current = Math.Max(0, languages.ToList().IndexOf(Ui.Language));
-                if (Dialogs.Pick(app, T("Interface language"), items, current) is int k && languages[k] != Ui.Language)
+                if (Dialogs.Pick(app, T("Interface language"), items, current, current: current) is int k && languages[k] != Ui.Language)
                 {
                     Settings.SetValue(Settings.FilePath, "uiLanguage", JsonString(languages[k]));
                     ReloadSettings();

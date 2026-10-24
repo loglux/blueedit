@@ -15,12 +15,17 @@ sealed partial class App
     void ShowCodeTools()
     {
         var tools = CodeTools.All;
-        string Row(CodeTools.Tool t) => $"{t.Name,-10} {T(t.Purpose),-38} " + (CodeTools.Find(t) is { } f
-            ? (f.Ours ? T("installed") : Tf("found: {0}", f.Path)) : Tf("not installed, {0}", T(t.Needs)));
-        var items = tools.Select(Row).Append(T("[ Install all that are missing ]")).Append(T("[ Remove what was installed here ]")).ToList();
-        if (Dialogs.Pick(app, Tf("Code tools — in {0}", CodeTools.Root), items) is not int i) return;
+        // a table to read (what there is, where), the actions as buttons under it: as rows of one list the tools and
+        // the actions read as one kind of thing, and Enter on a tool's row installing it was not to be guessed
+        static string Short(string path) => path.Length > 34 ? "…" + path[^33..] : path;
+        string Row(CodeTools.Tool t) => $"{t.Name,-11}{T(t.Purpose),-38} " + (CodeTools.Find(t) is { } f
+            ? (f.Ours ? T("installed here") : Tf("found: {0}", Short(f.Path))) : Tf("not installed, {0}", T(t.Needs)));
+        var table = string.Join("\n", tools.Select(Row));
+        var pick = Dialogs.Fix(app, Tf("Code tools — in {0}", CodeTools.Root), [], table,
+            [T("Install the missing"), T("Remove what was installed here"), T("Close")], "", none: "", table: true);
+        if (pick is not (0 or 1)) return;
         if (installingTools) { Note(T("Code tools: an installation is running")); return; }
-        if (i == tools.Length + 1)
+        if (pick == 1)
         {
             lsp?.Dispose(); lsp = null; lspConfigKey = "";                // the servers hold their files open
             try { CodeTools.Remove(null); Note(Tf("Code tools removed from {0}", CodeTools.Root)); }
@@ -28,9 +33,8 @@ sealed partial class App
             ApplySettings(settings);
             return;
         }
-        var todo = i < tools.Length ? [tools[i]] : tools.Where(t => CodeTools.Find(t) == null).ToArray();
+        var todo = tools.Where(t => CodeTools.Find(t) == null).ToArray();
         if (todo.Length == 0) { Note(T("Code tools: all are installed")); return; }
-        if (todo is [var one] && CodeTools.Find(one) is { Ours: false } there) { Note(Tf("{0} is installed at {1}: it is used", one.Name, there.Path)); return; }
         installingTools = true;
         Task.Run(async () =>
         {
@@ -408,11 +412,11 @@ sealed partial class App
     void LatexFix(LspDiagnostic d)
     {
         Note($"{d.Message}   [{d.Rule}]");
-        var title = d.Message.Length > 70 ? d.Message[..69] + "…" : d.Message;
-        switch (Dialogs.Pick(app, title, new List<string> { d.Fix + "   — LaTeX", "[ Never show this ]" }))
+        string[] fixes = d.Fix is { } fix ? [fix] : [];
+        switch (Dialogs.Fix(app, "LaTeX", fixes, d.Message, [T("Never show this")], "LaTeX · " + d.Rule) is int i ? i - fixes.Length : (int?)null)
         {
-            case 0: editor.FixLatex(d); break;
-            case 1:
+            case < 0: editor.FixLatex(d); break;
+            case 0:
                 Settings.SetValue(Settings.FilePath, "ignoredRules", Settings.JsonList(settings.IgnoredRules.Union([d.Rule])));
                 ReloadSettings();
                 Note(Tf("Never shown again: {0} (Tools > Ignored rules brings it back)", d.Rule));

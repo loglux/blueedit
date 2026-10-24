@@ -322,6 +322,20 @@ partial class EditorView
     }
 
     /// <summary>Puts <paramref name="replacement"/> in place of the problem's text (one undo step).</summary>
+    /// <summary>The text a finding is about (its paragraph starting at <paramref name="first"/>): F7 shows what
+    /// becomes what, "checks → check", where the fix alone read as a word to pick or a command.</summary>
+    public string GrammarText(GrammarIssue issue, int first)
+    {
+        var text = new System.Text.StringBuilder();
+        for (int r = first; r < Lines.Count && text.Length < issue.Offset + issue.Length; r++)
+        {
+            if (r > first) text.Append('\n');
+            text.Append(Lines[r]);
+        }
+        int start = Math.Min(issue.Offset, text.Length);
+        return text.ToString(start, Math.Min(issue.Length, text.Length - start));
+    }
+
     public void FixGrammar(GrammarIssue issue, int first, string replacement)
     {
         if (ReadOnlyView) return;
