@@ -5,7 +5,7 @@ using Xunit;
 /// <summary>
 /// lang/template/strings.json: what a new interface language starts from, the Russian table (UiTests keeps it whole:
 /// every string the code translates, nothing else) with its values emptied and its own header. Kept in step here;
-/// BLUEEDIT_WRITE_TEMPLATE=1 (tasks lang-template) writes it anew. The help to translate is lang/help.en.txt itself.
+/// BLUEEDIT_WRITE_TEMPLATE=1 (tasks lang-template) writes it anew. The help to translate is lang/help.en.md itself.
 /// </summary>
 public sealed class LanguageTemplateTests
 {

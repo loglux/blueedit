@@ -8,7 +8,22 @@ English: [linux.md](linux.md).
 
 ## Установка
 
-Из релиза: скачать `blueedit-<версия>-linux-x64.tar.gz` (и сверить его SHA-256 с описанием релиза), затем
+**Пакетом** (Debian, Ubuntu и подобные; Fedora, RHEL и подобные), из релиза начиная с 0.4.2, модуль картинок формул
+внутри; `be` сразу в PATH:
+
+```bash
+sudo apt install ./blueedit_<версия>_amd64.deb       # Debian, Ubuntu
+sudo dnf install ./blueedit-<версия>-1.x86_64.rpm    # Fedora, RHEL
+be --version
+```
+
+Ставится в `/usr/lib/blueedit` (`/usr/bin/be` — ссылка на него); `apt remove blueedit` / `dnf remove blueedit` убирает.
+Рекомендуемое ставится вместе с ним: корневые сертификаты, OpenSSL и ICU (ниже: редактор работает и без них). Новая
+версия ставится так же, поверх старой: репозитория пакетов нет, поэтому `apt upgrade` её не увидит. Проверено в
+чистых контейнерах Debian 12, Ubuntu 24.04 и Fedora 41 ([docs/tech/packages.ru.md](tech/packages.ru.md)).
+
+**Архив tar.gz** — для любого дистрибутива, ничего не ставится: скачать `blueedit-<версия>-linux-x64.tar.gz` (и сверить
+его SHA-256 с описанием релиза), затем
 
 ```bash
 tar xzf blueedit-*-linux-x64.tar.gz

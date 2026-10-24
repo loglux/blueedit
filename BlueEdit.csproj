@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <AssemblyName>be</AssemblyName>
-    <Version>0.4.1</Version>
+    <Version>0.4.2</Version>
     <RootNamespace>BlueEdit</RootNamespace>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -32,7 +32,7 @@
     <EmbeddedResource Include="lang\*.json" LogicalName="lang.%(Filename).json" />
     <!-- the F1 help, English and other languages (HelpText.cs); without WithCulture="false" the ".ru." in the name would send it
          into a satellite assembly (ru\be.resources.dll), which a single-file be.exe does not look in -->
-    <EmbeddedResource Include="lang\help.*.txt" LogicalName="lang.%(Filename).txt" WithCulture="false" />
+    <EmbeddedResource Include="lang\help.*.md" LogicalName="lang.%(Filename).md" WithCulture="false" />
   </ItemGroup>
 
   <ItemGroup>

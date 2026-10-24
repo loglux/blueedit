@@ -8,3 +8,4 @@ __pycache__/
 tests/BlueEdit.Tests/TestResults/
 publish-linux/
 publish-installer/
+publish-packages/

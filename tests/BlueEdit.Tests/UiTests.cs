@@ -181,8 +181,8 @@ public sealed class UiTests : IDisposable
     [Fact]
     public void The_English_help_names_each_menus_Alt_letter()
     {
-        // "Alt+F/E/S/..." in the help's first lines: View's V was once left out
-        var line = HelpText.Lines.First(l => l.StartsWith("Menu:", StringComparison.Ordinal));
+        // "Alt+F/E/S/..." in the help's F9 row: View's V was once left out
+        var line = HelpText.Lines(HelpText.English).First(l => l.StartsWith("F9 ", StringComparison.Ordinal));
         var listed = Regex.Match(line, @"Alt\+([A-Z](?:/[A-Z])*)").Groups[1].Value;
         var letters = string.Join("/", Menus().Select(m => char.ToUpperInvariant(MenuBar.HotkeyOf(m.Label))));
         Assert.Equal(letters, listed);

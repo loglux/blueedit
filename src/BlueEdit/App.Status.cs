@@ -53,7 +53,9 @@ sealed partial class App
 
     void Note(string text) { note = text; noteFresh = true; }
 
-    void ShowHelp() => Dialogs.ShowText(app, T("Help"), HelpText.For(Ui.Language, Settings.Directory));
+    // F1 opens on the section of the file's kind: Markdown's keys in a note, the language servers' in code
+    void ShowHelp() => app.RunModal(new HelpDialog(T("Help"), HelpText.For(Ui.Language, Settings.Directory),
+        HelpText.SectionFor(editor.IsMarkdown, LanguageServers.Defaults.ContainsKey(editor.LangName))));
 
     // "0.1.0+<commit>" as the build stamps it: shown as "0.1.0 (abc1234)"
     internal static string AppVersion()

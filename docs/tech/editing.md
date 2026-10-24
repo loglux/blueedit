@@ -73,15 +73,47 @@ command.
   provider and dictionaries, code tools, terminal font, ignored rules, style), File > Info and the formula errors.
   F1 help too. Still English: what other programs say (a language server's messages, an exception's text; a model's
   explanations follow the paragraph's language anyway).
-- **F1 help is a whole text per language** (`lang/help.<code>.txt`, built in; one in the settings folder's `lang/`
-  comes first), not a table of its lines: a translation breaks its lines where its own words need and keeps the key
-  columns, which a line-by-line table could not. `HelpTextTests` keeps it in step: lines within 86 columns, and every
-  F-key and Ctrl shortcut of the English help named (Alt+letter is left out: the menus' letters differ by language).
-  The file is embedded with `WithCulture="false"`: MSBuild reads the `.ru.` of `help.ru.txt` as a culture and would
-  put it into a satellite assembly (`ru\be.resources.dll`), which the single-file `be.exe` never loads. English is a
-  file the same way, `lang/help.en.txt`: until October 2026 it was an array of lines in `HelpText.cs`, and a
-  translator had no text to start from. A new language starts from `lang/template/strings.json` (every interface
-  string, empty) and `lang/help.en.txt` (`lang/template/README.md`).
+- **F1 help is a text per language in sections** (`lang/help.<code>.md`, built in; one in the settings folder's
+  `lang/` comes first), not a table of its lines: a translation writes its own words, in its own order and length.
+  `HelpTextTests` keeps it in step: the English sections in the same order (F1 opens one by its place), and every
+  F-key and Ctrl shortcut of the English help named, in the same section (Alt+letter is left out: the menus' letters
+  differ by language). The file is embedded with `WithCulture="false"`: MSBuild reads the `.ru.` of `help.ru.md` as a
+  culture and would put it into a satellite assembly (`ru\be.resources.dll`), which the single-file `be.exe` never
+  loads. A new language starts from `lang/template/strings.json` (every interface string, empty) and
+  `lang/help.en.md` (`lang/template/README.md`).
+
+## The F1 help: sections, laid out by the editor (`HelpText.cs`, `HelpDialog`)
+
+Until October 2026 the help was one text aligned by hand, `lang/help.en.txt`: two columns of key and action, 155
+lines in one scroll, all in one colour, within 86 columns. The user found it hard to read ("the letters blend,
+everything is laid out too plainly": no headings that stand out, keys not set apart, no air between the parts) and
+poor to translate: a translator had to count spaces to keep the columns and break lines by hand.
+
+Now the source says what each line is and the editor lays it out:
+
+```
+# Files
+
+F2, Ctrl+S         | Save
+Shift+F2           | Save as...
+
+In Open and Save as: F7 makes a new folder, ...
+```
+
+`# Title` starts a section; `keys | what they do` is a row (the spaces before `|` only help the eye); any other line
+is a paragraph, lines one after another joined. `HelpDialog` shows the sections' titles at the left and the chosen
+one at the right: the title in white, the keys in a column of their own in the menus' hotkey colour (a key too long
+for the column, up to 26, gets a line of its own, its text under it), the text wrapped beside them, paragraphs
+wrapped to the width, a blank line between the parts. Up and Down choose the section, PgUp/PgDn, Space, Home/End and
+the wheel scroll it (▼ ▲ in the keys' row say there is more), Esc, Enter or F1 close.
+
+F1 opens on the section of the file's kind: Markdown in a Markdown file, Code in a language with a language server,
+else Basics. A translated help is found by the English titles' places, which is why a translation keeps the
+sections in the same order (a test holds it to that).
+
+The content is the old help's, all of it, in 14 sections; a row per key where the
+old one paired two keys on a line.
+
 
 ## `be` in any console (`UserPath.cs`)
 

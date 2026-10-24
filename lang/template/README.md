@@ -1,19 +1,21 @@
 # A new interface language
 
 BlueEdit's interface is English with a table per other language: `lang/<code>.json` (English string → translation)
-and the F1 help as a whole text, `lang/help.<code>.txt`. This folder is where a new one starts:
+and the F1 help as a text in sections, `lang/help.<code>.md`. This folder is where a new one starts:
 
 | File | What |
 |---|---|
 | `strings.json` | every string of the interface, the translations empty |
-| [`../help.en.txt`](../help.en.txt) | the F1 help in English, the text to translate (`../help.ru.txt` is the Russian one) |
+| [`../help.en.md`](../help.en.md) | the F1 help in English, the text to translate (`../help.ru.md` is the Russian one) |
 
 To try one on your own computer, without building anything:
 
 1. Copy `strings.json` to `lang/<code>.json` in BlueEdit's settings folder (`%APPDATA%\blueedit` on Windows,
    `~/.config/blueedit` on Linux), the code as the system names the language: `de`, `pt-br`, `uk`.
 2. Write the translations between the empty quotes. An empty one stays English: the part done shows at once.
-3. Optionally, translate `lang/help.en.txt` into `lang/help.<code>.txt` beside it. Lines stay within 86 characters.
+3. Optionally, translate `lang/help.en.md` into `lang/help.<code>.md` beside it: `# Title` starts a section,
+   `keys | what they do` is a key's row, any other line a paragraph. Keep the sections in the English order (F1
+   opens one by its place) and the keys as they are; the editor lays it out, so lines can be of any length.
 4. **Tools → Settings… → Interface language**, or `"uiLanguage": "<code>"` in `settings.json` (`"auto"` takes the
    system's).
 
@@ -28,5 +30,5 @@ Rules the tests hold a built-in table to (`tests/BlueEdit.Tests/UiTests.cs`):
 - `"context|English"` keys translate a word where it reads differently (`"hint|Save"`: the short word under F2).
 
 To build it in: put the files in this repository's `lang/` folder (not in `template/`) and send a pull request;
-`BlueEdit.csproj` embeds every `lang/*.json` and `lang/help.*.txt`. `tasks lang-template` writes `strings.json` anew
+`BlueEdit.csproj` embeds every `lang/*.json` and `lang/help.*.md`. `tasks lang-template` writes `strings.json` anew
 when the interface's strings change (a unit test fails until it is).

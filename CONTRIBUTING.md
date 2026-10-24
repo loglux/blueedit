@@ -62,7 +62,7 @@ None is needed to use the editor; they move its folders, switch things for tests
 - Interface strings go through `T()` (`Ui.cs`; values as `{0}` with `Tf`, never pasted together) and into
   `lang/ru.json` — `UiTests` fails on a `T()` string the table lacks. A menu letter, or the first letters of a
   question's buttons, clash with nothing (`docs/tech/editing.md`).
-- F1 help lines at most 86 characters (`HelpTextTests`).
+- F1 help: `lang/help.en.md` in sections, a translation in the same order with the same keys (`HelpTextTests`).
 - Nothing tied to one language or one system: languages come from the system or the user's choice.
 - Anything that ships a feature also updates the docs (README, `docs/*.md` and the Russian `*.ru.md`, F1 help).
 - A design decision (why this way, what was measured, what was rejected) goes into `docs/tech/*.md`.
@@ -86,7 +86,7 @@ None is needed to use the editor; they move its folders, switch things for tests
 - Terminal layer: `src/Tui` — [docs/tech/tui.md](docs/tech/tui.md).
 - Editor: `src/BlueEdit` — `Program.cs` (the command line), `App.cs` (wiring) and `App.*.cs` by area (`Menus`: keys
   and menus, `Status`, `Documents`, `Search`, `Settings`, `Proofing`, `ProofingSetup`, `Code`), `EditorView*.cs`,
-  `MainView.cs`, `Settings.cs`, `Themes.cs`, `HelpText.cs` (the F1 help is `lang/help.en.txt`) — [docs/tech/editing.md](docs/tech/editing.md).
+  `MainView.cs`, `Settings.cs`, `Themes.cs`, `HelpText.cs` (the F1 help is `lang/help.en.md`) — [docs/tech/editing.md](docs/tech/editing.md).
 - Formulas: `Latex.cs`, `LatexLayout.cs`, `FormulaImages.cs` + the optional module `src/MathImages`.
 - Proofing: `Spell.cs`, `HunspellSpell.cs`, `OfficeSpell.cs`, `Grammar.cs`, `LlmGrammar.cs`, `LlmServer.cs`,
   `Style.cs`, `ProofingTools.cs` — [docs/tech/proofing-internals.md](docs/tech/proofing-internals.md).

@@ -1,0 +1,81 @@
+# The .deb and .rpm of BlueEdit, made by nfpm (github.com/goreleaser/nfpm) from the same files as the Linux tar.gz:
+# tools/packages/build.py puts in the ${...} values and runs it. The editor goes to /usr/lib/blueedit with the formula
+# pictures module beside it (where it looks first), and /usr/bin/be links to it. docs/tech/packages.md says why.
+name: blueedit
+arch: amd64
+platform: linux
+version: ${BLUEEDIT_VERSION}
+section: editors
+priority: optional
+maintainer: Vladislav Sorokin <37578325+loglux@users.noreply.github.com>
+vendor: BlueEdit
+homepage: https://github.com/loglux/blueedit
+license: MIT
+description: |-
+  A fast console text editor for writing, mathematics and code.
+  Markdown with a live preview, LaTeX formulas as readable text or typeset pictures, spelling, grammar and style
+  checking, language servers for code. The command is "be".
+
+contents:
+  # the folders are the package's own: rpm removes only those it owns (Fedora kept an empty /usr/lib/blueedit)
+  - dst: /usr/lib/blueedit
+    type: dir
+    file_info:
+      mode: 0755
+  - dst: /usr/lib/blueedit/mathimages
+    type: dir
+    file_info:
+      mode: 0755
+  - dst: /usr/lib/blueedit/tools
+    type: dir
+    file_info:
+      mode: 0755
+  - dst: /usr/lib/blueedit/tools/proofing-setup
+    type: dir
+    file_info:
+      mode: 0755
+  - dst: /usr/lib/blueedit/tools/lsp-setup
+    type: dir
+    file_info:
+      mode: 0755
+  - dst: /usr/share/doc/blueedit
+    type: dir
+    file_info:
+      mode: 0755
+  - src: ${BLUEEDIT_LINUX}/be
+    dst: /usr/lib/blueedit/be
+    file_info:
+      mode: 0755
+  - src: /usr/lib/blueedit/be
+    dst: /usr/bin/be
+    type: symlink
+  - src: ${BLUEEDIT_MODULE}/
+    dst: /usr/lib/blueedit/mathimages/
+    file_info:
+      mode: 0644
+  - src: ${BLUEEDIT_ROOT}/tools/proofing-setup/install.sh
+    dst: /usr/lib/blueedit/tools/proofing-setup/install.sh
+    file_info:
+      mode: 0755
+  - src: ${BLUEEDIT_ROOT}/tools/lsp-setup/install.sh
+    dst: /usr/lib/blueedit/tools/lsp-setup/install.sh
+    file_info:
+      mode: 0755
+  - src: ${BLUEEDIT_ROOT}/LICENSE
+    dst: /usr/share/doc/blueedit/copyright
+    file_info:
+      mode: 0644
+
+# Nothing the editor cannot start without: ICU gives the languages' names (without it .NET's invariant mode), OpenSSL
+# and the certificates downloads over https (without them a window says what to install). docs/linux.md
+overrides:
+  deb:
+    recommends:
+      - ca-certificates
+      - libssl3t64 | libssl3
+      - libicu76 | libicu74 | libicu72
+  rpm:
+    recommends:
+      - ca-certificates
+      - openssl-libs
+      - libicu

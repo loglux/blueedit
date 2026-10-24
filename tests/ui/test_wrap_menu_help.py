@@ -131,13 +131,25 @@ def test_f1_opens_help_that_scrolls_and_closes(editor, make_file):
     t = editor(make_file("a.txt", "x\n"))
     t.send(F1, 1.2)
     assert t.has_dialog("Help")
-    text = t.text()
-    assert "keys and commands" in text and "FILES" in text
-    for _ in range(10):                                          # PgDn at the end stays there
-        t.send(PGDN, 0.3)
+    text = t.text()                                              # the contents at the left, Basics (a plain file) open
+    assert "Moving and selecting" in text and "Save all and quit" in text
+    t.send(DOWN, 0.4)                                            # the next section: Files
+    assert "Save as..." in t.text() and "Save all and quit" not in t.text()
+    for _ in range(20):                                          # Down at the last section stays there
+        t.send(DOWN, 0.2)
     assert "Far Manager" in t.text()
     t.send(ESC, 0.8)
     assert not t.has_dialog()
+
+
+def test_f1_in_a_markdown_file_opens_on_markdown_and_a_long_section_scrolls(editor, make_file):
+    t = editor(make_file("a.md", "# x\n"))
+    t.send(F1, 1.2)
+    assert "Task checkbox" in t.text()                            # the Markdown section
+    t.send(UP * 2, 0.4)                                          # Editing: longer than the window
+    assert "Ctrl+Z" in t.text() and "▼" in t.text()
+    t.send(PGDN, 0.4)
+    assert "▲" in t.text() or "▼" not in t.text()
 
 
 def test_help_menu_has_about(editor, make_file):

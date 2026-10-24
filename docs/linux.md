@@ -8,7 +8,22 @@ terminal over SSH. Status: a preview. What was checked, and where, is said below
 
 ## Install
 
-From a release: download `blueedit-<version>-linux-x64.tar.gz` (and check its SHA-256 against the release notes), then
+**A package** (Debian, Ubuntu and the like; Fedora, RHEL and the like), from a release from 0.4.2 on, with the formula
+pictures module in it; `be` is on PATH at once:
+
+```bash
+sudo apt install ./blueedit_<version>_amd64.deb       # Debian, Ubuntu
+sudo dnf install ./blueedit-<version>-1.x86_64.rpm    # Fedora, RHEL
+be --version
+```
+
+It goes to `/usr/lib/blueedit` (`/usr/bin/be` links to it); `apt remove blueedit` / `dnf remove blueedit` takes it
+away. What it recommends comes with it: the root certificates, OpenSSL and ICU (below: the editor runs without them).
+A newer version is installed the same way, over the old one: there is no package repository, so `apt upgrade` does not
+see it. Checked in clean Debian 12, Ubuntu 24.04 and Fedora 41 containers ([docs/tech/packages.md](tech/packages.md)).
+
+**The tar.gz**, for any distribution, nothing installed: download `blueedit-<version>-linux-x64.tar.gz` (and check
+its SHA-256 against the release notes), then
 
 ```bash
 tar xzf blueedit-*-linux-x64.tar.gz

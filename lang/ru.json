@@ -138,6 +138,7 @@
     "Space = on/off   Enter = OK   Esc = cancel": "Пробел = вкл/выкл   Enter = ОК   Esc = отмена",
     "Space, ← → = change   Enter = save   Esc = cancel": "Пробел, ← → = сменить   Enter = сохранить   Esc = отмена",
     "Up/Down, PgUp/PgDn scroll     Esc closes": "Вверх/вниз, PgUp/PgDn листают     Esc закрывает",
+    "↑↓ section   PgUp/PgDn scroll   Esc close": "↑↓ раздел   PgUp/PgDn листать   Esc закрыть",
     "Drives": "Диски",
     "Enter open   F7 new folder   Alt+F1 drives   Esc cancel": "Enter открыть   F7 новая папка   Alt+F1 диски   Esc отмена",
     "Tab list/name   Enter save   F7 new folder   Alt+F1 drives   Esc cancel": "Tab список/имя   Enter сохранить   F7 новая папка   Alt+F1 диски   Esc отмена",

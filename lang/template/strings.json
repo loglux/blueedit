@@ -140,6 +140,7 @@
     "Space = on/off   Enter = OK   Esc = cancel": "",
     "Space, ← → = change   Enter = save   Esc = cancel": "",
     "Up/Down, PgUp/PgDn scroll     Esc closes": "",
+    "↑↓ section   PgUp/PgDn scroll   Esc close": "",
     "Drives": "",
     "Enter open   F7 new folder   Alt+F1 drives   Esc cancel": "",
     "Tab list/name   Enter save   F7 new folder   Alt+F1 drives   Esc cancel": "",

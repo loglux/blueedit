@@ -46,6 +46,22 @@ $tasks = [ordered]@{
         Run { dotnet publish -c Release -r linux-x64 --self-contained -p:PublishSingleFile=true -o publish-linux -nologo -v q }
         $v = ([xml](Get-Content BlueEdit.csproj)).Project.PropertyGroup.Version | Where-Object { $_ } | Select-Object -First 1
         Run { python tools/ci/pack-linux.py publish-linux "publish-linux/blueedit-$v-linux-x64.tar.gz" } })
+    'packages'       = @('the .deb and .rpm into publish-packages\, as the release makes them (nfpm; docs/tech/packages.md)', {
+        Run { dotnet publish -c Release -r linux-x64 --self-contained -p:PublishSingleFile=true -o publish-linux -nologo -v q }
+        Run { dotnet publish src/MathImages -c Release -r linux-x64 --self-contained false -o publish-packages/mathimages -nologo -v q }
+        $v = ([xml](Get-Content BlueEdit.csproj)).Project.PropertyGroup.Version | Where-Object { $_ } | Select-Object -First 1
+        Get-ChildItem publish-packages -Filter 'blueedit*' -ErrorAction SilentlyContinue | Remove-Item
+        Run { python tools/packages/build.py $v publish-linux publish-packages/mathimages publish-packages } })
+    'packages-test'  = @('the .deb and .rpm of publish-packages\ in clean Debian, Ubuntu, Fedora containers on BLUEEDIT_LINUX_HOST: installed, run, removed, ~3 min', {
+        $hostName = $env:BLUEEDIT_LINUX_HOST
+        if (-not $hostName) { Fail 'which Linux host with Docker? set BLUEEDIT_LINUX_HOST (user@host)' }
+        $files = @(Get-ChildItem publish-packages -Filter 'blueedit*' | Where-Object { $_.Extension -in '.deb', '.rpm' })
+        if ($files.Count -ne 2) { Fail 'no packages in publish-packages\: tasks packages first' }
+        $dir = 'be-packages-test'
+        ssh $hostName "rm -rf ~/$dir && mkdir ~/$dir"
+        scp -q @($files.FullName) tools/packages/probe.py tools/packages/test.sh "${hostName}:$dir/"
+        ssh $hostName "cd ~/$dir && sh test.sh"
+        ssh $hostName "rm -rf ~/$dir" })
     'installer'      = @('the Windows installer into publish-installer\, as the release makes it (Inno Setup 6; docs/tech/installer.md)', {
         $build = Join-Path ([IO.Path]::GetTempPath()) 'blueedit-installer-build'
         Run { dotnet publish -c Release -r win-x64 --self-contained -p:PublishSingleFile=true -o $build -nologo -v q }

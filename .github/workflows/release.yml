@@ -1,7 +1,7 @@
 # A tag vX.Y.Z: build and unit-test, publish the single-file exe, zip it, make its installer (tools/installer),
-# publish the Linux build into a tar.gz (tools/ci/pack-linux.py), pack the formula pictures module for both, and
-# make a DRAFT release with these five and their SHA-256, on GitHub's own Windows machine. The draft is reviewed
-# (notes written) and published by hand. See docs/ci.md.
+# publish the Linux build into a tar.gz (tools/ci/pack-linux.py), pack the formula pictures module for both, make the
+# .deb and .rpm (tools/packages), and make a DRAFT release with these seven and their SHA-256, on GitHub's own Windows
+# machine. The draft is reviewed (notes written) and published by hand. See docs/ci.md.
 name: release
 
 on:
@@ -90,10 +90,20 @@ jobs:
           "miTgz=$miTgz" >> $env:GITHUB_OUTPUT
           "shaMiZip=$((Get-FileHash $miZip).Hash.ToLower())" >> $env:GITHUB_OUTPUT
           "shaMiTgz=$((Get-FileHash $miTgz).Hash.ToLower())" >> $env:GITHUB_OUTPUT
+          # .deb and .rpm (tools/packages, nfpm; docs/tech/packages.md): the same Linux build and module, into /usr/lib/blueedit
+          $pkgOut = Join-Path $env:RUNNER_TEMP 'packages'
+          python tools/packages/build.py $ver $outLinux $miLinux $pkgOut
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          $deb = (Get-ChildItem $pkgOut -Filter '*.deb').FullName
+          $rpm = (Get-ChildItem $pkgOut -Filter '*.rpm').FullName
+          "deb=$deb" >> $env:GITHUB_OUTPUT
+          "rpm=$rpm" >> $env:GITHUB_OUTPUT
+          "shaDeb=$((Get-FileHash $deb).Hash.ToLower())" >> $env:GITHUB_OUTPUT
+          "shaRpm=$((Get-FileHash $rpm).Hash.ToLower())" >> $env:GITHUB_OUTPUT
       - name: draft release
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          $notes = "Draft made by the release workflow from ${{ github.ref_name }}. Write the notes, then publish.`n`nSHA-256 of the Windows installer: ``${{ steps.zip.outputs.shaSetup }}```nSHA-256 of the Windows zip: ``${{ steps.zip.outputs.sha }}```nSHA-256 of the Linux tar.gz: ``${{ steps.zip.outputs.shaLinux }}```nSHA-256 of the formula pictures module, Windows: ``${{ steps.zip.outputs.shaMiZip }}```nSHA-256 of the formula pictures module, Linux: ``${{ steps.zip.outputs.shaMiTgz }}``"
-          gh release create '${{ github.ref_name }}' '${{ steps.zip.outputs.setup }}' '${{ steps.zip.outputs.zip }}' '${{ steps.zip.outputs.tgz }}' '${{ steps.zip.outputs.miZip }}' '${{ steps.zip.outputs.miTgz }}' --draft --prerelease --title "BlueEdit $('${{ github.ref_name }}'.TrimStart('v')) (preview)" --notes $notes
+          $notes = "Draft made by the release workflow from ${{ github.ref_name }}. Write the notes, then publish.`n`nSHA-256 of the Windows installer: ``${{ steps.zip.outputs.shaSetup }}```nSHA-256 of the Windows zip: ``${{ steps.zip.outputs.sha }}```nSHA-256 of the Linux tar.gz: ``${{ steps.zip.outputs.shaLinux }}```nSHA-256 of the formula pictures module, Windows: ``${{ steps.zip.outputs.shaMiZip }}```nSHA-256 of the formula pictures module, Linux: ``${{ steps.zip.outputs.shaMiTgz }}```nSHA-256 of the .deb: ``${{ steps.zip.outputs.shaDeb }}```nSHA-256 of the .rpm: ``${{ steps.zip.outputs.shaRpm }}``"
+          gh release create '${{ github.ref_name }}' '${{ steps.zip.outputs.setup }}' '${{ steps.zip.outputs.zip }}' '${{ steps.zip.outputs.tgz }}' '${{ steps.zip.outputs.miZip }}' '${{ steps.zip.outputs.miTgz }}' '${{ steps.zip.outputs.deb }}' '${{ steps.zip.outputs.rpm }}' --draft --prerelease --title "BlueEdit $('${{ github.ref_name }}'.TrimStart('v')) (preview)" --notes $notes

@@ -30,12 +30,13 @@ From the [releases](https://github.com/loglux/blueedit/releases), on Windows 10 
   ([docs/tech/installer.md](docs/tech/installer.md));
 - **the zip**: a self-contained `be.exe` to put anywhere, nothing installed, with the setup scripts beside it.
 
-On Linux (x64), `be` from the tar.gz ([docs/linux.md](docs/linux.md)). The Windows files are not signed, so the first
+On Linux (x64), a .deb or .rpm package (`sudo apt install ./blueedit_<version>_amd64.deb`), or `be` from the tar.gz
+([docs/linux.md](docs/linux.md)). The Windows files are not signed, so the first
 start of a downloaded copy may meet a warning: "Windows protected your PC" — **More info > Run anyway**; "The
 publisher could not be verified" — **Run**.
 
 **First steps.** `be notes.md` opens a file (or `be` alone, then **F3**). **F9** opens the menus (or Alt+F, Alt+E…),
-**F1** lists every key, **F2** saves, **F10** quits. The first start shows a short welcome with the keys to begin with
+**F1** opens the help, every key by section, **F2** saves, **F10** quits. The first start shows a short welcome with the keys to begin with
 and the interface language (English or Russian). Spelling works at once with the dictionaries Windows has; grammar checking is one menu
 away: **Tools → Set up grammar checking** ([docs/proofing.md](docs/proofing.md)).
 
@@ -311,6 +312,7 @@ menu item says to set the font in the terminal's own settings.
     dotnet run -- file.md
     dotnet publish -c Release -r win-x64 --self-contained -p:PublishSingleFile=true -o publish
     .\tasks.ps1 publish-linux       # the Linux build and its tar.gz in publish-linux\ (docs/linux.md)
+    .\tasks.ps1 packages            # the .deb and .rpm in publish-packages\ (docs/tech/packages.md)
     .\tasks.ps1 help      # every routine operation (or: make help)
     .\tasks.ps1 check     # build with analyzers (warnings are errors) + unit tests, ~30 s
     .\tasks.ps1 test-all  # also publishes and runs all UI regression tests (~5 min)
