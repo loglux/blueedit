@@ -71,6 +71,7 @@ $data = Join-Path $env:LOCALAPPDATA 'BlueEdit'
 Check "nothing in $data" (-not (Test-Path $data) -or -not (Get-ChildItem $data -Recurse -File | Where-Object Name -ne 'error.log'))
 Check 'the defaults put it in PATH' ((UserPath) -split ';' -contains (Join-Path $env:LOCALAPPDATA 'Programs\BlueEdit'))
 Check 'the defaults add "Open with BlueEdit"' (Test-Path 'HKCU:\Software\Classes\*\shell\BlueEdit\command')
+Check 'the defaults put in the formula pictures module' (Test-Path (Join-Path $env:LOCALAPPDATA 'Programs\BlueEdit\mathimages\BlueEdit.MathImages.dll'))
 
 "`n== silent install: PATH, Open with, Harper"
 $sw = [Diagnostics.Stopwatch]::StartNew()
@@ -101,6 +102,7 @@ Check '"be" runs from PATH' ($version -like 'BlueEdit *')
 $p = Start-Process $setup '/VERYSILENT /SUPPRESSMSGBOXES /TASKS="openwith"' -PassThru -Wait
 "  exit code $($p.ExitCode)"
 Check 'PATH no longer has it' (-not ((UserPath) -split ';' -contains $app))
+Check 'the formula pictures module gone, not chosen' (-not (Test-Path "$app\mathimages"))
 
 "`n== silent uninstall"
 $p = Start-Process "$app\unins000.exe" '/VERYSILENT /SUPPRESSMSGBOXES' -PassThru -Wait

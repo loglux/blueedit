@@ -16,7 +16,8 @@ are shown typeset instead, as LaTeX prints them, in the Latin Modern font (Live 
   A terminal without Sixel gets the text layout, as before; if it shows boxes for some symbols, see
   [terminal-fonts.md](terminal-fonts.md).
 - **The module**, about 14 MB unpacked (most of it Skia, the drawing library): `blueedit-mathimages-<version>-win-x64.zip`
-  or `…-linux-x64.tar.gz` from the same release as the editor. Unpack it **next to the editor**, so that a folder
+  or `…-linux-x64.tar.gz` from the same release as the editor. **The Windows installer puts it in** (ticked by
+  default); from the zip, unpack it **next to the editor**, so that a folder
   `mathimages` lies beside `be.exe`:
 
   ```

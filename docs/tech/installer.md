@@ -13,7 +13,7 @@ tag). Added on 23 October 2026.
 |---|---|
 | Where | `%LOCALAPPDATA%\Programs\BlueEdit`: `be.exe`, `tools\proofing-setup`, `tools\lsp-setup`, `LICENSE.txt`, `THIRD-PARTY-NOTICES.md` |
 | Always | Start menu shortcut; Programs and Features entry (uninstaller); App Paths (Win+R `be`); Explorer's "Open with" list for `.txt`, `.md`, `.markdown`, `.log`, `.json`, `.ini`, `.py`, `.cs` |
-| Ticked by default | `be` in the user's PATH; "Open with BlueEdit" on every file in Explorer |
+| Ticked by default | `be` in the user's PATH; "Open with BlueEdit" on every file in Explorer; the formula pictures module (`mathimages`, ~14 MB, inside the installer: nothing downloaded) |
 | Not ticked | a desktop shortcut; the language servers for code |
 | Grammar checking (a page of its own) | nothing chosen: Harper, LanguageTool, a language model here (one of five, by the video card) or a model server (address, model, key) |
 | Languages | English and Russian, by Windows' interface language (asked when it is neither) |

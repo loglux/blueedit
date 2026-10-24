@@ -14,6 +14,9 @@
 #ifndef Source
   #define Source "..\..\publish"
 #endif
+#ifndef MathImages
+  #define MathImages "..\..\publish-mathimages"
+#endif
 #ifndef Output
   #define Output "..\..\publish-installer"
 #endif
@@ -58,6 +61,8 @@ Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl"
 [CustomMessages]
 en.TaskPath=Add the command "be" to PATH: open files from any console (be notes.md)
 ru.TaskPath=Добавить команду «be» в PATH: открывать файлы из любой консоли (be notes.md)
+en.TaskMathImages=Formula pictures: display formulas typeset in Windows Terminal (the mathimages module, ~14 MB)
+ru.TaskMathImages=Картинки формул: выносные формулы набраны, как в LaTeX, в Windows Terminal (модуль mathimages, ~14 МБ)
 en.TaskOpenWith=Add "Open with BlueEdit" to the menu of files in Explorer
 ru.TaskOpenWith=Добавить «Открыть в BlueEdit» в меню файлов в Проводнике
 en.OpenWith=Open with BlueEdit
@@ -202,6 +207,7 @@ ru.RemoveData=Удалить и то, что скачал BlueEdit (провер
 [Tasks]
 Name: path; Description: {cm:TaskPath}
 Name: openwith; Description: {cm:TaskOpenWith}
+Name: mathimages; Description: {cm:TaskMathImages}
 Name: desktopicon; Description: {cm:CreateDesktopIcon}; Flags: unchecked
 Name: code; Description: {cm:Code}; GroupDescription: {cm:GroupCode}; Flags: unchecked
 Name: code\pyright; Description: {cm:pyright}; Flags: unchecked
@@ -213,8 +219,14 @@ Name: code\typescript; Description: {cm:typescript}; Flags: unchecked
 Source: "{#Source}\be.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\proofing-setup\*"; DestDir: "{app}\tools\proofing-setup"; Flags: ignoreversion recursesubdirs
 Source: "..\lsp-setup\*"; DestDir: "{app}\tools\lsp-setup"; Flags: ignoreversion recursesubdirs
+; the formula pictures module beside be.exe, where the editor looks first (docs/formula-pictures.md)
+Source: "{#MathImages}\*"; DestDir: "{app}\mathimages"; Flags: ignoreversion recursesubdirs; Tasks: mathimages
 Source: "..\..\LICENSE"; DestDir: "{app}"; DestName: "LICENSE.txt"; Flags: ignoreversion
 Source: "..\..\THIRD-PARTY-NOTICES.md"; DestDir: "{app}"; Flags: ignoreversion
+
+[InstallDelete]
+; installed again without it: the module of an earlier install goes
+Type: filesandordirs; Name: "{app}\mathimages"; Tasks: not mathimages
 
 [Icons]
 Name: "{autoprograms}\BlueEdit"; Filename: "{app}\be.exe"; WorkingDir: "{userdocs}"
