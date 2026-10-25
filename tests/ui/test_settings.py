@@ -231,9 +231,9 @@ def test_set_up_grammar_offers_the_ways_and_sets_a_model_server(editor, make_fil
     t = editor(make_file("a.txt", "hello\n"))
     t.send(alt("t"), 0.8); t.send("u", 1.5)
     text = t.text()
-    for way in ("A language model here", "Ollama", "LM Studio", "Another model server", "LanguageTool", "Harper"):
+    for way in ("A language model here", "Ollama", "LM Studio", "Cloud service", "Another model server", "LanguageTool", "Harper"):
         assert way in text, text
-    t.send(DOWN * 3, 0.3); t.send("\r", 0.8)                      # another model server
+    t.send(DOWN * 4, 0.3); t.send("\r", 0.8)                      # another model server
     t.send("\r", 0.6)                                             # the address offered (the last one)
     t.send("my-model", 0.4); t.send("\r", 0.6)
     t.send("sk-test-secret", 0.4); t.send("\r", 1.0)               # a key: to a file of its own
@@ -259,6 +259,22 @@ def test_set_up_grammar_offers_the_ways_and_sets_a_model_server(editor, make_fil
         assert b"sk-test-secret" not in key, key                   # encrypted (DPAPI)
     else:
         assert key == b"sk-test-secret" and os.stat(key_file).st_mode & 0o777 == 0o600, key
+
+
+def test_set_up_grammar_offers_the_cloud_services_by_name(editor, make_file):
+    # Claude or OpenAI is chosen from a list, with no address to type: the key is asked for that service, where it is
+    # got said; Esc there leaves the settings as they were (nothing is sent anywhere in this test)
+    t = editor(make_file("a.txt", "hello\n"))
+    t.send(alt("t"), 0.8); t.send("u", 1.5)
+    t.send(DOWN * 3, 0.3); t.send("\r", 0.8)                      # cloud service
+    text = t.text()
+    for service in ("Anthropic Claude", "OpenAI", "Google Gemini", "DeepSeek"):
+        assert service in text, text
+    t.send("\r", 0.8)                                             # Anthropic Claude
+    assert "console.anthropic.com" in t.text(), t.text()
+    t.send(ESC, 0.6)
+    assert "console.anthropic.com" not in t.text(), t.text()
+    assert not os.path.exists(settings_path()) or "anthropic" not in open(settings_path(), encoding="utf-8").read()
 
 
 class FakeOllama:

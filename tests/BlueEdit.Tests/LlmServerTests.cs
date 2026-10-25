@@ -329,6 +329,16 @@ public class LlmServerTests
     public void Only_models_that_write_text_are_listed(string id, bool listed) => Assert.Equal(listed, LlmServer.IsTextModel(id));
 
     [Fact]
+    public void A_cloud_service_offers_its_recommended_model_first_and_once()
+    {
+        Assert.Equal(["claude-haiku-5-5", "claude-opus-5-5", "claude-sonnet-5-5"],
+            App.CloudModels("claude-haiku-5-5", ["claude-haiku-5-5-20260901", "claude-opus-5-5", "claude-sonnet-5-5"]));
+        Assert.Equal(["gpt-5.4-mini"], App.CloudModels("gpt-5.4-mini", []));      // no list: the service did not answer
+        // each service is one the requests know by its address, and its key goes the way it wants it
+        Assert.All(App.CloudServices, c => Assert.True(new LlmEndpoint(c.Url, c.Model, null) is var e && (e.IsAnthropic || e.IsOpenAi || e.IsGoogleNative || e.IsDeepSeek)));
+    }
+
+    [Fact]
     public void Strict_and_closed_schemas_close_every_object_and_strict_requires_every_field()
     {
         var schema = JsonNode.Parse("""{"type":"object","properties":{"issues":{"type":"array","items":{"type":"object","properties":{"a":{"type":"string"},"b":{"type":["string","null"]}},"required":["a"]}}}}""")!;

@@ -244,6 +244,10 @@ Obsidian, поэтому достаточно адреса (и ключа, и м
 | Google (Gemini) | `https://generativelanguage.googleapis.com/v1beta` — своё API; `…/v1beta/openai` — его форма OpenAI | `gemini-3.5-flash-lite` |
 | DeepSeek | `https://api.deepseek.com/v1` | `deepseek-flash`, `deepseek-v4-pro` |
 
+Вводить это руками не нужно: **Tools → Set up grammar checking → Cloud service** показывает эти четыре сервиса
+списком, спрашивает ключ (и говорит, где его взять), проверяет его и показывает модели сервиса, рекомендуемую первой,
+как установщик и плагин. Модель потом меняется в **Tools → Grammar model**.
+
 23 октября 2026 года каждый ответил через код самого редактора и нашёл ошибку в английском и русском абзаце, за 1–2,5 с
 (`CloudCheck`, `docs/tech/proofing-internals.md`); насколько хорошо каждый справляется на множестве текстов, замерял
 плагин ([его docs/servers.md](https://github.com/loglux/obsidian-blueproof/blob/main/docs/servers.md)). Другой сервис с API как у OpenAI тоже может подойти: от чего он отказывается, редактор
@@ -265,7 +269,7 @@ llama.cpp или модели или llama.cpp не запустился, и с�
   `chat_template_kwargs` llama.cpp (OpenAI его отвергает), `temperature` (отвергают модели с рассуждениями),
   `max_tokens` (там, где нужно, — `max_completion_tokens`). «Размышления» выключаются `reasoning_effort: "none"`: через
   Ollama без этого Qwen тратил весь лимит ответа на рассуждения и не отвечал ничем (нашёл плагин для Obsidian).
-- **Ключ**, введённый в **Tools → Set up grammar checking → Another model server**, сохраняется в отдельный файл
+- **Ключ**, введённый в **Tools → Set up grammar checking** (Cloud service или Another model server), сохраняется в отдельный файл
   `llm-key` рядом с `settings.json`, а в настройках остаётся только `"file:llm-key"`: ключ не виден, когда настройки
   открыты, и не попадает в их копию. В Windows файл зашифрован DPAPI — встроенным средством системы для сохранённых
   паролей: прочесть его может только этот пользователь на этом компьютере. В Linux это обычный текст, который может

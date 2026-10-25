@@ -97,6 +97,68 @@ sealed partial class App
         Note(Tf("Grammar: {0} on {1}; paragraphs are sent there", model.Trim(), address.Trim()));
     }
 
+    // The cloud services as the installer offers them (tools/installer/blueedit.iss, ServerDefaults): the address, the
+    // model the Obsidian plugin's benchmark recommends, and where a key is got
+    internal static readonly (string Name, string Url, string Model, string KeyAt)[] CloudServices =
+    [
+        ("Anthropic Claude", "https://api.anthropic.com/v1", "claude-haiku-5-5", "console.anthropic.com"),
+        ("OpenAI", "https://api.openai.com/v1", "gpt-5.4-mini", "platform.openai.com"),
+        ("Google Gemini", "https://generativelanguage.googleapis.com/v1beta", "gemini-3.5-flash-lite", "aistudio.google.com"),
+        ("DeepSeek", "https://api.deepseek.com/v1", "deepseek-flash", "platform.deepseek.com"),
+    ];
+
+    // A service's models to choose from, the recommended one first: a dated name of it (Anthropic lists
+    // claude-haiku-4-5-20251001 beside claude-haiku-4-5) is not a second row; with no list (not answering), only it
+    internal static List<string> CloudModels(string recommended, IEnumerable<string> listed) =>
+        listed.Where(m => !m.Equals(recommended, StringComparison.OrdinalIgnoreCase)
+                && !m.StartsWith(recommended + "-", StringComparison.OrdinalIgnoreCase))
+            .Prepend(recommended).ToList();
+
+    // Set up grammar checking > Cloud service: the service chosen from a list, its key typed, its models listed from
+    // the service itself and one chosen; no address or model name to type
+    void SetUpCloudService()
+    {
+        var host = new LlmEndpoint(settings.LlmServer, "", null).Host;
+        int now = settings.LlmServer.Length == 0 ? -1
+            : Array.FindIndex(CloudServices, c => new LlmEndpoint(c.Url, "", null).Host.Equals(host, StringComparison.OrdinalIgnoreCase));
+        if (Dialogs.Pick(app, T("Cloud service"), CloudServices.Select(c => c.Name).ToList(), Math.Max(0, now), current: now) is not int i) return;
+        var (name, url, recommended, keyAt) = CloudServices[i];
+        // the key kept for this service comes back; another service's is never offered to this one
+        string key = i == now ? settings.LlmApiKey : "";
+        var models = new List<string>();
+        while (true)
+        {
+            if (Dialogs.Prompt(app, name, Tf("API key ({0}; env:NAME or file:PATH also do):", keyAt), key) is not { Length: > 0 } k) return;
+            key = k.Trim();
+            Note(Tf("Asking {0} for its models...", name));
+            app.Render();
+            var endpoint = new LlmEndpoint(url, "", LlmEndpoint.KeyFrom(key));
+            var (found, detail) = LlmServer.Probe(endpoint);
+            if (found == LlmServer.ProbeResult.Ok) models = LlmServer.ModelsAt(endpoint);
+            Note("");
+            if (found == LlmServer.ProbeResult.Ok) break;
+            var why = found switch
+            {
+                LlmServer.ProbeResult.Key => Tf("{0} did not take the key: {1}", name, detail),
+                LlmServer.ProbeResult.Unreachable => Tf("{0} does not answer: {1}", name, detail),
+                _ => Tf("{0} answered: {1}", name, detail),
+            };
+            var choice = Dialogs.Ask(app, name, why, [T("Keep it as it is"), T("Fix it"), T("Cancel")], 2);
+            if (choice == 0) break;
+            if (choice == 2) return;
+        }
+        var list = CloudModels(recommended, models);
+        int current = i == now ? list.FindIndex(m => m.Equals(settings.LlmServerModel, StringComparison.OrdinalIgnoreCase)) : -1;
+        var rows = list.Select(m => m == recommended ? $"{m}   {T("(recommended)")}" : m).ToList();
+        if (Dialogs.Pick(app, Tf("{0}: the model for grammar checking", name), rows, Math.Max(0, current), current: current) is not int pick) return;
+        Settings.SetValue(Settings.FilePath, "llmServer", JsonString(url));
+        Settings.SetValue(Settings.FilePath, "llmServerModel", JsonString(list[pick]));
+        Settings.SetValue(Settings.FilePath, "llmApiKey", JsonString(LlmEndpoint.SaveKey(key)));
+        Settings.SetValue(Settings.FilePath, "llmModel", JsonString("server"));
+        TurnOnGrammar("llm");
+        Note(Tf("Grammar: {0} at {1}; paragraphs are sent there", list[pick], name));
+    }
+
     // Ollama or LM Studio on this computer, at its usual address: its models listed and one chosen, nothing to type.
     // Not running, or without a model: what to do, step by step. Nothing is installed by BlueEdit for them.
     void SetUpModelApp(string name, string url, string[] help)
@@ -169,7 +231,8 @@ sealed partial class App
                 + Have(ProofingTools.HasLlama(h))),
             Row("Ollama", T("a program for models (ollama.com); its models are listed")),
             Row("LM Studio", T("a program for models (lmstudio.ai); its models are listed")),
-            Row(T("Another model server"), T("an address: a cloud service, a server on the network")),
+            Row(T("Cloud service"), T("Claude, OpenAI, Gemini, DeepSeek: with a key; the text leaves the computer")),
+            Row(T("Another model server"), T("an address: llama-server on the network, any OpenAI-compatible API")),
             Row("LanguageTool", T("rules for 31 languages; no video card (Java, ~530 MB)")) + Have(ProofingTools.HasLanguageTool(h)),
             Row("Harper", T("fast rules for English; no video card (~60 MB)")) + Have(ProofingTools.HasHarper(h)),
         };
@@ -180,16 +243,17 @@ sealed partial class App
             case 0: SetUpModelHere(); break;
             case 1: SetUpOllama(); break;
             case 2: SetUpLmStudio(); break;
-            case 3: SetUpModelServer(); break;
-            case 4:
+            case 3: SetUpCloudService(); break;
+            case 4: SetUpModelServer(); break;
+            case 5:
                 if (ProofingTools.HasLanguageTool(h)) { TurnOnGrammar("languagetool"); Note(T("Grammar: LanguageTool on, starting (a few seconds)")); }
                 else InstallProofing(["languagetool"], "LanguageTool", () => { TurnOnGrammar("languagetool"); Note(T("Grammar: LanguageTool installed and on, starting")); });
                 break;
-            case 5:
+            case 6:
                 if (ProofingTools.HasHarper(h)) { TurnOnGrammar("harper"); Note(T("Grammar: Harper on")); }
                 else InstallProofing(["harper"], "Harper", () => { TurnOnGrammar("harper"); Note(T("Grammar: Harper installed and on")); });
                 break;
-            case 6: RemoveProofing(); break;
+            case 7: RemoveProofing(); break;
         }
     }
 

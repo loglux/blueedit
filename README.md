@@ -278,7 +278,8 @@ computer without a GPU (docs/proofing.md, "Which to choose"):
   DeepSeek, or another with OpenAI's API. Each cloud service is asked in its own way; each was tried with its
   recommended model (gpt-5.4-mini, claude-haiku-5-5, gemini-3.5-flash-lite, deepseek-flash) and answers in about 1–2 s a
   paragraph. The key is kept in a file of its own, encrypted on Windows. Set up in **Tools → Set up grammar checking →
-  Another model server** or in the installer ([docs/proofing.md](docs/proofing.md)).
+  Cloud service** (the service from a list, its key, a model from its list) or in the installer
+  ([docs/proofing.md](docs/proofing.md)).
 - **Edge** (experimental) — Microsoft Edge's built-in on-device proofreader, English only (American spelling). Not
   officially on yet: the editor starts a hidden Edge Canary with a profile of its own and the hidden switches that
   turn it on, and drives it over the DevTools protocol. Needs [Edge Canary](https://www.microsoft.com/edge/download/insider)

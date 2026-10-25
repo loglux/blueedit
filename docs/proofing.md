@@ -245,6 +245,10 @@ address is all there is to give (and the key, and the model):
 | Google (Gemini) | `https://generativelanguage.googleapis.com/v1beta` — its own API; `…/v1beta/openai` is its OpenAI form | `gemini-3.5-flash-lite` |
 | DeepSeek | `https://api.deepseek.com/v1` | `deepseek-flash`, `deepseek-v4-pro` |
 
+None of this has to be typed: **Tools → Set up grammar checking → Cloud service** lists the four, asks for the key
+(saying where it is got), checks it, and lists the service's models with the recommended one first, as the installer
+and the plugin do. The model can be changed later in **Tools → Grammar model**.
+
 Each answered and found the error in an English and a Russian paragraph through the editor's own code on 23 October
 2026, in 1 to 2.5 s (`CloudCheck`, `docs/tech/proofing-internals.md`); how well each does over many texts was measured by
 the plugin ([its docs/servers.md](https://github.com/loglux/obsidian-blueproof/blob/main/docs/servers.md)). Any other service with an API like OpenAI's may work too; what it refuses, the
@@ -266,7 +270,7 @@ llama.cpp does not start, and the status line says so. Grammar and style both go
   llama.cpp's `chat_template_kwargs` (OpenAI refuses it), `temperature` (refused by reasoning models), `max_tokens`
   (sent as `max_completion_tokens` where wanted). Thinking is switched off with `reasoning_effort: "none"`: through
   Ollama, Qwen spent the whole answer limit thinking and returned nothing without it (found by the Obsidian plugin).
-- **The key**: one typed in **Tools → Set up grammar checking → Another model server** goes to a file of its own,
+- **The key**: one typed in **Tools → Set up grammar checking** (Cloud service or Another model server) goes to a file of its own,
   `llm-key` beside `settings.json`, which then says only `"file:llm-key"`: the key is not on screen when the settings
   are opened, nor in a copy of them. On Windows the file is encrypted with DPAPI, the system's own means for saved
   passwords: only this user on this computer can read it. On Linux it is plain text that only this user may read

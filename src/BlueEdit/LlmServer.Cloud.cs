@@ -127,7 +127,7 @@ sealed partial class LlmServer
     {
         var said = ErrorMessage(answer);
         if (resp.StatusCode is HttpStatusCode.Unauthorized or HttpStatusCode.Forbidden)
-            throw new HttpRequestException($"{e.Host} refused the key ({(int)resp.StatusCode}): check it in Tools > Set up grammar checking > Another model server");
+            throw new HttpRequestException($"{e.Host} refused the key ({(int)resp.StatusCode}): check it in Tools > Set up grammar checking");
         if (e.Model.Trim().Length == 0 && Regex.IsMatch(said, @"\bmodel\b", RegexOptions.IgnoreCase))
             throw new HttpRequestException($"{e.Host} needs a model's name: Tools > Grammar model");
         if (resp.StatusCode != HttpStatusCode.TooManyRequests) return;

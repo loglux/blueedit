@@ -142,7 +142,7 @@ Not checked: web addresses, e-mail, paths. Words mixing Latin and Cyrillic look-
 
 F7                 | On an underlined finding: the fixes as buttons, why, and who found it
 Ctrl+F7            | The language model suggests a better wording of the paragraph: tick the changes to take (Ctrl+Z undoes them)
-Tools > Set up grammar checking | A model here, Ollama, LM Studio, a server at an address, LanguageTool or Harper; then turned on
+Tools > Set up grammar checking | A model here, Ollama, LM Studio, a cloud service (Claude, OpenAI, Gemini, DeepSeek), a server at an address, LanguageTool or Harper; then turned on
 Tools > Grammar checking | LanguageTool, a model, Edge, Chrome, Harper: findings underlined in another colour
 Tools > Grammar model | The model: here (Auto: the best one) or a server's
 Tools > Ignored rules | What F7 > Never show this hid; untick to see it again
