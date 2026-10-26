@@ -291,8 +291,24 @@ sealed partial class App
     {
         if (editor.Path != path || editor.EditVersion != version) { Note(T("Not formatted: the text changed meanwhile")); return; }
         int before = editor.EditVersion;
+        var old = editor.Lines.ToList();
         if (!editor.ApplyEdits(edits)) { Note(Tf("The changes from {0} do not fit the text; nothing changed", by)); return; }
-        Note(editor.EditVersion == before ? T("Already formatted") : Tf("Formatted by {0} (Ctrl+Z undoes it)", by));
+        // how many lines it touched, so that a press shows what it did (a formatted file looks much the same)
+        int changed = ChangedLines(old, editor.Lines);
+        Note(editor.EditVersion == before || changed == 0 ? Tf("Already formatted: {0} changed nothing", by)
+            : Tf("Formatted by {0}, lines changed: {1} (Ctrl+Z undoes it)", by, changed));
+    }
+
+    // The lines the new text has that the old one had not, or the lines that went, whichever is more (blank lines
+    // removed are changes too): a count without a full diff, each line matched once
+    internal static int ChangedLines(IEnumerable<string> before, IEnumerable<string> after)
+    {
+        var left = before.GroupBy(l => l, StringComparer.Ordinal).ToDictionary(g => g.Key, g => g.Count(), StringComparer.Ordinal);
+        int added = 0;
+        foreach (var line in after)
+            if (left.TryGetValue(line, out int n) && n > 0) left[line] = n - 1;
+            else added++;
+        return Math.Max(added, left.Values.Sum());
     }
 
     // Ctrl+F2: renames the symbol at the caret everywhere the language server knows it (F2 in VS Code; F2 saves here).

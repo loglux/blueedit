@@ -92,7 +92,7 @@ Alt+N              | Numbered list
 Alt+Q              | Quote
 Alt+X              | Task checkbox, toggles [ ] and [x]
 Alt+R              | Reformat the paragraph (or each selected one) to the right margin
-Format menu        | Align left, right, centre, justify (the last three in plain text); Auto-wrap: a word typed past the margin goes to a new line
+Format menu        | Paragraph: align left, right, centre, justify — once, on the paragraph at the caret or the selected ones (the last three in plain text); Auto-wrap: a word typed past the margin goes to a new line
 
 The margin is "rightMargin" in the settings (78). Alt+Z only shows long lines wrapped.
 

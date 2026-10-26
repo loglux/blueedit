@@ -185,7 +185,9 @@ sealed partial class App
 
     void ToggleSpell()
     {
-        editor.SpellOn = !editor.SpellOn && spell.Available;
+        // kept in the settings, as Alt+G keeps line numbers: the Tools menu's √ and Tools > Settings never disagree
+        Settings.SetValue(Settings.FilePath, "spellCheck", editor.SpellOn ? "false" : "true");
+        ReloadSettings();
         Note(editor.SpellOn ? T("Spell check on") : T("Spell check off"));
     }
 }

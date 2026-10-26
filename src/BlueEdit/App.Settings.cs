@@ -223,6 +223,23 @@ sealed partial class App
         Note(editor.LineNumbersOn ? T("Line numbers on (Alt+G turns them off)") : T("Line numbers off"));
     }
 
+    // Alt+Z: kept in the settings for this kind of file (text or code), as Alt+G keeps line numbers, so that the View
+    // menu's √ and Tools > Settings never disagree
+    void ToggleSoftWrap()
+    {
+        editor.ToggleSoftWrap();
+        Settings.SetValue(Settings.FilePath, editor.IsProseFile ? "wrapProse" : "wrapCode", editor.WrapOn ? "true" : "false");
+        ReloadSettings();
+        Note(editor.WrapOn ? T("Soft wrap on") : T("Soft wrap off"));
+    }
+
+    // View > Formula pictures, at the right while they are on: why none are shown ("" when they are, or are off)
+    string FormulaPicturesMissing() =>
+        !settings.FormulaImages || FormulaImages.Active ? ""
+        : FormulaImages.ModuleDir == null && FormulaImages.Renderer == null ? T("no module")
+        : FormulaImages.LoadError != null ? T("module failed")
+        : T("not in this terminal");
+
     void ToggleAutoWrap()
     {
         Settings.SetValue(Settings.FilePath, "autoWrap", settings.AutoWrap ? "false" : "true");

@@ -8,6 +8,15 @@ public sealed class FormattersTests : IDisposable
     public void Dispose() { try { Directory.Delete(_dir, true); } catch (IOException) { } }
 
     [Fact]
+    public void The_lines_a_formatting_changed_are_counted_for_the_status_line()
+    {
+        Assert.Equal(0, App.ChangedLines(["a", "b"], ["a", "b"]));
+        Assert.Equal(2, App.ChangedLines(["x=1", "y = 2", "z=3"], ["x = 1", "y = 2", "z = 3"]));
+        Assert.Equal(2, App.ChangedLines(["a", "", "", "b"], ["a", "b"]));                 // blank lines removed
+        Assert.Equal(1, App.ChangedLines(["}", "}"], ["}", "}", "}"]));                    // a repeated line counted once each
+    }
+
+    [Fact]
     public void The_change_is_one_edit_between_what_both_texts_share()
     {
         Assert.Empty(Formatters.Diff("a\nb\n", "a\nb\n"));

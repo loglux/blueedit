@@ -5,7 +5,7 @@ import time
 
 import pytest
 
-from harness import DOWN, END, ESC, F2, F6, RIGHT, UP, WINDOWS, alt, ctrl
+from harness import DOWN, END, ESC, F2, F6, F8, RIGHT, UP, WINDOWS, alt, ctrl
 
 
 def settings_path():
@@ -259,6 +259,23 @@ def test_set_up_grammar_offers_the_ways_and_sets_a_model_server(editor, make_fil
         assert b"sk-test-secret" not in key, key                   # encrypted (DPAPI)
     else:
         assert key == b"sk-test-secret" and os.stat(key_file).st_mode & 0o777 == 0o600, key
+
+
+def test_f8_and_alt_z_keep_their_setting_so_the_menu_and_settings_agree(editor, make_file):
+    # F8 turned spelling off while Tools > Settings still said "on"; now the key writes the setting, as Alt+G does,
+    # and the View menu's mark follows
+    t = editor(make_file("a.md", "# Title\n\nSome text.\n"))
+    t.send(F8, 0.6)
+    t.send(alt("z"), 0.6)
+    for _ in range(25):
+        s = open(settings_path(), encoding="utf-8").read() if os.path.exists(settings_path()) else ""
+        if '"spellCheck": false' in s and '"wrapProse": false' in s:
+            break
+        time.sleep(0.2)
+    assert '"spellCheck": false' in s and '"wrapProse": false' in s, s
+    t.send(alt("v"), 0.8)
+    assert "┃ Soft wrap" in t.text() and "┃√Soft wrap" not in t.text(), t.text()
+    t.send(ESC, 0.4)
 
 
 def test_set_up_grammar_offers_the_cloud_services_by_name(editor, make_file):

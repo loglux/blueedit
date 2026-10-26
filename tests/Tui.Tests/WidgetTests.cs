@@ -314,6 +314,34 @@ public class WidgetTests
     }
 
     [Fact]
+    public void A_setting_in_a_menu_shows_its_state_now()
+    {
+        // √ before what is on, • before the chosen one of several, the value at the right; asked at each drawing
+        bool wrap = true;
+        var term = new FakeTerminal(80, 25);
+        var app = new TuiApp(term) { Root = new Root() };
+        app.Menu = new MenuBar(new[]
+        {
+            new Menu("_View", new[]
+            {
+                new MenuItem("Soft _wrap", "Alt+Z", () => wrap = !wrap) { On = () => wrap },
+                new MenuItem("_Dark", "", () => { }) { On = () => false, Choice = true },
+                new MenuItem("_Light", "", () => { }) { On = () => true, Choice = true },
+                new MenuItem("Line _endings", "", () => { }) { Value = () => "CRLF" },
+            }),
+        });
+        term.Keys(Alt('v'));
+        Assert.Throws<InvalidOperationException>(() => app.Run());
+        Assert.Contains("┃√Soft wrap", term.Row(2), StringComparison.Ordinal);
+        Assert.Contains("┃ Dark", term.Row(3), StringComparison.Ordinal);
+        Assert.Contains("┃•Light", term.Row(4), StringComparison.Ordinal);
+        Assert.Matches(@"┃ Line endings\s+CRLF ┃", term.Row(5));
+        wrap = false;
+        app.Render();
+        Assert.Contains("┃ Soft wrap", term.Row(2), StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void Mouse_opens_a_menu_and_picks_an_item()
     {
         var (app, term, log, _) = MenuApp();

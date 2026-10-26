@@ -356,6 +356,36 @@ The second step after the text layout above: display formulas typeset, as pictur
   italic, E is Edit, W is Window). One key more, and the view is named rather than found by going round. Ctrl+E still
   toggles Reading.
 
+## The state in the menus (`MenuItem.On`, `Choice`, `Value`)
+
+**The rule (the user's, 26 October 2026): an option that is on is seen to be on in the menu, so one always knows where
+one is.** Every item that switches something has a mark or a value; an item without one is an action, and its name
+says what it acts on. A key that switches a setting keeps it in the settings, so the menu and Tools > Settings never
+disagree. A new toggle follows this from the start.
+
+The user could not tell what was on: "Spell check on/off", "Line endings CRLF/LF" named both states, and the menu did
+not say which held now or what a press would do (26 October 2026). Now, as in Far's menus:
+
+- `√` in the blank column before the label: what is on — soft wrap, line numbers, formula pictures, timing,
+  auto-wrap, spelling, column mode. "Spell check on/off" became "Spell check".
+- `•`: the chosen one of several — the Markdown view (in a Markdown file only), the theme.
+- The value at the right, where a key would stand, for a two-valued setting without a key: "Line endings … CRLF".
+
+The state is asked whenever the menu is drawn (`Func<bool>`), so it is never out of date and never kept twice.
+
+Ctrl+F12 (Format code) is an action, not a toggle, but its result was not seen either: a formatted file looks much the
+same, and the status line said only "Formatted by ruff". It now says how many lines changed ("lines changed: 3"), or
+that the program changed nothing. The lines are counted without a full diff: the new text's lines the old one lacked,
+or the lines that went, whichever is more (`App.ChangedLines`). "(language server)" left the item's name: ruff or
+black format too.
+
+Then the user asked whether Align left, right, centre and Justify were modes and which one was on. They are actions,
+once, on the paragraph at the caret (or the selected ones); now named "Paragraph: align left", "Paragraph: centre",
+and so on. And Tools > Settings said "Spell checking: on" after F8 had turned spelling off, because F8 and Alt+Z changed
+only the editor and Alt+G alone kept its setting: now all three keep theirs (Alt+Z for text or for code, by the file).
+Formula pictures has its √ while it is on even when no picture is shown, so the reason stands at the right: "no
+module", "module failed", "not in this terminal".
+
 ## Scrolling in the reading view (`EditorView.ScrollReading`)
 
 - The caret is not drawn in the reading view, but the arrows used to move it as in editing: the page did not move

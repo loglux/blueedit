@@ -84,7 +84,7 @@ def test_ctrl_f12_formats_python_with_ruff_or_black_or_says_what_to_install(edit
     while time.time() < deadline and found and "Formatted" not in t.status():
         time.sleep(0.3)
     if found:
-        assert t.body()[0] == "x = 1" and "Formatted by" in t.status(), (t.status(), t.body()[:2])
+        assert t.body()[0] == "x = 1" and "lines changed: 1" in t.status(), (t.status(), t.body()[:2])
     else:                                                               # pyright has no formatter: what to install
         assert "Code tools installs ruff" in t.status() and t.body()[0] == "x=1", t.status()
 

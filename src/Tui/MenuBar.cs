@@ -6,6 +6,18 @@ public sealed record MenuItem(string Label, string Shortcut, Action Run)
 {
     public char Hotkey => MenuBar.HotkeyOf(Label);
     public string Text => Label.Replace("_", "", StringComparison.Ordinal);
+
+    /// <summary>Whether what the item turns on is on now: √ at its left, as in Far's menus. Asked whenever the menu is
+    /// drawn, so it is never out of date.</summary>
+    public Func<bool>? On { get; init; }
+
+    /// <summary>One of several choices (the Markdown views, the themes): • marks the chosen one instead of √.</summary>
+    public bool Choice { get; init; }
+
+    /// <summary>The setting's value now, at the right where a shortcut would stand ("CRLF").</summary>
+    public Func<string>? Value { get; init; }
+
+    internal string Right => Shortcut.Length > 0 ? Shortcut : Value?.Invoke() ?? "";
 }
 
 public sealed record Menu(string Label, IReadOnlyList<MenuItem> Items)
@@ -152,7 +164,7 @@ public sealed class MenuBar
     Rect DropDownRect()
     {
         var m = _menus[_open];
-        int labelW = m.Items.Max(i => i.Text.Length), keyW = m.Items.Max(i => i.Shortcut.Length);
+        int labelW = m.Items.Max(i => i.Text.Length), keyW = m.Items.Max(i => i.Right.Length);
         int w = 1 + labelW + (keyW > 0 ? 2 + keyW : 0) + 1 + 2;
         int x = _slots.Count > _open ? Math.Max(0, _slots[_open].X - 1) : 0;
         return new Rect(x, 1, w, m.Items.Count + 2);
@@ -165,16 +177,18 @@ public sealed class MenuBar
         var r = DropDownRect();
         if (r.X + r.W > s.Width) r = r with { X = Math.Max(0, s.Width - r.W) };
         Draw.Box(s, r, "", t.Menu, t.Menu);
-        int keyW = m.Items.Max(i => i.Shortcut.Length);
+        int keyW = m.Items.Max(i => i.Right.Length);
         for (int i = 0; i < m.Items.Count; i++)
         {
             var it = m.Items[i];
             bool sel = i == _item;
             var style = sel ? t.MenuSelected : t.Menu;
             s.Fill(r.X + 1, r.Y + 1 + i, r.W - 2, 1, ' ', style);
+            // the mark in the column before the label, which is otherwise blank
+            if (it.On?.Invoke() == true) s.Set(r.X + 1, r.Y + 1 + i, it.Choice ? '•' : '√', style);
             DrawLabel(s, r.X + 2, r.Y + 1 + i, it.Label, style, sel ? t.MenuSelected : t.MenuHotkey);
-            if (it.Shortcut.Length > 0)
-                s.Text(r.X + r.W - 2 - keyW, r.Y + 1 + i, it.Shortcut.PadLeft(keyW), sel ? t.MenuSelected : t.MenuShortcut);
+            if (it.Right is { Length: > 0 } right)
+                s.Text(r.X + r.W - 2 - keyW, r.Y + 1 + i, right.PadLeft(keyW), sel ? t.MenuSelected : t.MenuShortcut);
         }
         Draw.Shadow(s, r, t.Shadow);
     }

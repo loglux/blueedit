@@ -105,8 +105,9 @@ narrows it, Up/Down choose, Enter or Tab take the word, Esc closes, one Ctrl+Z u
 
 **Alt+R** (Format → Reformat paragraph) joins the paragraph's lines and breaks them again at words to the right
 margin (`rightMargin`, 78); with a selection, each paragraph in it on its own. List items and quotes keep their marks,
-the next lines hang under the text; an inline formula `$…$` or code is never split. **Format → Align** left, right,
-centre or justify (justify reformats and stretches the gaps); right, centre and justify only in plain text — in
+the next lines hang under the text; an inline formula `$…$` or code is never split. **Format → Paragraph: align left**,
+right, centre or justify, once, on the paragraph at the caret or the selected ones (justify reformats and stretches
+the gaps): not a mode, nothing stays on; right, centre and justify only in plain text — in
 Markdown the extra spaces vanish when shown. **Format → Auto-wrap at the margin** wraps while typing (`AUTOWRAP` in the
 status line). None of it applies to code. Soft wrap (Alt+Z) is different: it only shows long lines wrapped, the file
 keeps them whole.
