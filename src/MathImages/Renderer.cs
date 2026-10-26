@@ -46,6 +46,66 @@ public static class Renderer
         return (mask, cw, ch, null);
     }
 
+    /// <summary>The shape of <see cref="Decode"/>, looked for apart from <see cref="Api"/>: an older module without it
+    /// still draws formulas, and the editor shows no images.</summary>
+    public const int ImageApi = 1;
+
+    /// <summary>
+    /// A picture file (PNG, JPEG, and what else Skia reads: BMP, GIF's first frame, WebP) turned the way its EXIF says,
+    /// scaled down to fit <paramref name="maxWidth"/> × <paramref name="maxHeight"/> pixels (never up), as 0xAARRGGBB
+    /// pixels row by row; or null and why.
+    /// </summary>
+    public static (int[]? Pixels, int Width, int Height, string? Error) Decode(string path, int maxWidth, int maxHeight)
+    {
+        if (maxWidth <= 0 || maxHeight <= 0) return (null, 0, 0, "no room");
+        using var codec = SKCodec.Create(path);
+        if (codec == null) return (null, 0, 0, "not a picture this module reads");
+        // decoded whole before it is scaled: 100 megapixels is 400 MB
+        if ((long)codec.Info.Width * codec.Info.Height > 100_000_000) return (null, 0, 0, "too large");
+        using var decoded = SKBitmap.Decode(codec);
+        if (decoded == null) return (null, 0, 0, "could not be decoded");
+        using var upright = Upright(decoded, codec.EncodedOrigin);
+        double scale = Math.Min(1, Math.Min((double)maxWidth / upright.Width, (double)maxHeight / upright.Height));
+        int w = Math.Max(1, (int)Math.Round(upright.Width * scale)), h = Math.Max(1, (int)Math.Round(upright.Height * scale));
+        // mipmaps: a photo shrunk ten times or more stays smooth, where plain linear sampling skips pixels
+        using var small = upright.Resize(new SKImageInfo(w, h, SKColorType.Bgra8888, SKAlphaType.Unpremul),
+            new SKSamplingOptions(SKFilterMode.Linear, SKMipmapMode.Linear));
+        if (small == null) return (null, 0, 0, "could not be scaled");
+        var bytes = small.GetPixelSpan();
+        int stride = small.RowBytes;
+        var pixels = new int[w * h];
+        for (int y = 0; y < h; y++)
+            for (int x = 0; x < w; x++)
+            {
+                int i = y * stride + x * 4;                                 // B, G, R, A
+                pixels[y * w + x] = (bytes[i + 3] << 24) | (bytes[i + 2] << 16) | (bytes[i + 1] << 8) | bytes[i];
+            }
+        return (pixels, w, h, null);
+    }
+
+    // A phone's photo is stored as the sensor saw it, with the way to turn it in its EXIF
+    static SKBitmap Upright(SKBitmap b, SKEncodedOrigin origin)
+    {
+        bool swap = origin is SKEncodedOrigin.LeftTop or SKEncodedOrigin.RightTop or SKEncodedOrigin.RightBottom or SKEncodedOrigin.LeftBottom;
+        var turned = new SKBitmap(swap ? b.Height : b.Width, swap ? b.Width : b.Height, b.ColorType, b.AlphaType);
+        using var canvas = new SKCanvas(turned);
+        canvas.Clear(SKColors.Transparent);
+        float w = b.Width, h = b.Height;
+        switch (origin)
+        {
+            case SKEncodedOrigin.TopRight: canvas.Scale(-1, 1, w / 2, 0); break;
+            case SKEncodedOrigin.BottomRight: canvas.RotateDegrees(180, w / 2, h / 2); break;
+            case SKEncodedOrigin.BottomLeft: canvas.Scale(1, -1, 0, h / 2); break;
+            // (u, v) of the stored picture to its place on screen, the operations read from the last
+            case SKEncodedOrigin.LeftTop: canvas.RotateDegrees(90); canvas.Scale(1, -1); break;                          // (v, u)
+            case SKEncodedOrigin.RightTop: canvas.Translate(h, 0); canvas.RotateDegrees(90); break;                      // (h − v, u)
+            case SKEncodedOrigin.RightBottom: canvas.Translate(h, 0); canvas.RotateDegrees(90); canvas.Scale(-1, 1); canvas.Translate(-w, 0); break;   // (h − v, w − u)
+            case SKEncodedOrigin.LeftBottom: canvas.Translate(0, w); canvas.RotateDegrees(-90); break;                   // (v, w − u)
+        }
+        canvas.DrawBitmap(b, 0, 0);
+        return turned;
+    }
+
     // CSharpMath reads less LaTeX than MathJax and KaTeX; these rewrite what notes use most into what it reads. On the
     // author's maths notes (10 October 2026) they took it from 12,595 of 17,222 display formulas read to 17,119.
     static readonly (Regex Rx, string To)[] Rewrites =

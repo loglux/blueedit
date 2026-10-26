@@ -494,9 +494,11 @@ sealed partial class EditorView
         return mask;
     }
 
-    // Addresses, e-mail and paths are not words: https://example.com/docs, name@mail.ru, C:\Users\..., docs/notes.md
+    // Addresses, e-mail and paths are not words: https://example.com/docs, name@mail.ru, C:\Users\..., docs/notes.md;
+    // nor are the names of files and notes in Obsidian's [[links]] and ![[embeds]] and a Markdown link's (target)
     internal static readonly System.Text.RegularExpressions.Regex NotProseRx = new(
-        @"\b(?:[a-z][a-z0-9+.-]*://|www\.)\S+|[\w.+-]+@[\w-]+(?:\.[\w-]+)+|\b[A-Za-z]:\\\S*|(?<![\w/])\.{0,2}/?(?:[\w.-]+/)+[\w.-]*",
+        @"\b(?:[a-z][a-z0-9+.-]*://|www\.)\S+|[\w.+-]+@[\w-]+(?:\.[\w-]+)+|\b[A-Za-z]:\\\S*|(?<![\w/])\.{0,2}/?(?:[\w.-]+/)+[\w.-]*" +
+        @"|!?\[\[[^\]]*\]\]|\]\([^)]*\)",
         System.Text.RegularExpressions.RegexOptions.Compiled | System.Text.RegularExpressions.RegexOptions.IgnoreCase);
 
     bool[]? MisspelledMask(string line, Tok[] toks, Lang? lang)
@@ -754,11 +756,15 @@ sealed partial class EditorView
                 cachedLine = li;
             }
             int cells = Math.Clamp(Math.Min(endCol, text.Length) - startCol, 0, w - hang);
+            // a picture's row: no marks of spelling, grammar or code on the blanks beside it (an image's line,
+            // "![[photo.jpg]]", is text to the checkers, and its underlines showed as dashes left of the picture)
+            bool marks = disp?.Picture == null;
             for (int x = 0; x < cells; x++)
             {
                 int ci = startCol + x;
                 int src = disp != null ? disp.Map[ci] : ci;
                 var style = _pal[(int)(disp?.Over[ci] ?? toks[src])];
+                if (!marks) { s.Set(ox + hang + x, oy + y, text[ci], null, IsSelected(li, src) ? _selStyle : style); continue; }
                 if (gram != null && src < gram.Length && gram[src]) style = _grammarStyle;
                 if (diag != null && src < diag.Length && diag[src] != 0) style = diag[src] == 1 ? _errorStyle : _warningStyle;
                 if (bad != null && src < bad.Length && bad[src]) style = _badStyle;      // a typo wins over grammar

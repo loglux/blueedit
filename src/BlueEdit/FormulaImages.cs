@@ -14,9 +14,19 @@ using Tui;
 static class FormulaImages
 {
     public delegate (byte[]? Mask, int Width, int Height, string? Error) RenderFn(string latex, float fontSize);
+    public delegate (int[]? Pixels, int Width, int Height, string? Error) DecodeFn(string path, int maxWidth, int maxHeight);
 
     /// <summary>Draws formulas: the module's, once loaded; tests put their own here.</summary>
     internal static RenderFn? Renderer;
+
+    /// <summary>Reads picture files (images in Markdown): the module's, once loaded; tests put their own here.</summary>
+    internal static DecodeFn? Decoder;
+
+    /// <summary>The setting ("images"): pictures of Markdown's images.</summary>
+    public static bool ImagesWanted { get; set; } = true;
+
+    /// <summary>Why images cannot be shown although formulas can (an older module), or null.</summary>
+    public static string? ImageError { get; private set; }
 
     /// <summary>The setting ("formulaImages").</summary>
     public static bool Wanted { get; set; } = true;
@@ -31,8 +41,11 @@ static class FormulaImages
     /// editor lays its lines out again.</summary>
     public static Action? Changed;
 
-    /// <summary>Pictures are drawn and used now.</summary>
+    /// <summary>Formula pictures are drawn and used now.</summary>
     public static bool Active => Wanted && Cell.W > 0 && (Renderer != null || ModuleDir != null) && LoadError == null;
+
+    /// <summary>Images are drawn and used now.</summary>
+    public static bool ImagesActive => ImagesWanted && Cell.W > 0 && (Decoder != null || ModuleDir != null) && LoadError == null && ImageError == null;
 
     // ---- the module ----
     static readonly Lazy<string?> Dir = new(FindModule);
@@ -51,8 +64,9 @@ static class FormulaImages
         return places.FirstOrDefault(d => File.Exists(Path.Combine(d, ModuleFile)));
     }
 
-    /// <summary>Loads the module into a context of its own (its CSharpMath and Skia beside the editor's runtime).</summary>
-    static RenderFn? Load(string dir)
+    /// <summary>Loads the module into a context of its own (its CSharpMath and Skia beside the editor's runtime): its
+    /// formula renderer, and its picture reader when it has one (a module older than 0.4.5 has not).</summary>
+    static void Load(string dir)
     {
         try
         {
@@ -61,14 +75,15 @@ static class FormulaImages
             if (type?.GetField("Api")?.GetValue(null) is not 1)
             {
                 LoadError = "the mathimages module is of another version: install the one from this editor's release";
-                return null;
+                return;
             }
-            return type.GetMethod("Render")!.CreateDelegate<RenderFn>();
+            if (type.GetField("ImageApi")?.GetValue(null) is 1) Decoder ??= type.GetMethod("Decode")!.CreateDelegate<DecodeFn>();
+            else ImageError = "the mathimages module is older than the editor: it draws formulas, not images";
+            Renderer ??= type.GetMethod("Render")!.CreateDelegate<RenderFn>();
         }
         catch (Exception ex) when (ex is IOException or BadImageFormatException or TypeLoadException or ArgumentException or InvalidOperationException or MissingMethodException)
         {
             LoadError = "the mathimages module could not be loaded: " + ex.Message;
-            return null;
         }
     }
 
@@ -103,6 +118,7 @@ static class FormulaImages
     static readonly LinkedList<string> Queue = new();
     static readonly Dictionary<string, LinkedListNode<string>> Queued = new();
     static readonly object Lock = new();
+    static bool _loadTried;
     static Thread? _worker;
     static int _generation, _changePending;
     static string? _drawing;
@@ -124,9 +140,22 @@ static class FormulaImages
 
     /// <summary>The picture of a display formula, or null when it is not ready (it is asked for, and
     /// <see cref="Changed"/> follows) or cannot be drawn.</summary>
-    public static CellPicture? Get(string tex)
+    public static CellPicture? Get(string tex) => Active ? Ask(tex) : null;
+
+    // An image's key in the same queue as the formulas: a character no formula starts with, then what it is drawn from
+    const char ImageKey = '\u0001';
+
+    /// <summary>The picture of an image file at most <paramref name="maxCols"/> × <paramref name="maxRows"/> cells, or
+    /// null when it is not ready (it is asked for, and <see cref="Changed"/> follows) or cannot be read.
+    /// <paramref name="stamp"/> (the file's time) makes a changed file a new picture.</summary>
+    public static CellPicture? GetImage(string path, int maxCols, int maxRows, long stamp) =>
+        ImagesActive && maxCols > 0 && maxRows > 0
+            ? Ask(string.Join(ImageKey, "", path, maxCols.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                maxRows.ToString(System.Globalization.CultureInfo.InvariantCulture), stamp.ToString(System.Globalization.CultureInfo.InvariantCulture)))
+            : null;
+
+    static CellPicture? Ask(string tex)
     {
-        if (!Active) return null;
         if (Shown.TryGetValue(tex, out var pic)) return pic;
         lock (Lock)
         {
@@ -153,15 +182,22 @@ static class FormulaImages
                 _drawing = tex;
                 generation = _generation; cell = Cell;
             }
-            if (Renderer == null && LoadError == null && ModuleDir is { } dir) Renderer = Load(dir);
-            var render = Renderer;
-            if (render == null)                                          // LoadError says why: text from now on
+            if (!_loadTried && Renderer == null && Decoder == null && ModuleDir is { } dir) { _loadTried = true; Load(dir); }
+            CellPicture? pic;
+            if (tex[0] == ImageKey)
+            {
+                var parts = tex.Split(ImageKey);
+                var decode = Decoder;
+                pic = decode == null ? null : DrawImage(decode, parts[1], int.Parse(parts[2], System.Globalization.CultureInfo.InvariantCulture),
+                    int.Parse(parts[3], System.Globalization.CultureInfo.InvariantCulture), cell);
+            }
+            else if (Renderer is { } render) pic = Draw(render, tex, cell);
+            else                                                         // LoadError says why: text from now on
             {
                 lock (Lock) _drawing = null;
                 Changed?.Invoke();
                 continue;
             }
-            var pic = Draw(render, tex, cell);
             lock (Lock)
             {
                 _drawing = null;
@@ -200,6 +236,21 @@ static class FormulaImages
         var full = new byte[pw * rows * cell.H];
         for (int y = 0; y < r.Height; y++)
             for (int x = 0; x < r.Width; x++) full[(oy + y) * pw + ox + x] = Bolder[mask[y * r.Width + x]];
+        return new CellPicture(full, cols, rows, cell.W, cell.H);
+    }
+
+    /// <summary>An image file's picture in whole cells, at its top left; what the cells have beyond it is transparent.</summary>
+    internal static CellPicture? DrawImage(DecodeFn decode, string path, int maxCols, int maxRows, (int W, int H) cell)
+    {
+        (int[]? Pixels, int Width, int Height, string? Error) r;
+        try { r = decode(path, maxCols * cell.W, maxRows * cell.H); }
+#pragma warning disable CA1031 // anything the module throws on a file: that image stays text
+        catch (Exception) { return null; }
+#pragma warning restore CA1031
+        if (r.Pixels is not { } pixels) return null;
+        int cols = (r.Width + cell.W - 1) / cell.W, rows = (r.Height + cell.H - 1) / cell.H, pw = cols * cell.W;
+        var full = new int[pw * rows * cell.H];
+        for (int y = 0; y < r.Height; y++) Array.Copy(pixels, y * r.Width, full, y * pw, r.Width);
         return new CellPicture(full, cols, rows, cell.W, cell.H);
     }
 

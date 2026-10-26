@@ -43,9 +43,10 @@ sealed partial class App
             Conceal.ClearCaches();
             editor.FormulaPicturesChanged();
         }
-        if (FormulaImages.Wanted != s.FormulaImages)
+        if (FormulaImages.Wanted != s.FormulaImages || FormulaImages.ImagesWanted != s.Images)
         {
             FormulaImages.Wanted = s.FormulaImages;
+            FormulaImages.ImagesWanted = s.Images;
             AskTerminalForGraphics();
             editor.FormulaPicturesChanged();
         }
@@ -240,6 +241,24 @@ sealed partial class App
         : FormulaImages.LoadError != null ? T("module failed")
         : T("not in this terminal");
 
+    // View > Images, at the right while they are on: why none are shown ("" when they are, or are off)
+    string ImagesMissing() =>
+        !settings.Images || FormulaImages.ImagesActive ? ""
+        : FormulaImages.ModuleDir == null && FormulaImages.Decoder == null ? T("no module")
+        : FormulaImages.LoadError != null ? T("module failed")
+        : FormulaImages.ImageError != null ? T("module too old")
+        : T("not in this terminal");
+
+    // View > Images: kept in the settings
+    void ToggleImages()
+    {
+        Settings.SetValue(Settings.FilePath, "images", settings.Images ? "false" : "true");
+        ReloadSettings();
+        Note(!settings.Images ? T("Images off: shown as text")
+            : FormulaImages.ImagesActive ? T("Images on: a line that is only an image shows the picture (with soft wrap)")
+            : Tf("Images on, but not shown: {0}", ImagesMissing()));
+    }
+
     void ToggleAutoWrap()
     {
         Settings.SetValue(Settings.FilePath, "autoWrap", settings.AutoWrap ? "false" : "true");
@@ -266,6 +285,8 @@ sealed partial class App
                 "Live: markup hidden except on the caret's line; reading: as a page; source: as written. Ctrl+E switches."),
             ("Formula pictures", "formulaImages", ["on", "off"], ["true", "false"], On(s.FormulaImages),
                 "Display formulas typeset, where the terminal shows Sixel graphics and the mathimages module is installed."),
+            ("Images", "images", ["on", "off"], ["true", "false"], On(s.Images),
+                "A Markdown line that is only an image shows the picture, as formula pictures do (the same module and terminal)."),
             ("Formula symbols", "formulaSymbols", ["full", "basic"], ["\"full\"", "\"basic\""], s.FormulaSymbols,
                 "Basic: without the characters most fonts lack (ₙ, ⩽), for a terminal that shows boxes for them (MobaXterm)."),
             ("Formula errors", "latexCheck", ["on", "off"], ["true", "false"], On(s.LatexCheck),

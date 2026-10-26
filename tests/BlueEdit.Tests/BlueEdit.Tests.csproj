@@ -20,4 +20,9 @@
     <ProjectReference Include="..\..\src\MathImages\MathImages.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- one JPEG per EXIF orientation, each the same picture once turned (made with Pillow; ImageTests) -->
+    <None Include="images\*.jpg" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>

@@ -111,6 +111,7 @@ sealed partial class App
                 new MenuItem(T("Line _numbers"), "Alt+G", ToggleLineNumbers) { On = () => editor.LineNumbersOn },
                 new MenuItem(T("_Outline"), "Ctrl+O", ShowOutline),
                 new MenuItem(T("_Formula pictures"), "", ToggleFormulaImages) { On = () => settings.FormulaImages, Value = FormulaPicturesMissing },
+                new MenuItem(T("Ima_ges"), "", ToggleImages) { On = () => settings.Images, Value = ImagesMissing },
                 new MenuItem(T("Markdown: _source"), "", () => editor.SetView(MdView.Source)) { On = () => editor.IsMarkdown && editor.View == MdView.Source, Choice = true },
                 new MenuItem(T("Markdown: _live preview"), "", () => editor.SetView(MdView.Live)) { On = () => editor.IsMarkdown && editor.View == MdView.Live, Choice = true },
                 new MenuItem(T("Markdown: _reading"), "Ctrl+E", () => editor.ToggleReading()) { On = () => editor.IsMarkdown && editor.View == MdView.Reading, Choice = true },

@@ -330,6 +330,34 @@ The second step after the text layout above: display formulas typeset, as pictur
 - **Not done**: inline formulas (`$…$`) as pictures; pictures in the Source view; terminals other than Windows
   Terminal were not tried; the kitty graphics protocol (another way to send pictures) is not used.
 
+### Images in Markdown (`MarkdownImages.cs`, `FormulaImages.GetImage`, `Sixel.Quantize`)
+
+Asked for on 26 October 2026 ("can such an editor show pictures too?"): notes have charts and diagrams beside the text.
+Everything a formula picture needs was there (the cell size, rows given to a picture, the background queue, sending on
+scroll), so an image goes the same way, with two new parts.
+
+- **Reading the file is the module's** (`Renderer.Decode`, `ImageApi = 1`): Skia, already in it for the formulas,
+  reads PNG, JPEG, BMP, GIF and WebP, turns a photo the way its EXIF says, and scales it with mipmaps (a photo shrunk
+  ten times stays smooth). The editor has no picture reader of its own (.NET has none on Linux). A module without
+  `Decode` (before 0.4.5) still draws formulas; the menu says it is too old for images.
+- **Colour Sixel** (`CellPicture` from pixels, `Sixel.EncodeIndexed`): formulas are a coverage mask painted in the
+  text's colour; an image needs its own colours, at most 255 (Sixel's registers; the 256th is the background, for
+  transparent pixels). A picture with 255 colours or fewer keeps them exactly. One with more gets a palette made for
+  it (median cut on 5-bit channels, a box's colour the mean of its pixels) and Floyd–Steinberg dithering. First a
+  fixed 6 × 7 × 6 cube was tried: a chart's flat bars came out covered in dither (its blue was not in the cube) and its
+  Sixel was 78 KB; with median cut the bars are flat and the Sixel 29 KB, the photo's 181 KB instead of 227 KB.
+  Encoding sorts a band's pixels to their colours first, so each used colour costs one pass of the width.
+- **Measured** (a 900 × 520 chart and a 1200 × 800 photo, 10 × 20 cells, 95 columns by 20 rows at most): read,
+  scaled and brought to 255 colours in 83 and 54 ms, encoded in 16 and 15 ms, on the worker thread. The output was
+  decoded back (a Sixel reader in Python, and one in `ImageTests`) and looked at: the colours are right.
+- **Where**: a line that is only an image, `![alt](path)` or Obsidian's `![[name|300]]`; at most half the window's
+  height, so the text around it stays in view. Obsidian's names are looked for where its `.obsidian/app.json` puts
+  attachments, beside the note and at the vault's root, never by searching the vault: a lookup runs while laying out
+  and must not wait on a large folder. A file found or not is looked at again after 2 s, so a picture saved later
+  appears and a changed one is read again (its time is part of the key).
+- **Not done**: images beside text, in lists and tables; images on the web; a GIF's animation; the size on scroll
+  (a photo's Sixel is sent again when it moves; Windows Terminal's speed with 180 KB a frame not yet measured).
+
 ## Line numbers (`EditorView.Gutter.cs`)
 
 - **Where.** A column at the left of the text area, as wide as the last line's number plus one space; the caret's line

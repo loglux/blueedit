@@ -65,6 +65,7 @@ partial class EditorView
             return Conceal.Empty(line);
         if (inMath) return PictureFor(li) ?? Conceal.MathLine(line);
         if (st != 0) return null;                                // inside a code fence / comment: shown as written
+        if (ImageFor(li) is { } image) return image;
         if (PictureFor(li) is { } single) return single;
         if (TableDisp(li) is { } table) return table;
         if (line.TrimStart().StartsWith("```", StringComparison.Ordinal)) return null;    // fence marker lines stay visible
@@ -114,6 +115,19 @@ partial class EditorView
         string? OneLine(string open, string close) =>
             t.Length > open.Length + close.Length && t.StartsWith(open, StringComparison.Ordinal) && t.EndsWith(close, StringComparison.Ordinal)
                 ? t[open.Length..^close.Length] : null;
+    }
+
+    // A line that is only an image, as a picture (MarkdownImages, FormulaImages), as display formulas are: with soft
+    // wrap, as wide as the window lets it be and at most half its height (a photo larger than the window would leave
+    // nothing of the text around it), Obsidian's "|300" narrower still. Until it is read, or when it cannot be: text.
+    Disp? ImageFor(int li)
+    {
+        if (!Concealing || !WrapOn || !FormulaImages.ImagesActive) return null;
+        if (MarkdownImages.Parse(Lines[li]) is not { } image || MarkdownImages.Resolve(Path, image.Target, image.Wiki) is not { } file) return null;
+        int maxCols = WrapCap - Disp.PictureIndent - 1;
+        if (image.Width is int px && FormulaImages.Cell.W > 0) maxCols = Math.Min(maxCols, Math.Max(1, (px + FormulaImages.Cell.W - 1) / FormulaImages.Cell.W));
+        int maxRows = Math.Max(3, TextArea.H / 2);
+        return FormulaImages.GetImage(file.Path, maxCols, maxRows, file.Stamp) is { } pic ? Conceal.ImageRows(pic, Lines[li], 0, true) : null;
     }
 
     /// <summary>Formula pictures arrived (or went: another cell size, the setting): the lines are laid out again, the

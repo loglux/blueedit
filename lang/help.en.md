@@ -106,6 +106,7 @@ Alt+G              | Line numbers on/off for every file, remembered (setting lin
 
 Live preview hides markup except on the caret line; $math$ is shown as Unicode, over rows when it needs them (a fraction, x^{5/2}). $$display$$ and \[ \] formulas are laid out: fractions, roots, limits, grids; in Live preview the formula the caret is in is shown as written.
 
+View > Images: a Markdown line that is only an image (![alt](path), ![[name.png]]) shows the picture, PNG or JPEG, with the same module and terminal as formula pictures.
 View > Formula pictures: display formulas typeset, in terminals that show Sixel (Windows Terminal 1.22+), with the mathimages module (docs/formula-pictures.md). Boxes instead of symbols: the terminal's font lacks them; Tools > Settings > Formula symbols: basic avoids the rarest (docs/terminal-fonts.md).
 
 A formula that would not typeset (an unclosed brace, \left without \right) is an error: TeX 1E in the status line, Shift+F7 goes to it (setting latexCheck). cos without \, \cos{(x)}, 2*3, <=, ..., 5 cm in italics: warnings (TeX 1W) that F7 fixes or never shows again (setting latexStyle).

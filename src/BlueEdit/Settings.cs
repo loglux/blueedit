@@ -98,6 +98,9 @@ sealed class Settings
     /// <summary>Display formulas as typeset pictures where the terminal shows Sixel graphics and the mathimages module
     /// is installed (docs/formula-pictures.md); off: rows of text.</summary>
     public bool FormulaImages { get; set; } = true;
+    /// <summary>A Markdown line that is only an image ("![alt](path)", "![[name.png]]") shown as the picture, where
+    /// formula pictures could be shown (the same module and terminal); off: as text.</summary>
+    public bool Images { get; set; } = true;
     /// <summary>Formulas that would not typeset (an unclosed brace, \left without \right...) shown as errors.</summary>
     public bool LatexCheck { get; set; } = true;
     /// <summary>Also the rules of writing in formulas (cos without \, * for \times, &lt;= for \le) as warnings.</summary>
@@ -204,6 +207,7 @@ sealed class Settings
                     case "latexcheck": if (Bool(v) is bool lc) s.LatexCheck = lc; else Problem("latexCheck: expected true or false"); break;
                     case "latexstyle": if (Bool(v) is bool ls) s.LatexStyle = ls; else Problem("latexStyle: expected true or false"); break;
                     case "formulaimages": if (Bool(v) is bool fi) s.FormulaImages = fi; else Problem("formulaImages: expected true or false"); break;
+                    case "images": if (Bool(v) is bool im) s.Images = im; else Problem("images: expected true or false"); break;
                     case "formulasymbols":
                         if (v.ValueKind == JsonValueKind.String && v.GetString()?.ToLowerInvariant() is "full" or "basic") s.FormulaSymbols = v.GetString()!.ToLowerInvariant();
                         else Problem("formulaSymbols: expected \"full\" or \"basic\"");
@@ -466,6 +470,9 @@ sealed class Settings
         sb.Append("    // display formulas as typeset pictures: needs the mathimages module and a terminal that shows Sixel\n");
         sb.Append("    // graphics, such as Windows Terminal 1.22 or later (View > Formula pictures); false: rows of text\n");
         sb.Append(CultureInfo.InvariantCulture, $"    \"formulaImages\": {Lower(s.FormulaImages)},\n\n");
+        sb.Append("    // a Markdown line that is only an image, ![alt](path) or Obsidian's ![[name.png]], shown as the picture\n");
+        sb.Append("    // where formula pictures can be (the same module and terminal; View > Images); false: as text\n");
+        sb.Append(CultureInfo.InvariantCulture, $"    \"images\": {Lower(s.Images)},\n\n");
         sb.Append("    // formulas that would not typeset (an unclosed brace, \\left without \\right, \\frac with one argument)\n");
         sb.Append("    // underlined as errors in Markdown and LaTeX files: Shift+F7 goes to them, F7 explains\n");
         sb.Append(CultureInfo.InvariantCulture, $"    \"latexCheck\": {Lower(s.LatexCheck)},\n\n");

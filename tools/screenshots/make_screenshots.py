@@ -7,6 +7,9 @@ renders the emulated screen (characters, colours, underline, cursor) to PNG file
 Needs the published exe (dotnet publish ... -o publish) and: pip install pywinpty pyte pillow fonttools; the language
 server pictures need pyright and csharp-ls (tasks setup-lsp). docs/screenshots/formula-pictures.png is not made here:
 Sixel pictures need a real terminal, so it is a capture of a Windows Terminal window showing samples/math.md.
+docs/screenshots/images-text.png and images-diagram.png are captures too, of samples/darwin/darwin.md in Windows
+Terminal 1.25 (portable) in Windows Sandbox (tools/sandbox/images.ps1): the chart is drawn by samples/darwin/growth.py,
+the diagram is Darwin's (The Origin of Species, 1872, public domain; Project Gutenberg ebook 2009).
 """
 import json
 import os

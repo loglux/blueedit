@@ -45,4 +45,23 @@ are shown typeset instead, as LaTeX prints them, in the Latin Modern font (Live 
 - Pictures are as sharp as the terminal allows: Windows Terminal draws Sixel on a grid of 10 × 20 pixels per cell
   whatever the font, and scales it to the font, so a larger font makes them softer.
 
+## Images
+
+The same module and terminal show **images in Markdown** too: a line that is only an image, `![a graph](img/graph.png)`
+or Obsidian's `![[graph.png]]`, shows the picture in the reading view and Live preview (with soft wrap, as formulas).
+
+- **Files**: PNG and JPEG, also BMP, GIF (its first frame) and WebP. A photo is turned the way its EXIF says.
+- **Where the file is looked for**: `![…](path)` from the note's folder (`%20` and `<a b.png>` for spaces);
+  `![[name.png]]` where Obsidian puts attachments (its `.obsidian/app.json`), then beside the note, then at the vault's
+  root. Images on the web (`https://…`) are not fetched: they stay text.
+- **Size**: as wide as the window lets it be and at most half its height, never enlarged; `![[name.png|300]]` makes
+  it at most 300 pixels wide, as in Obsidian.
+- **Colours**: a Sixel picture holds 255 at most. A chart or a diagram usually has fewer and keeps them exactly; a photo
+  gets 255 chosen for it, with the rest mixed from neighbouring pixels.
+- Drawn in the background: 50–90 ms for a 1200 × 800 photo or a chart, before it shows; typing never waits.
+- In Live preview the image the caret is on is shown as written, so it can be edited.
+- **View → Images** (`"images": true`) turns them on and off and says why none are shown: no module, a module older
+  than the editor (formulas only), or a terminal without Sixel.
+- Not yet: an image beside text on one line, or inside a list item or a table (shown as text).
+
 The design, the choices and the measurements: [tech/editing.md](tech/editing.md#formula-pictures-sixel).

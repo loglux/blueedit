@@ -165,7 +165,7 @@ sealed partial class App
     // there (after the start: an answer typed into a terminal not yet in raw mode would show up as text)
     void AskTerminalForGraphics()
     {
-        if (!hostStarted || graphicsAsked || !FormulaImages.Wanted || FormulaImages.ModuleDir == null) return;
+        if (!hostStarted || graphicsAsked || !(FormulaImages.Wanted || FormulaImages.ImagesWanted) || FormulaImages.ModuleDir == null) return;
         graphicsAsked = true;
         host.QueryGraphics();
     }

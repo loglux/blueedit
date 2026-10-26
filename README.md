@@ -3,7 +3,8 @@
 A fast console text editor for writing, mathematics and code, on Windows and Linux.
 
 - **Writing**: Markdown with a live preview (markup hidden except on the caret's line) and a reading mode; tables
-  aligned, paragraphs reformatted to a margin.
+  aligned, paragraphs reformatted to a margin; images (PNG, JPEG, Obsidian's `![[…]]`) shown as pictures where formula
+  pictures are ([docs/formula-pictures.md](docs/formula-pictures.md#images)).
 - **Mathematics**: LaTeX made readable — `$…$` as Unicode, display formulas laid out over several rows: fractions,
   roots, limits, integrals, aligned rows, matrices; typeset as pictures in terminals that show Sixel graphics
   (Windows Terminal 1.22+), with the optional module ([docs/formula-pictures.md](docs/formula-pictures.md)). Boxes
@@ -52,6 +53,14 @@ LM Studio work the same way. F7 on the underlined place gives the fix and says w
 
 ![Grammar from a cloud model](docs/screenshots/grammar-cloud.png)
 
+**Images and formulas as pictures** — a note with a chart (`![…](growth.png)`), a display formula and Darwin's
+diagram (Obsidian's `![[diagram.jpg]]`), in the reading view in Windows Terminal, with the optional formula pictures
+module ([docs/formula-pictures.md](docs/formula-pictures.md#images)).
+
+![A note with a chart and a formula](docs/screenshots/images-text.png)
+
+![The same note further down: Darwin's diagram](docs/screenshots/images-diagram.png)
+
 | | |
 |---|---|
 | ![Reading mode](docs/screenshots/markdown-reading.png) **Reading mode** (Ctrl+E) | ![Code and menu](docs/screenshots/code-and-menu.png) **Syntax highlighting, tabs, menus** |
@@ -63,9 +72,10 @@ LM Studio work the same way. F7 on the underlined place gives the fix and says w
 ![Help](docs/screenshots/help.png)
 
 The screenshots are generated, not hand-made: `python tools/screenshots/make_screenshots.py` runs the published
-editor in a pseudo-console, plays the scenarios and renders the screen. Rerun it after UI changes. The formula
-pictures are the one exception: they are Sixel graphics, which the emulated screen does not draw, so that one is a
-capture of a real Windows Terminal window. The grammar picture asks a real model: it is made only when
+editor in a pseudo-console, plays the scenarios and renders the screen. Rerun it after UI changes. The pictures with
+pictures in them are the exception: Sixel graphics, which the emulated screen does not draw, so those are captures of
+a real Windows Terminal window (the images ones in Windows Sandbox, `tools/sandbox/images.ps1`; Darwin's diagram is
+from *The Origin of Species*, 1872, public domain, via Project Gutenberg). The grammar picture asks a real model: it is made only when
 `BLUEEDIT_SHOTS_GRAMMAR` names one, `"address|model|key"`.
 
 ## Command line
@@ -214,6 +224,7 @@ The file lives in `%APPDATA%\blueedit\` (on Linux `~/.config/blueedit/`) and exp
 | `latexCheck` | `true` | formulas that would not typeset underlined as errors in Markdown and LaTeX files; Shift+F7 goes to them, F7 explains |
 | `latexStyle` | `true` | with `latexCheck`: rules of writing in formulas as warnings (`cos` without `\`, `2*3`, `<=`, `5 cm` in italics); F7 puts in the fix or never shows that rule again |
 | `formulaImages` | `true` | display formulas as typeset pictures where the terminal shows Sixel graphics and the mathimages module is installed (**View → Formula pictures**; docs/formula-pictures.md) |
+| `images` | `true` | a Markdown line that is only an image (`![alt](path)`, `![[name.png]]`) shows the picture, with the same module and terminal (**View → Images**; docs/formula-pictures.md#images) |
 | `styleFocus` | all but informal words | what **Ctrl+F7** looks for: officialese, wordiness, repetition, informal words in academic writing (**Tools → Style options…**) |
 | `lsp`, `languageServers`, `formatters` | `true`, `{}`, `{}` | language servers for code, your own servers by language, formatters by language ([docs/lsp.md](docs/lsp.md)) |
 | `fastScroll` | `false` | let the terminal move scrolled lines itself (much less output); experimental, Windows Terminal has shown it wrongly |
