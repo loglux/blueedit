@@ -20,6 +20,7 @@ sealed partial class App
         editor.WrapProse = s.WrapProse;
         editor.WrapCode = s.WrapCode;
         editor.LineNumbersOn = s.LineNumbers;
+        editor.ShowTiming = s.ShowTiming || Environment.GetEnvironmentVariable("BLUEEDIT_TIMING") == "1";
         editor.DefaultMdView = s.MarkdownView switch { "source" => MdView.Source, "reading" => MdView.Reading, _ => MdView.Live };
         var langs = SpellLanguagesFor(s);
         var provider = !OperatingSystem.IsWindows() || s.SpellProvider == "hunspell" ? "Hunspell"
@@ -259,6 +260,15 @@ sealed partial class App
             : Tf("Images on, but not shown: {0}", ImagesMissing()));
     }
 
+    // View > Clock goes round off, time, date and time; kept in the settings, as the Tools > Settings row is
+    void CycleClock()
+    {
+        var next = settings.Clock switch { "off" => "time", "time" => "date", _ => "off" };
+        Settings.SetValue(Settings.FilePath, "clock", $"\"{next}\"");
+        ReloadSettings();
+        Note(next switch { "time" => T("Clock: the time"), "date" => T("Clock: the date and the time"), _ => T("Clock off") });
+    }
+
     void ToggleAutoWrap()
     {
         Settings.SetValue(Settings.FilePath, "autoWrap", settings.AutoWrap ? "false" : "true");
@@ -308,6 +318,8 @@ sealed partial class App
             ("Completion while typing", "completeWhileTyping", ["code", "always", "off"], ["\"code\"", "\"always\"", "\"off\""], s.CompleteWhileTyping,
                 "The completion list opens by itself after three letters (Ctrl+Space always opens it)."),
             ("Word count", "wordCount", ["on", "off"], ["true", "false"], On(s.WordCount), "The number of words in the status line."),
+            ("Clock", "clock", ["off", "time", "date"], ["\"off\"", "\"time\"", "\"date\""], s.Clock,
+                "At the right of the menu bar, as in Far: the time, or the date and the time."),
             ("Language servers", "lsp", ["on", "off"], ["true", "false"], On(s.Lsp), "Errors and warnings in code, from the language's server."),
             ("Esc closes the file", "escapeQuits", ["auto", "on", "off"], ["\"auto\"", "\"on\"", "\"off\""], s.EscapeQuits,
                 "Auto: only when Far Manager opened the editor, as Far's own editor does. Esc in the settings file always goes back."),

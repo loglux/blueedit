@@ -1,3 +1,4 @@
+import re
 import time
 
 import pytest
@@ -108,7 +109,8 @@ def test_every_way_into_the_menu(editor, make_file, keys, expected):
 def test_menu_bar_order(editor, make_file):
     t = editor(make_file("a.txt", "x\n"))
     bar = t.rows()[0].split()
-    assert bar == ["File", "Edit", "Search", "View", "Format", "Tools", "Block", "Window", "Help"]
+    assert bar[:9] == ["File", "Edit", "Search", "View", "Format", "Tools", "Block", "Window", "Help"]
+    assert len(bar) == 10 and re.fullmatch(r"\d\d:\d\d", bar[9])   # the clock, on by default
 
 
 def test_mouse_opens_a_menu(editor, make_file):

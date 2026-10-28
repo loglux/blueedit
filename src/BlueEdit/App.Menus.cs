@@ -118,7 +118,7 @@ sealed partial class App
                 new MenuItem(T("Theme: _DOS blue"), "", () => SetTheme("dos-blue")) { On = () => settings.Theme is not ("dark" or "light"), Choice = true },
                 new MenuItem(T("Theme: dar_k"), "", () => SetTheme("dark")) { On = () => settings.Theme == "dark", Choice = true },
                 new MenuItem(T("Theme: lig_ht"), "", () => SetTheme("light")) { On = () => settings.Theme == "light", Choice = true },
-                new MenuItem(T("Show t_iming"), "", () => editor.ShowTiming = !editor.ShowTiming) { On = () => editor.ShowTiming },
+                new MenuItem(T("_Clock"), "", CycleClock) { On = () => settings.Clock != "off", Value = () => settings.Clock == "off" ? "" : T(settings.Clock) },
             }),
             new Menu(T("F_ormat"), new[]
             {
@@ -178,7 +178,10 @@ sealed partial class App
                 new MenuItem(T("_About"), "", About),
             }),
         })
-        { Opened = ProofingTools.LookForVideoCard };     // so that Tools > Set up grammar checking finds the answer ready
+        {
+            Opened = ProofingTools.LookForVideoCard,     // so that Tools > Set up grammar checking finds the answer ready
+            Right = ClockText,
+        };
         app.Menu = buildMenu();
     }
 

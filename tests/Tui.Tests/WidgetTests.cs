@@ -389,6 +389,26 @@ public class MenuBarValidationTests
     }
 
     [Fact]
+    public void The_right_text_ends_the_bar_and_is_left_out_where_the_menus_reach_it()
+    {
+        string clock = "14:05";
+        var bar = new MenuBar(new[] { new Menu("_File", new[] { new MenuItem("_New", "", () => { }) }) }) { Right = () => clock };
+        static string Row(Screen s) => new(Enumerable.Range(0, s.Width).Select(x => s.CharAt(x, 0)).ToArray());
+
+        var wide = new Screen(20, 2);
+        bar.DrawBar(wide, new Theme());
+        Assert.Equal(" File         14:05 ", Row(wide));
+
+        var narrow = new Screen(10, 2);
+        bar.DrawBar(narrow, new Theme());
+        Assert.Equal(" File     ", Row(narrow));
+
+        clock = "";
+        bar.DrawBar(wide, new Theme());
+        Assert.Equal(" File               ", Row(wide));
+    }
+
+    [Fact]
     public void Duplicate_menu_hotkeys_on_the_bar_are_rejected() =>
         Assert.Throws<ArgumentException>(() => new MenuBar(new[]
         {

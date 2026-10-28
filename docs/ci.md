@@ -47,6 +47,12 @@ a mistake for each checker (spelling, Harper, LanguageTool), in English and, onl
 Russian too, F7, then Tools → Set up grammar checking → Harper and → LanguageTool, waiting for each.
 The pictures are read by eye; nothing is asserted. About 5 minutes.
 
+`start.ps1 -Images` (`.\tasks.ps1 images-sandbox`) builds the editor and the formula pictures module and runs
+`tools\sandbox\images.ps1`: the Darwin note of `tools/screenshots/samples/darwin` in a portable Windows Terminal (the
+sandbox has none; its release zip is downloaded once and its SHA-256 checked), captured at the top and further down,
+cut to the window, into `docs/screenshots/images-*.png`: the README pictures of images in Markdown, which the
+screenshot generator cannot make (Sixel). About 5 minutes.
+
 `start.ps1 -Dialogs` (`.\tasks.ps1 dialogs`) builds the same zip and runs `tools\sandbox\dialogs.ps1`: the welcome's Language button sets Russian, then File > Info and each dialog of the Tools menu is opened and captured, nothing installed (about 3 minutes): how a translation looks, which `UiTests` cannot see (a word that does not agree, a column too narrow for the longer words). On 21 October 2026 it found both. Last, Tools > Command be in any console puts the folder in PATH, and the transcript shows the user's PATH, its kind (ExpandString kept) and that a new console finds `be`.
 
 `SendKeys` cannot send Alt+letter to a console window (the letters were typed), so menus are opened with F9 and the

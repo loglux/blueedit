@@ -43,6 +43,27 @@ public sealed class SettingsTests : IDisposable
     }
 
     [Fact]
+    public void Clock_shows_the_time_by_default_and_reads_off_date_or_a_boolean()
+    {
+        Assert.Equal("time", new Settings().Clock);
+        Assert.Equal("off", Settings.Parse(Settings.Template(new Settings { Clock = "off" })).Settings.Clock);
+        Assert.Equal("date", Settings.Parse(Settings.Template(new Settings { Clock = "date" })).Settings.Clock);
+        Assert.Equal("time", Settings.Parse("""{ "clock": true }""").Settings.Clock);
+        Assert.Equal("off", Settings.Parse("""{ "clock": false }""").Settings.Clock);
+        Assert.NotNull(Settings.Parse("""{ "clock": "seconds" }""").Error);
+    }
+
+    [Fact]
+    public void Timing_is_a_setting_for_developers_off_by_default()
+    {
+        Assert.False(new Settings().ShowTiming);
+        var (s, error) = Settings.Parse(Settings.Template(new Settings { ShowTiming = true }));
+        Assert.Null(error);
+        Assert.True(s.ShowTiming);
+        Assert.NotNull(Settings.Parse("""{ "showTiming": "yes" }""").Error);
+    }
+
+    [Fact]
     public void Spell_languages_switch_between_auto_and_a_list_in_the_file()
     {
         Settings.SetValue(FilePath, "spellLanguages", "[\"ru-RU\", \"en-GB\"]");

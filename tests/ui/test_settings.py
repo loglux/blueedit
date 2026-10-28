@@ -68,6 +68,18 @@ def test_options_from_the_file_are_used_at_start(editor, make_file):
     assert t.body()[0].startswith("  # Title")
 
 
+def test_the_clock_is_at_the_right_of_the_menu_bar_and_view_clock_goes_round_and_is_kept(editor, make_file):
+    t = editor(make_file("c.txt", "x\n"))
+    bar = t.rows()[0]
+    assert re.search(r"\b\d\d:\d\d$", bar), bar                  # on by default: the time
+    assert t.cols_n - len(bar) == 1                               # one blank column after it, as before the menus
+    t.send(alt("v"), 0.5); t.send("c", 1.0)                       # View > Clock: the date and the time
+    assert re.search(r"\S+ \d\d:\d\d$", t.rows()[0]) and '"clock": "date"' in open(settings_path(), encoding="utf-8").read()
+    t.send(alt("v"), 0.5); t.send("c", 1.0)                       # off
+    assert not re.search(r"\d\d:\d\d$", t.rows()[0])
+    assert '"clock": "off"' in open(settings_path(), encoding="utf-8").read()
+
+
 def test_a_broken_setting_is_reported_and_the_rest_still_applies(editor, make_file):
     write_settings('{ "tabSize": 99, "theme": "dark" }')
     t = editor(make_file("a.txt", "x\n"))

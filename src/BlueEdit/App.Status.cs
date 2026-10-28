@@ -15,6 +15,19 @@ sealed partial class App
         return wordsShown < 0 ? "" : $"  {wordsShown} {Ui.Tc("status", "w")}";
     }
 
+    // the clock at the right of the menu bar (setting clock): drawn with every frame, so it follows the minute without a
+    // timer of its own; only the cells that changed go to the terminal
+    string ClockText()
+    {
+        var now = DateTime.Now;
+        return settings.Clock switch
+        {
+            "time" => now.ToString("HH:mm", System.Globalization.CultureInfo.InvariantCulture),
+            "date" => now.ToString("d", System.Globalization.CultureInfo.CurrentCulture) + " " + now.ToString("HH:mm", System.Globalization.CultureInfo.InvariantCulture),
+            _ => "",
+        };
+    }
+
     string StatusText() =>
         $" {NameOf(editor.Path)}{(editor.Modified ? " *" : "")}   {Ui.Tc("status", "Ln")} {editor.Row + 1}/{editor.Lines.Count}  {Ui.Tc("status", "Col")} {editor.Col + 1}{(signature != null ? "  " + signature : "")}{(note != "" ? "  [" + note + "]" : "")}" +
         $"   {editor.LangName}  {editor.FileFormat}   {(editor.ColumnMode ? Ui.Tc("status", "COLUMN") : Ui.Tc("status", "STREAM"))}{(editor.WrapOn ? "  " + Ui.Tc("status", "WRAP") : "")}{(editor.AutoWrap ? "  " + Ui.Tc("status", "AUTOWRAP") : "")}{Words()}" +

@@ -1,0 +1,13 @@
+#!/bin/sh
+# Before a commit: no control characters in the text files staged (a scripted edit turned "\b" into a backspace and
+# "\n" into a line break more than once). RepoTextTests checks the same in every test run; this stops it sooner.
+# Turned on with the other hooks:  git config core.hooksPath .githooks   (docs/ci.md)
+# The bytes themselves in a plain bracket (Git for Windows' grep has no -P outside a UTF-8 locale); -I skips binaries.
+pattern=$(printf '[\001-\010\013\014\016-\037\177]')
+bad=$(git diff --cached --name-only --diff-filter=ACMR -z | LC_ALL=C xargs -0 -r grep -Il "$pattern" 2>/dev/null)
+if [ -n "$bad" ]; then
+  echo "control characters (a broken escape in a scripted edit?) in:" >&2
+  echo "$bad" >&2
+  exit 1
+fi
+exit 0

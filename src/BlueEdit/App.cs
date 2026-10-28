@@ -158,7 +158,6 @@ sealed partial class App : IDisposable
         };
         // the window's title names the file, as Notepad does; the console's own title is put back on exit (ConsoleHost)
         app.Title = () => $"{NameOf(editor.Path)}{(editor.Modified ? " *" : "")} - BlueEdit";
-        editor.ShowTiming = Environment.GetEnvironmentVariable("BLUEEDIT_TIMING") == "1";
     }
 
     public void Dispose() => host.Dispose();

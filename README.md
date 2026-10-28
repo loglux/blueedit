@@ -201,6 +201,7 @@ The file lives in `%APPDATA%\blueedit\` (on Linux `~/.config/blueedit/`) and exp
 | `tabSize` | `4` | spaces inserted by the Tab key |
 | `rightMargin` | `78` | the right margin of **Format → Reformat paragraph** (Alt+R), Align and auto-wrap |
 | `wordCount` | `false` | the number of words in the status line (Markdown: without markup, formulas and code); **File → Info** has all the counts |
+| `clock` | `"time"` | a clock at the right of the menu bar, as in Far: `"time"` (14:05), `"date"` (the system's short date and the time) or `"off"` (**View → Clock** goes round them) |
 | `autoWrap` | `false` | wrap while typing: a word typed past the right margin goes to a new line (text and Markdown; **Format → Auto-wrap**) |
 | `autoRecoverSeconds` | `10` | how often documents with unsaved edits are copied for recovery after the editor ended without saving ([Saving and recovery](#saving-and-recovery)); `0`: no copies |
 | `autoIndent` | `true` | Enter keeps the indentation of the line above, one step deeper after a line that opens a block (Python's `:`, `{` `[` `(` in C#, JavaScript and other brace languages; between `{` and `}` the closer goes to its own line) |
@@ -228,6 +229,7 @@ The file lives in `%APPDATA%\blueedit\` (on Linux `~/.config/blueedit/`) and exp
 | `styleFocus` | all but informal words | what **Ctrl+F7** looks for: officialese, wordiness, repetition, informal words in academic writing (**Tools → Style options…**) |
 | `lsp`, `languageServers`, `formatters` | `true`, `{}`, `{}` | language servers for code, your own servers by language, formatters by language ([docs/lsp.md](docs/lsp.md)) |
 | `fastScroll` | `false` | let the terminal move scrolled lines itself (much less output); experimental, Windows Terminal has shown it wrongly |
+| `showTiming` | `false` | for developers: the status line shows how long the last key took to reach the screen (`BLUEEDIT_TIMING=1` does the same) |
 | `colors` | `{}` | overrides, e.g. `{ "keyword": "#ffcc00", "background": "#101820" }` |
 | `fontSetup`, `font`, `fontSize` | `"auto"`, `"Cascadia Mono"`, `12` | terminal font, see below |
 

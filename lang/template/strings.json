@@ -62,7 +62,6 @@
     "Theme: _DOS blue": "",
     "Theme: dar_k": "",
     "Theme: lig_ht": "",
-    "Show t_iming": "",
 
     // ---------- Format ----------
     "_Bold": "",
@@ -265,13 +264,20 @@
     "The completion list opens by itself after three letters (Ctrl+Space always opens it).": "",
     "Word count": "",
     "The number of words in the status line.": "",
+    "Clock": "",
+    "_Clock": "",
+    "Clock: the time": "",
+    "Clock: the date and the time": "",
+    "Clock off": "",
+    "time": "",
+    "date": "",
+    "At the right of the menu bar, as in Far: the time, or the date and the time.": "",
     "Language servers": "",
     "Errors and warnings in code, from the language's server.": "",
     "Esc closes the file": "",
     "Auto: only when Far Manager opened the editor, as Far's own editor does. Esc in the settings file always goes back.": "",
     "Keys in any layout": "",
     "Shortcuts found by the key, whatever the keyboard layout: Ctrl+/ with Russian, Ctrl+1. Off: keys read as text.": "",
-
     // ---------- the status line: short words; a count's forms are split by "|" (one|few|many, Ui.N) ----------
     "NONAME": "",
     "status|Ln": "",

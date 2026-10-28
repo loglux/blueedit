@@ -60,7 +60,6 @@
     "Theme: _DOS blue": "Тема: _синяя DOS",
     "Theme: dar_k": "Тема: _тёмная",
     "Theme: lig_ht": "Тема: св_етлая",
-    "Show t_iming": "Показывать _время",
 
     // ---------- Format ----------
     "_Bold": "_Жирный",
@@ -263,13 +262,20 @@
     "The completion list opens by itself after three letters (Ctrl+Space always opens it).": "Список дополнений открывается сам после трёх букв (Ctrl+Пробел открывает всегда).",
     "Word count": "Число слов",
     "The number of words in the status line.": "Число слов в строке состояния.",
+    "Clock": "Часы",
+    "_Clock": "Ч_асы",
+    "Clock: the time": "Часы: время",
+    "Clock: the date and the time": "Часы: дата и время",
+    "Clock off": "Часы выключены",
+    "time": "время",
+    "date": "дата",
+    "At the right of the menu bar, as in Far: the time, or the date and the time.": "Справа в строке меню, как в Far: время или дата и время.",
     "Language servers": "Языковые серверы",
     "Errors and warnings in code, from the language's server.": "Ошибки и предупреждения в коде от сервера языка.",
     "Esc closes the file": "Esc закрывает файл",
     "Auto: only when Far Manager opened the editor, as Far's own editor does. Esc in the settings file always goes back.": "Авто: только если редактор открыт из Far Manager, как в редакторе самого Far. В файле настроек Esc всегда возвращает назад.",
     "Keys in any layout": "Клавиши в любой раскладке",
     "Shortcuts found by the key, whatever the keyboard layout: Ctrl+/ with Russian, Ctrl+1. Off: keys read as text.": "Сочетания узнаются по клавише в любой раскладке: Ctrl+/ при русской, Ctrl+1. Выкл: клавиши читаются как текст.",
-
     // ---------- the status line: short words; a count's forms are split by "|" (one|few|many, Ui.N) ----------
     "NONAME": "БЕЗ ИМЕНИ",
     "status|Ln": "Стр",

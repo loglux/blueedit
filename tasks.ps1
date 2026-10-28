@@ -89,6 +89,9 @@ $tasks = [ordered]@{
     'newcomer-linux' = @('a new user on bare Linux: the release tar.gz in clean Debian, Ubuntu, Fedora containers on a Linux host with Docker (BLUEEDIT_LINUX_HOST), screens as text, ~6 min', {
         NotWhileRunnerBusy
         Run { ./tools/linux-newcomer/run.ps1 } })
+    'images-sandbox' = @('the README pictures of images in Markdown: the Darwin note in Windows Terminal in Windows Sandbox, into docs/screenshots, ~5 min', {
+        NotWhileRunnerBusy
+        Run { ./tools/sandbox/start.ps1 -Images } })
     'dialogs'        = @('the dialogs in Russian on a clean Windows, each captured, nothing installed (Windows Sandbox), ~3 min', {
         NotWhileRunnerBusy
         Run { ./tools/sandbox/start.ps1 -Dialogs } })

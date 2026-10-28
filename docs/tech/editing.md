@@ -379,6 +379,19 @@ scroll), so an image goes the same way, with two new parts.
 
 - Soft wrap, line numbers, the outline, the Markdown views, the themes and the timing display had sat in Tools among
   the checkers and the settings, where line numbers were not found. They are now in their own menu after Search.
+- The timing display left the menus (28 October 2026): it measures the editor (key to screen, handler and drawing
+  apart) for whoever works on it, and sat among the themes as if it were for everyone. It is the setting `showTiming`
+  in settings.json now, as `fastScroll` is: not in the menus and not in the Tools > Settings list, which keep what one
+  uses while writing. The speed tests turn it on with `BLUEEDIT_TIMING=1`, as before. That is the usual place for such
+  switches (VS Code's developer settings, Far's far:config, Firefox's about:config): the full configuration, not the
+  menus.
+- **A clock** (setting `clock`, 28 October 2026): at the right end of the menu bar, where Far keeps its own and the bar
+  is empty; "time" (14:05) or "date" (the system's short date and the time); the time by default (the user: "let it be on, what
+  harm does it do"). View > Clock goes round time, date and off and keeps the choice, as the other View switches do;
+  the item has √ when on and the kind at the right. The bar is drawn with
+  every frame, and the loop draws at least every 250 ms when idle, so the clock follows the minute with no timer of its
+  own, and only its changed cells go to the terminal. Where the menus reach the right end (a narrow window) it is left
+  out rather than drawn over them. It is in the Tools > Settings list too, being for everyone.
 - **Alt+V** opens it, so S, L or R after it picks a Markdown view (Source, Live, Reading). Alt+V used to go round the
   three views; the bar takes Alt+letter before the editor does, and every other letter of "View" was taken (Alt+I is
   italic, E is Edit, W is Window). One key more, and the view is named rather than found by going round. Ctrl+E still
@@ -394,7 +407,7 @@ disagree. A new toggle follows this from the start.
 The user could not tell what was on: "Spell check on/off", "Line endings CRLF/LF" named both states, and the menu did
 not say which held now or what a press would do (26 October 2026). Now, as in Far's menus:
 
-- `√` in the blank column before the label: what is on — soft wrap, line numbers, formula pictures, timing,
+- `√` in the blank column before the label: what is on — soft wrap, line numbers, formula pictures,
   auto-wrap, spelling, column mode. "Spell check on/off" became "Spell check".
 - `•`: the chosen one of several — the Markdown view (in a Markdown file only), the theme.
 - The value at the right, where a key would stand, for a two-valued setting without a key: "Line endings … CRLF".

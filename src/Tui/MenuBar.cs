@@ -55,6 +55,9 @@ public sealed class MenuBar
     /// background, what an item may need.</summary>
     public Action? Opened { get; init; }
 
+    /// <summary>Text at the right end of the bar (a clock), asked for with every frame; left out when the menus reach it.</summary>
+    public Func<string>? Right { get; init; }
+
     public static char HotkeyOf(string label)
     {
         int i = label.IndexOf('_', StringComparison.Ordinal);
@@ -159,6 +162,8 @@ public sealed class MenuBar
             DrawLabel(s, x, 0, m.Label, sel ? t.BarSelected : t.Bar, sel ? t.BarSelected : t.BarHotkey);
             x += m.Text.Length + 2;
         }
+        if (Right?.Invoke() is { Length: > 0 } right && s.Width - right.Length - 1 >= x)
+            s.Text(s.Width - right.Length - 1, 0, right, t.Bar);
     }
 
     Rect DropDownRect()

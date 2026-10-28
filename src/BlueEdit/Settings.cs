@@ -20,6 +20,9 @@ sealed class Settings
     public bool AutoWrap { get; set; }
     /// <summary>The words of the text in the status line (Markdown: without markup, formulas and code).</summary>
     public bool WordCount { get; set; }
+    /// <summary>A clock at the right of the menu bar, as in Far: "off", "time" (14:05) or "date" (the system's short
+    /// date and the time).</summary>
+    public string Clock { get; set; } = "time";
     public bool AutoIndent { get; set; } = true;
     /// <summary>Seconds between copies of unsaved documents for recovery after the editor ended unsaved; 0 = none.</summary>
     public int AutoRecoverSeconds { get; set; } = 10;
@@ -41,6 +44,8 @@ sealed class Settings
     public bool FastScroll { get; set; }
     /// <summary>Shortcuts found by the key whatever the layout (#184): Windows key events, elsewhere the kitty protocol.</summary>
     public bool KeyEvents { get; set; } = true;
+    /// <summary>For developers: the status line shows how long the last key took to reach the screen (BLUEEDIT_TIMING=1 too).</summary>
+    public bool ShowTiming { get; set; }
     /// <summary>Esc closes the file (and the editor with the last one) when there is nothing to cancel:
     /// "auto" (default) only when Far Manager opened the editor, "on" always, "off" never.</summary>
     public string EscapeQuits { get; set; } = "auto";
@@ -186,6 +191,11 @@ sealed class Settings
                         break;
                     case "autowrap": if (Bool(v) is bool aw) s.AutoWrap = aw; else Problem("autoWrap: expected true or false"); break;
                     case "wordcount": if (Bool(v) is bool words) s.WordCount = words; else Problem("wordCount: expected true or false"); break;
+                    case "clock":
+                        if (Bool(v) is bool clk) s.Clock = clk ? "time" : "off";
+                        else if (v.ValueKind == JsonValueKind.String && v.GetString()?.ToLowerInvariant() is "off" or "time" or "date") s.Clock = v.GetString()!.ToLowerInvariant();
+                        else Problem("clock: expected \"off\", \"time\" or \"date\"");
+                        break;
                     case "autorecoverseconds":
                         if (v.TryGetInt32(out int ar) && ar is >= 0 and <= 3600) s.AutoRecoverSeconds = ar; else Problem("autoRecoverSeconds: expected a number from 0 to 3600");
                         break;
@@ -243,6 +253,7 @@ sealed class Settings
                         break;
                     case "fastscroll": if (Bool(v) is bool fsc) s.FastScroll = fsc; else Problem("fastScroll: expected true or false"); break;
                     case "keyevents": if (Bool(v) is bool ke) s.KeyEvents = ke; else Problem("keyEvents: expected true or false"); break;
+                    case "showtiming": if (Bool(v) is bool st) s.ShowTiming = st; else Problem("showTiming: expected true or false"); break;
                     case "escapequits":
                         if (Bool(v) is bool eq) s.EscapeQuits = eq ? "on" : "off";
                         else if (v.ValueKind == JsonValueKind.String && v.GetString()?.ToLowerInvariant() is "auto" or "on" or "off") s.EscapeQuits = v.GetString()!.ToLowerInvariant();
@@ -380,6 +391,9 @@ sealed class Settings
         sb.Append(CultureInfo.InvariantCulture, $"    \"autoWrap\": {Lower(s.AutoWrap)},\n\n");
         sb.Append("    // the number of words in the status line (in Markdown without markup, formulas and code; File > Info has all counts)\n");
         sb.Append(CultureInfo.InvariantCulture, $"    \"wordCount\": {Lower(s.WordCount)},\n\n");
+        sb.Append("    // a clock at the right of the menu bar, as in Far: \"off\", \"time\" (14:05) or \"date\" (the system's short\n");
+        sb.Append("    // date and the time)\n");
+        sb.Append(CultureInfo.InvariantCulture, $"    \"clock\": \"{s.Clock}\",\n\n");
         sb.Append("    // Enter keeps the indentation of the line above, one step deeper after a block's opener (Python's \":\",\n");
         sb.Append("    // \"{\" in C#, JavaScript and other brace languages)\n");
         sb.Append(CultureInfo.InvariantCulture, $"    \"autoIndent\": {Lower(s.AutoIndent)},\n\n");
@@ -406,6 +420,9 @@ sealed class Settings
         sb.Append("    // keys read as key events, elsewhere the kitty keyboard protocol where the terminal has it; false: keys read\n");
         sb.Append("    // as text, as before\n");
         sb.Append(CultureInfo.InvariantCulture, $"    \"keyEvents\": {Lower(s.KeyEvents)},\n\n");
+        sb.Append("    // for developers: the status line shows how long the last key took to reach the screen (handler and drawing\n");
+        sb.Append("    // apart); the speed tests read it\n");
+        sb.Append(CultureInfo.InvariantCulture, $"    \"showTiming\": {Lower(s.ShowTiming)},\n\n");
         sb.Append("    // Esc closes the file (the editor with the last one) once there is nothing left to cancel, as in Far's editor:\n");
         sb.Append("    // \"auto\" only when Far Manager opened it, true always, false never\n");
         sb.Append(CultureInfo.InvariantCulture, $"    \"escapeQuits\": {(s.EscapeQuits switch { "on" => "true", "off" => "false", _ => "\"auto\"" })},\n\n");

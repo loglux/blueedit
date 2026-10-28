@@ -155,6 +155,8 @@ A paragraph is checked in its language among the spelling ones: by its letters, 
 
 Tools > Settings   | The usual settings as a list: Space or Left/Right changes, Enter saves and applies. Its last row opens settings.json (all of them, with comments), where F2 applies the changes
 View > Theme       | DOS blue, dark or light; single colours are set in the settings
+View > Clock       | The time at the right of the menu bar; again: the date and the time; again: off (remembered, setting clock)
+showTiming         | For developers, in settings.json: the status line shows how long the last key took to reach the screen
 Interface language | Setting uiLanguage: auto, en or ru (menus, messages). Alt+Ф and Alt+A open the same menu, whatever the keyboard layout
 Tools > Terminal font | Own Windows Terminal profile with the font, or a how-to
 Tools > Command be | Puts the editor's folder in your PATH (or takes it out): "be" then starts it in any new console
@@ -164,4 +166,3 @@ Tools > Command be | Puts the editor's folder in your PATH (or takes it out): "b
 be file:LINE[:COL] | Opens the file at the line (also be +LINE file; -r read-only)
 EDITOR, VISUAL     | Set them to be.exe to use it from git and other programs
 Far Manager        | Commands > File associations > Edit command (F4): "path\be.exe" "!.!"
-View > Show timing | How long the last key took to reach the screen
