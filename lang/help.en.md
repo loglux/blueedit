@@ -46,6 +46,7 @@ Ctrl+Home/End      | Start / end of file
 PgUp / PgDn        | Page up / down
 Shift+move         | Select
 Ctrl+A             | Select all
+Alt+= / Alt+-      | Select by meaning, wider and back: word, inside quotes or brackets and with them, sentence, line, paragraph, section, file; in code also the block
 F4                 | Column block mode on/off
 Mouse              | Click, drag to select, double click selects a word, the wheel scrolls
 
@@ -76,6 +77,9 @@ F5 / Shift+F5      | Next / previous
 Ctrl+R             | Replace: at each match Y yes, N no, A all the rest, Esc stop
 Alt+F7             | Find in folder (a list of matches; Enter opens the file at the line)
 Ctrl+G             | Go to line
+Alt+Left / Alt+Right | Back to where a jump left from, and forward again: Ctrl+G, search, the outline, problems, F12; across files
+Ctrl+]             | To the pair of the bracket at the caret, and back: ( [ { in code, in formulas and in text
+Shift+F12 / Ctrl+Shift+F12 | The same as Alt+Left / Alt+Right, for Windows Terminal with panes: there Alt+arrows may move to the next pane
 
 In the dialogs: Alt+C match case, Alt+W whole word, Alt+R regular expression. A regex replace inserts the groups with $1, $2. Hotkeys and Y/N/A also work with the Russian keyboard layout.
 

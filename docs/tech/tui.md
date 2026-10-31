@@ -70,7 +70,10 @@ anything a library would give for free (wide characters, for one) has to be adde
   Ctrl+Backspace (what Windows Terminal sends). Characters outside the Basic Multilingual Plane arrive as `?` (the grid
   holds one UTF-16 unit per cell).
 - **Window size** is polled every 60 ms by its own thread. Windows consoles in VT-input mode send no resize events,
-  and polling also spares a SIGWINCH handler on Unix.
+  and polling also spares a SIGWINCH handler on Unix. The thread starts from the screen's size, not by asking the terminal
+  again: for four weeks it asked, so a change between creating the screen and starting (a pane split as the editor
+  opened, `wt be a.txt ; split-pane`) was taken as the size all along, and the editor drew at the old width until the
+  next resize (seen in Windows Terminal in Sandbox, 31 October 2026; a unit test failed on it before the fix).
 
 ### Key events on Windows (`WindowsKeys`)
 

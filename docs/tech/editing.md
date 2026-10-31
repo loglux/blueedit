@@ -441,6 +441,60 @@ The tabs show the same, but a tab needs the mouse, and the tabs may not all fit.
 ones Alt+1..Alt+9 reach, and a menu has no scrolling; later ones are reached by F6 or a tab. Such items come from
 `Menu.More`, asked when drawn. A file's name may hold an underscore, so only a label's first underscore marks the hotkey.
 
+## Back and forward (`JumpHistory.cs`, `GoBack` in `App.Code.cs`)
+
+Ctrl+G and the outline go where one knows how to get; back returns to where one left, with no line number to remember.
+Before this, Shift+F12 did it only after F12. Search > Go back and Go forward, Alt+Left and Alt+Right, as in browsers and
+IDEs (and in Fresh, which was looked at on 29 October 2026); Shift+F12 stays as a second key for back.
+
+- **Only jumps are recorded**: Ctrl+G, Find and F5, the outline, a next problem, F12, a pick from the folder results or
+  references. Arrows, the mouse and typing are not: one would then step back letter by letter. Switching files (F6, a tab)
+  and opening one are not jumps either, each has its own way back; a place in another file is still reached.
+- **A run counts as one.** F5 pressed five times is one jump: back returns to where the search began, which is what one
+  wants after looking through matches. A run ends when the caret has moved since the last landing, or by another kind of
+  jump: find a match, edit there, F5 on, and back returns to the edit. Same for Shift+F7. Rejected: recording every
+  match, as back would walk them all again.
+- A new jump drops the forward places, as a browser does. A hundred places are kept.
+- **Places are not moved by edits**: text inserted above a place leaves it some lines off, and past the end of a shortened
+  file it is clamped. Following edits would need every place adjusted on every keystroke, for a difference of a few lines
+  on the way back. Not chosen.
+- A file not saved has no name, so the place says only that; among several such files the first is used. A place in a
+  closed file opens it again; one in a file that is gone is passed over.
+- **Alt+arrows and panes.** Windows Terminal binds Alt+arrows to moving between panes by default (`Terminal.MoveFocus*`).
+  Measured in Windows Terminal 1.25 in Sandbox, 31 October 2026: without panes both keys reach the editor. With two panes
+  side by side the terminal takes the key that has a pane in its direction, and focus moves there, and passes on the other:
+  in the left pane Alt+Left goes back and Alt+Right changes pane; in the right pane Alt+Left changes pane. So Shift+F12 and
+  Ctrl+Shift+F12 do the same. The menu names Alt+Left and Alt+Right, the more familiar, and F1 gives both pairs: which
+  people use is to be learnt from them. Alt+Up and Alt+Down, which move lines, meet the same with panes one above the other.
+
+## The matching bracket (`GoToMatchingBracket` in `EditorView.Code.cs`)
+
+Ctrl+] goes to the pair of the bracket at the caret or just before it, and from there back. It uses the search that
+underlines the pair in code (up to 1000 lines away, skipping strings and comments), but unlike the underline it works in
+Markdown and plain text too, for a long `\frac{...}{...}`. Only `( [ {`: `$` and code fences have no direction to tell
+opening from closing without parsing the block, so they are left out. Going to and fro is one jump for Alt+Left. Ctrl+] is
+free in Windows Terminal 1.25's defaults; it reaches the editor by key on Windows, and as 0x1D elsewhere.
+
+## Selecting by meaning (`SelectionSteps.cs`, `EditorView.SelectByMeaning.cs`)
+
+Alt+= selects the next larger piece around the selection; Alt+- goes back a step. Selecting by hand means watching where
+a piece starts and ends; this finds the ends. Then the usual: typing replaces, Del deletes, Ctrl+X cuts: what vi does with
+`ci"`, without a mode.
+
+- **No fixed order of steps.** Each kind of piece offers candidates (word; between quotes, `$` or brackets, then with them;
+  sentence; line; indented block in code; paragraph; section; file) and the smallest that holds the selection and more
+  wins, so text and code need no separate ladders.
+- **A piece that cuts across brackets or a block is not offered.** The first version offered the line: from `d` in
+  `[c,⏎  d])` it took `d])`, around which no bracket is left, and the brackets could never be reached. A unit test found it.
+- **Sentences are a guess**: a stop, `!` or `?` followed by a space or the line's end, not inside `$...$`. A stop after an
+  abbreviation ("e.g. ") ends a sentence here; a dictionary per language was not worth it. An apostrophe is not a quote in
+  text ("don't"); it is in code.
+- In code brackets in strings and comments do not count (`IsCode`, as for the pair's underline); up to 1000 lines each way.
+- Alt+- keeps the states Alt+= came from only while the selection is the one Alt+= left: any move or typing forgets them.
+- **Keys.** Fresh's Expand Selection (seen 29 October 2026) has no key and in Markdown only adds the next word. VS Code's
+  Alt+Shift+arrows are Windows Terminal's by default, as are Ctrl+Shift+Up and Down, and Ctrl+Shift+Space opens its new-tab
+  menu (`defaults.json` of 1.25). Alt+= and Alt+- are free there.
+
 ## Scrolling in the reading view (`EditorView.ScrollReading`)
 
 - The caret is not drawn in the reading view, but the arrows used to move it as in editing: the page did not move

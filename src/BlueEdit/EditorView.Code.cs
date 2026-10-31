@@ -169,6 +169,27 @@ partial class EditorView
     ((int Line, int Col) A, (int Line, int Col) B)? MatchingBrackets()
     {
         if (IsProseFile || ReadingView || HasSelection) return null;
+        return BracketPairAtCaret();
+    }
+
+    /// <summary>Ctrl+]: to the pair of the bracket at the caret (or just before it), in code and in the formulas and
+    /// brackets of text. Says why not when it cannot.</summary>
+    public string? GoToMatchingBracket()
+    {
+        if (ReadingView) return null;
+        if (BracketPairAtCaret() is not { } pair) return BracketAtCaret() ? Ui.T("No pair for this bracket") : Ui.T("No bracket at the caret");
+        GoToLine(pair.B.Line + 1, pair.B.Col + 1);
+        return null;
+    }
+
+    bool BracketAtCaret()
+    {
+        var line = Lines[Row];
+        return new[] { Col, Col - 1 }.Any(c => c >= 0 && c < line.Length && (Openers.Contains(line[c]) || Closers.Contains(line[c])) && IsCode(Row, c));
+    }
+
+    ((int Line, int Col) A, (int Line, int Col) B)? BracketPairAtCaret()
+    {
         var line = Lines[Row];
         foreach (int c in new[] { Col, Col - 1 })
         {

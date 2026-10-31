@@ -206,7 +206,8 @@ public sealed class ConsoleHost : ITerminal, IDisposable
     // Consoles in VT-input mode do not deliver resize events through the byte stream, so the size is polled.
     void SizeLoop()
     {
-        var last = _platform.Size;
+        // from the screen, not the platform: a change while the program started up is one the screen has not had
+        var last = (Screen.Width, Screen.Height);
         while (!_stop.Token.WaitHandle.WaitOne(60))
         {
             var now = _platform.Size;

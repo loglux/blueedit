@@ -66,7 +66,9 @@ sealed partial class App
     void NextProblem(bool backward)
     {
         if (!editor.SpellOn && !editor.GrammarOn && lsp == null && !editor.LatexCheckOn) { Note(T("Spelling and grammar checking are off (F8, Tools)")); return; }
+        var from = Here();
         Note(editor.GoToNextProblem(backward) ?? (editor.GrammarOn ? T("No problems found (grammar may still be checking)") : T("No spelling problems found")));
+        jumps.Record(from, Here(), "problem");
     }
 
     // F7 on a grammar finding: the fixes all checkers suggest there (each applies to its own stretch of text) and

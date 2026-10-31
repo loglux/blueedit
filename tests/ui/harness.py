@@ -71,6 +71,10 @@ F12, SHIFT_F12, ALT_F1 = w32(0x7B), w32(0x7B, cs=SHIFT), w32(0x70, cs=ALT)
 SHIFT_F2 = w32(0x71, cs=SHIFT)
 CTRL_SLASH = w32(0xBF, uc=0x1F, cs=CTRL)          # as Windows Terminal sends it: the control character 0x1F
 ALT_UP, ALT_DOWN = w32(0x26, cs=ALT | ENHANCED), w32(0x28, cs=ALT | ENHANCED)
+ALT_LEFT, ALT_RIGHT = w32(0x25, cs=ALT | ENHANCED), w32(0x27, cs=ALT | ENHANCED)
+CTRL_SHIFT_F12 = w32(0x7B, cs=CTRL | SHIFT)
+CTRL_BRACKET = w32(0xDD, uc=0x1D, cs=CTRL)        # Ctrl+], the control character 0x1D
+ALT_EQUALS, ALT_MINUS = w32(0xBB, uc=ord("="), cs=ALT), w32(0xBD, uc=ord("-"), cs=ALT)
 CTRL_F12, CTRL_F2, ALT_F12 = w32(0x7B, cs=CTRL), w32(0x71, cs=CTRL), w32(0x7B, cs=ALT)
 
 if not WINDOWS:
@@ -88,6 +92,10 @@ if not WINDOWS:
     SHIFT_TAB = "\x1b[Z"
     CTRL_SLASH = "\x1f"
     ALT_UP, ALT_DOWN = "\x1b[1;3A", "\x1b[1;3B"
+    ALT_LEFT, ALT_RIGHT = "\x1b[1;3D", "\x1b[1;3C"
+    CTRL_SHIFT_F12 = "\x1b[24;6~"
+    CTRL_BRACKET = "\x1d"
+    ALT_EQUALS, ALT_MINUS = "\x1b=", "\x1b-"
     CTRL_F12, CTRL_F2, ALT_F12 = "\x1b[24;5~", "\x1b[1;5Q", "\x1b[24;3~"
     CTRL_SPACE = "\x00"
     DELETE = "\x1b[3~"

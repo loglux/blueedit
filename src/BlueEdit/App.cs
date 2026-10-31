@@ -36,7 +36,7 @@ sealed partial class App : IDisposable
     bool dotWhileListed;    // a dot typed while a list was open: ask again when it closes
     string? signature;    // the parameters of the function being called, shown in the status line
     int signatureRow = -1;    // ... while the caret stays on this line
-    readonly Stack<(string Path, int Row, int Col)> definitionTrail = new();    // where F12 jumped from (Shift+F12 goes back)
+    readonly JumpHistory jumps = new();    // where Ctrl+G, search, the outline, problems and F12 jumped from
     BrowserProofreader? edgeProof;
     HarperChecker? harper;
     BrowserProofreader? chromeProof;

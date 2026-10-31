@@ -26,13 +26,17 @@ sealed partial class App
             T("Enter = find   F5 = next   Shift+F5 = previous   Esc = cancel")));
         if (form.Values is not { } v || v[0].Length == 0) return;
         var o = OptionsFrom(v[0], form.Toggles);
+        var from = Here();
         ReportFind(editor.Find(o), o);
+        jumps.Record(from, Here(), "search");
     }
 
     void FindAgain(bool backward)
     {
         if (editor.LastSearch == null) { Find(); return; }
+        var from = Here();
         ReportFind(editor.FindNext(backward), editor.LastSearch);
+        jumps.Record(from, Here(), "search");
     }
 
     void Replace()
@@ -80,8 +84,10 @@ sealed partial class App
         if (Dialogs.Pick(app, title, items, folderPick) is not int i) return;
         folderPick = i;
         var hit = r.Hits[i];
+        var from = Here();
         OpenPath(hit.Path);
         editor.SelectAt(hit.Line, hit.Col, hit.Length);
+        jumps.Record(from, Here());
         if (folderOptions != null) editor.RememberSearch(folderOptions);
     }
 
@@ -106,7 +112,12 @@ sealed partial class App
                     var items = symbols.Select(s => (new string(' ', s.Level * 2) + s.Name).PadRight(width) + s.Kind).ToList();
                     int current = Math.Max(0, symbols.ToList().FindLastIndex(s => s.Line <= editor.Row));
                     Note("");
-                    if (Dialogs.Pick(app, Tn(symbols.Count, "Outline: {0} symbol", "Outline: {0} symbols"), items, current) is int i) editor.GoToLine(symbols[i].Line + 1, symbols[i].Col + 1);
+                    if (Dialogs.Pick(app, Tn(symbols.Count, "Outline: {0} symbol", "Outline: {0} symbols"), items, current) is int i)
+                    {
+                        var from = Here();
+                        editor.GoToLine(symbols[i].Line + 1, symbols[i].Col + 1);
+                        jumps.Record(from, Here());
+                    }
                 }), TaskScheduler.Default);
             return;
         }
@@ -114,12 +125,27 @@ sealed partial class App
         if (heads.Count == 0) { Note(T("No headings (Markdown or LaTeX files)")); return; }
         var items = heads.Select(h => new string(' ', (h.Level - 1) * 2) + h.Title).ToList();
         int current = Math.Max(0, heads.FindLastIndex(h => h.Line <= editor.Row));
-        if (Dialogs.Pick(app, T("Outline"), items, current) is int idx) editor.GoToLine(heads[idx].Line + 1);
+        if (Dialogs.Pick(app, T("Outline"), items, current) is int idx)
+        {
+            var from = Here();
+            editor.GoToLine(heads[idx].Line + 1);
+            jumps.Record(from, Here());
+        }
+    }
+
+    void GoToMatchingBracket()
+    {
+        var from = Here();
+        if (editor.GoToMatchingBracket() is { } why) Note(why);
+        jumps.Record(from, Here(), "bracket");                       // to and fro counts as one
     }
 
     void GoTo()
     {
         var s = Dialogs.Prompt(app, T("Go to line"), T("Line number:"));
-        if (int.TryParse(s, out var n)) editor.GoToLine(n);
+        if (!int.TryParse(s, out var n)) return;
+        var from = Here();
+        editor.GoToLine(n);
+        jumps.Record(from, Here());
     }
 }

@@ -214,13 +214,14 @@ sealed partial class App
             pick = i;
         }
         var (to, line, col) = places[pick];
-        definitionTrail.Push((path, editor.Row, editor.Col));
+        var from = Here();
         if (!string.Equals(to, path, StringComparison.OrdinalIgnoreCase))
         {
-            if (!File.Exists(to)) { Note(Tf("The definition is in {0}, which is not a file here", to)); definitionTrail.Pop(); return; }
+            if (!File.Exists(to)) { Note(Tf("The definition is in {0}, which is not a file here", to)); return; }
             OpenPath(to);
         }
         editor.GoToLine(line + 1, col + 1);
+        jumps.Record(from, Here());
         Note(Tf("Definition: {0}:{1} (Shift+F12 goes back)", System.IO.Path.GetFileName(to), line + 1));
     }
 
@@ -513,17 +514,44 @@ sealed partial class App
             }), TaskScheduler.Default);
     }
 
-    // Shift+F12: back to where the last F12 jumped from.
+    Place Here() => new(editor.Path, editor.Row, editor.Col);
+
+    // Alt+Left, Shift+F12: to where the last jump left from; Alt+Right undoes it. A place in a file that is gone is passed over.
     void GoBack()
     {
-        if (definitionTrail.Count == 0) { Note(T("Nothing to go back to (F12 goes to a definition)")); return; }
-        var (path, row, col) = definitionTrail.Pop();
-        if (!string.Equals(editor.Path, path, StringComparison.OrdinalIgnoreCase))
+        var here = Here();
+        while (jumps.Back(here) is { } place)
+            if (GoToPlace(place)) return;
+        Note(T("Nothing to go back to"));
+    }
+
+    void GoForward()
+    {
+        var here = Here();
+        while (jumps.Forward(here) is { } place)
+            if (GoToPlace(place)) return;
+        Note(T("Nothing to go forward to"));
+    }
+
+    bool GoToPlace(Place place)
+    {
+        if (place.Path == null)
         {
-            if (!File.Exists(path)) { Note(Tf("{0} is gone", path)); return; }
-            OpenPath(path);
+            // a file not saved yet has no name to tell it by: the first such one
+            if (editor.Path != null)
+            {
+                int unsaved = Enumerable.Range(0, docs.Count).FirstOrDefault(i => PathOf(i) == null, -1);
+                if (unsaved < 0) return false;
+                Switch(unsaved);
+            }
         }
-        editor.GoToLine(row + 1, col + 1);
+        else if (!string.Equals(editor.Path, place.Path, StringComparison.OrdinalIgnoreCase))
+        {
+            if (!docs.Exists(d => string.Equals(d.Path, place.Path, StringComparison.OrdinalIgnoreCase)) && !File.Exists(place.Path)) return false;
+            OpenPath(place.Path);
+        }
+        editor.GoToLine(place.Row + 1, place.Col + 1);
+        return true;
     }
 
     // Alt+F1: what the language server knows about the symbol at the caret (its type, signature, documentation).
