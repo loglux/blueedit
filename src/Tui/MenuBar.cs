@@ -1,11 +1,12 @@
 namespace Tui;
 
-/// <summary>A menu entry. An underscore in the label marks its hotkey letter ("_Open..." = O). The hotkey is a key, in
-/// either layout: "_Файл" is the key of Ф, A on a QWERTY keyboard (<see cref="KeyboardLayout.Latin"/>).</summary>
+/// <summary>A menu entry. The first underscore in the label marks its hotkey letter ("_Open..." = O); any later one is
+/// shown as it is (a file named my_notes.md). The hotkey is a key, in either layout: "_Файл" is the key of Ф, A on a
+/// QWERTY keyboard (<see cref="KeyboardLayout.Latin"/>).</summary>
 public sealed record MenuItem(string Label, string Shortcut, Action Run)
 {
     public char Hotkey => MenuBar.HotkeyOf(Label);
-    public string Text => Label.Replace("_", "", StringComparison.Ordinal);
+    public string Text => MenuBar.TextOf(Label);
 
     /// <summary>Whether what the item turns on is on now: √ at its left, as in Far's menus. Asked whenever the menu is
     /// drawn, so it is never out of date.</summary>
@@ -14,16 +15,32 @@ public sealed record MenuItem(string Label, string Shortcut, Action Run)
     /// <summary>One of several choices (the Markdown views, the themes): • marks the chosen one instead of √.</summary>
     public bool Choice { get; init; }
 
-    /// <summary>The setting's value now, at the right where a shortcut would stand ("CRLF").</summary>
+    /// <summary>The setting's value now, at the right where a shortcut would stand ("CRLF"). Asked with every frame while
+    /// the menu is open, so it reads what is in memory, not the disk. A long one is cut, so the menu keeps its width.</summary>
     public Func<string>? Value { get; init; }
 
-    internal string Right => Shortcut.Length > 0 ? Shortcut : Value?.Invoke() ?? "";
+    const int MaxValue = 24;
+
+    internal string Right
+    {
+        get
+        {
+            if (Shortcut.Length > 0) return Shortcut;
+            var value = Value?.Invoke() ?? "";
+            return value.Length > MaxValue ? value[..(MaxValue - 1)] + "…" : value;
+        }
+    }
 }
 
 public sealed record Menu(string Label, IReadOnlyList<MenuItem> Items)
 {
     public char Hotkey => MenuBar.HotkeyOf(Label);
-    public string Text => Label.Replace("_", "", StringComparison.Ordinal);
+    public string Text => MenuBar.TextOf(Label);
+
+    /// <summary>Items known only when the menu opens (the open files), under the fixed ones.</summary>
+    public Func<IEnumerable<MenuItem>>? More { get; init; }
+
+    internal IReadOnlyList<MenuItem> Shown => More == null ? Items : Items.Concat(More()).ToList();
 }
 
 /// <summary>
@@ -64,6 +81,9 @@ public sealed class MenuBar
         return i >= 0 && i + 1 < label.Length ? KeyboardLayout.Latin(label[i + 1]) : '\0';
     }
 
+    /// <summary>The label without its hotkey mark: the first underscore only.</summary>
+    public static string TextOf(string label) => label.IndexOf('_', StringComparison.Ordinal) is >= 0 and var i ? label.Remove(i, 1) : label;
+
     public void Open(int index)
     {
         bool was = IsOpen;
@@ -92,7 +112,7 @@ public sealed class MenuBar
             return false;
         }
 
-        var items = _menus[_open].Items;
+        var items = _menus[_open].Shown;
         switch (ev)
         {
             case KeyInput { Key: Key.Escape } or KeyInput { Key: Key.F9 }: Close(); return true;
@@ -168,24 +188,24 @@ public sealed class MenuBar
 
     Rect DropDownRect()
     {
-        var m = _menus[_open];
-        int labelW = m.Items.Max(i => i.Text.Length), keyW = m.Items.Max(i => i.Right.Length);
+        var items = _menus[_open].Shown;
+        int labelW = items.Max(i => i.Text.Length), keyW = items.Max(i => i.Right.Length);
         int w = 1 + labelW + (keyW > 0 ? 2 + keyW : 0) + 1 + 2;
         int x = _slots.Count > _open ? Math.Max(0, _slots[_open].X - 1) : 0;
-        return new Rect(x, 1, w, m.Items.Count + 2);
+        return new Rect(x, 1, w, items.Count + 2);
     }
 
     public void DrawDropDown(Screen s, Theme t)
     {
         if (!IsOpen) return;
-        var m = _menus[_open];
+        var items = _menus[_open].Shown;
         var r = DropDownRect();
         if (r.X + r.W > s.Width) r = r with { X = Math.Max(0, s.Width - r.W) };
         Draw.Box(s, r, "", t.Menu, t.Menu);
-        int keyW = m.Items.Max(i => i.Right.Length);
-        for (int i = 0; i < m.Items.Count; i++)
+        int keyW = items.Max(i => i.Right.Length);
+        for (int i = 0; i < items.Count; i++)
         {
-            var it = m.Items[i];
+            var it = items[i];
             bool sel = i == _item;
             var style = sel ? t.MenuSelected : t.Menu;
             s.Fill(r.X + 1, r.Y + 1 + i, r.W - 2, 1, ' ', style);
@@ -200,12 +220,8 @@ public sealed class MenuBar
 
     static void DrawLabel(Screen s, int x, int y, string label, Style style, Style hot)
     {
-        bool nextHot = false;
-        foreach (char c in label)
-        {
-            if (c == '_' && !nextHot) { nextHot = true; continue; }
-            s.Set(x++, y, c, nextHot ? hot : style);
-            nextHot = false;
-        }
+        int mark = label.IndexOf('_', StringComparison.Ordinal);
+        for (int i = 0; i < label.Length; i++)
+            if (i != mark) s.Set(x++, y, label[i], i == mark + 1 && mark >= 0 ? hot : style);
     }
 }

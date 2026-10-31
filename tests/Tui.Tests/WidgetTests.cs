@@ -388,6 +388,60 @@ public class MenuBarValidationTests
         Assert.Equal(2, opened);
     }
 
+    static List<string> DropDownRows(MenuBar bar, int width = 60)
+    {
+        var s = new Screen(width, 12);
+        bar.DrawBar(s, new Theme());
+        bar.Open(0);
+        bar.DrawBar(s, new Theme());
+        bar.DrawDropDown(s, new Theme());
+        return Enumerable.Range(1, 11).Select(y => new string(Enumerable.Range(0, width).Select(x => s.CharAt(x, y)).ToArray()).TrimEnd()).ToList();
+    }
+
+    [Fact]
+    public void A_long_value_is_cut_so_the_menu_keeps_its_width()
+    {
+        var bar = new MenuBar(new[] { new Menu("_Tools", new[]
+        {
+            new MenuItem("_Model...", "", () => { }) { Value = () => new string('m', 40) },
+            new MenuItem("_Short...", "", () => { }) { Value = () => "ab" },
+        }) });
+        var rows = DropDownRows(bar);
+        Assert.Contains(rows, r => r.Contains(new string('m', 23) + "…", StringComparison.Ordinal) && !r.Contains(new string('m', 24), StringComparison.Ordinal));
+        Assert.Contains(rows, r => r.Contains("Short...", StringComparison.Ordinal) && r.Contains(" ab", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void Items_known_when_the_menu_opens_follow_the_fixed_ones_and_run_by_their_digit()
+    {
+        var files = new List<string> { "_1 my_notes.md" };
+        int ran = 0;
+        var bar = new MenuBar(new[] { new Menu("_Window", new[] { new MenuItem("_Next", "", () => { }) })
+        {
+            More = () => files.Select(f => new MenuItem(f, "", () => ran++) { On = () => true, Choice = true }),
+        } });
+        var rows = DropDownRows(bar);
+        // only the first underscore marks the hotkey: the file's own stays in its name
+        Assert.Contains(rows, r => r.Contains("•1 my_notes.md", StringComparison.Ordinal));
+        Assert.True(bar.TryHandle(new KeyInput(Key.Character, '1', Mods.None), new TuiApp(new FakeTerminal())));
+        Assert.Equal(1, ran);
+        Assert.False(bar.IsOpen);
+
+        files.Add("_2 b.md");
+        Assert.Contains(DropDownRows(bar), r => r.Contains("2 b.md", StringComparison.Ordinal));
+    }
+
+    [Theory]
+    [InlineData("_File", 'f', "File")]
+    [InlineData("Save _as...", 'a', "Save as...")]
+    [InlineData("_1 my_notes.md", '1', "1 my_notes.md")]
+    [InlineData("plain", '\0', "plain")]
+    public void Only_the_first_underscore_marks_the_hotkey(string label, char hotkey, string text)
+    {
+        Assert.Equal(char.ToLowerInvariant(hotkey), char.ToLowerInvariant(MenuBar.HotkeyOf(label)));
+        Assert.Equal(text, MenuBar.TextOf(label));
+    }
+
     [Fact]
     public void The_right_text_ends_the_bar_and_is_left_out_where_the_menus_reach_it()
     {

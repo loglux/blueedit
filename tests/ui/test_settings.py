@@ -80,6 +80,40 @@ def test_the_clock_is_at_the_right_of_the_menu_bar_and_view_clock_goes_round_and
     assert '"clock": "off"' in open(settings_path(), encoding="utf-8").read()
 
 
+def test_tools_shows_what_its_windows_hold_without_opening_them(editor, make_file):
+    write_settings('''{ "grammar": ["languagetool"], "spellProvider": "hunspell", "ignoredRules": ["A", "B", "C"],
+                        "llmModel": "qwen3-14b-q4.gguf", "styleFocus": ["wordiness"] }''')
+    t = editor(make_file("a.txt", "x\n"))
+    t.send(alt("t"), 0.8)
+    row = {name: next(r for r in t.rows() if name in r) for name in
+           ("Grammar checking", "Grammar model", "Ignored rules", "Style options", "Spelling provider")}
+    assert "√" in row["Grammar checking"] and "LanguageTool" in row["Grammar checking"]
+    assert "Qwen3 14B" in row["Grammar model"]
+    assert re.search(r"\b3\b", row["Ignored rules"])
+    assert re.search(r"\b1/\d+\b", row["Style options"])
+    assert "Hunspell" in row["Spelling provider"]
+
+
+def test_grammar_off_has_no_mark_or_name_in_tools(editor, make_file):
+    t = editor(make_file("a.txt", "x\n"))
+    t.send(alt("t"), 0.8)
+    row = next(r for r in t.rows() if "Grammar checking" in r)
+    assert "√" not in row and "LanguageTool" not in row
+
+
+def test_the_window_menu_lists_the_open_files_and_goes_to_one(editor, make_file):
+    t = editor(make_file("first_one.txt", "first\n"), make_file("b.txt", "second\n"))
+    t.send(alt("w"), 0.8)
+    rows = "\n".join(t.rows())
+    assert "1 first_one.txt" in rows and "2 b.txt" in rows      # the underscore in a name stays
+    t.send("1", 0.8)
+    assert t.body()[0].startswith("first")
+    t.send(alt("w"), 0.8)
+    assert "•1 first_one.txt" in "\n".join(t.rows())            # the mark on the current one
+    t.send("2", 0.8)
+    assert t.body()[0].startswith("second")
+
+
 def test_a_broken_setting_is_reported_and_the_rest_still_applies(editor, make_file):
     write_settings('{ "tabSize": 99, "theme": "dark" }')
     t = editor(make_file("a.txt", "x\n"))

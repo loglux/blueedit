@@ -427,6 +427,20 @@ only the editor and Alt+G alone kept its setting: now all three keep theirs (Alt
 Formula pictures has its √ while it is on even when no picture is shown, so the reason stands at the right: "no
 module", "module failed", "not in this terminal".
 
+An audit on 31 October 2026 found the toggles whole, and the gap in items with "...": their window held a state the menu
+did not show, so one had to open each to learn what checked the text. Now Tools shows it at the right: Grammar checking
+(√ and the checkers' names), Grammar model, Spelling languages, Spelling provider, Style options ("3/6"), Ignored rules
+(a count, none when empty), Command be in any console (√); File > Reopen with encoding shows the encoding. A value is
+asked with every frame while the menu is open, so these read what is in memory; the grammar model's name is made from
+the setting, not by listing the models' folder (Auto is "auto" until the window is opened). One registry read for PATH is
+the exception, and costs microseconds. A value over 24 characters is cut with "…", or a server's long model name would
+widen the whole menu.
+
+The Window menu lists the open files under Next and Previous, • on the current one, a digit as the hotkey (Alt+W, 2).
+The tabs show the same, but a tab needs the mouse, and the tabs may not all fit. Only the first nine are listed: the
+ones Alt+1..Alt+9 reach, and a menu has no scrolling; later ones are reached by F6 or a tab. Such items come from
+`Menu.More`, asked when drawn. A file's name may hold an underscore, so only a label's first underscore marks the hotkey.
+
 ## Scrolling in the reading view (`EditorView.ScrollReading`)
 
 - The caret is not drawn in the reading view, but the arrows used to move it as in editing: the page did not move

@@ -19,6 +19,14 @@ sealed partial class App
         Sync(); cur = i; editor.ApplyDoc(docs[cur]);
     }
 
+    // Window: the files Alt+1..Alt+9 reach, • on the current one; a tenth and later are reached by F6 or a tab
+    IEnumerable<MenuItem> OpenFilesInMenu() => docs.Take(9).Select((_, i) =>
+    {
+        var name = NameOf(PathOf(i));
+        if (name.Length > 40) name = name[..39] + "…";
+        return new MenuItem($"_{i + 1} {name}{(IsModified(i) ? " *" : "")}", "", () => Switch(i)) { On = () => i == cur, Choice = true };
+    });
+
     void NextDoc() => Switch((cur + 1) % docs.Count);
 
     void PrevDoc() => Switch((cur + docs.Count - 1) % docs.Count);

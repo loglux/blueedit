@@ -34,6 +34,7 @@ Shift+F6           | Previous document
 Ctrl+PgDn          | Next document
 Ctrl+PgUp          | Previous document
 Alt+1..Alt+9       | Document by number
+Window menu        | The open files, • on the current one: Alt+W, then the digit
 Mouse              | Click a tab
 
 # Moving and selecting

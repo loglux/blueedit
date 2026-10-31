@@ -502,8 +502,32 @@ sealed partial class App
         var json = c[0] || picked.Count == 0 ? "\"auto\"" : "[" + string.Join(", ", picked.Select(t => $"\"{t}\"")) + "]";
         Settings.SetValue(Settings.FilePath, "spellLanguages", json);
         ReloadSettings();
-        Note(Tf("Spelling: {0}", (settings.SpellAuto ? T("auto") + ", " : "") + string.Join("/", spell.Languages.Select(Spell.ShortTag))));
+        Note(Tf("Spelling: {0}", SpellingLanguagesNow()));
     }
+
+    string SpellingLanguagesNow() => (settings.SpellAuto ? T("auto") + ", " : "") + string.Join("/", spell.Languages.Select(Spell.ShortTag));
+
+    // What Tools shows beside its items: from the settings in memory, as the menu asks with every frame.
+    string GrammarNow() => string.Join(", ", settings.Grammar.Select(e => e switch
+    {
+        "languagetool" => "LanguageTool",
+        "llm" => T("Language model"),
+        "edge" => "Edge",
+        "harper" => "Harper",
+        "chrome" => "Chrome",
+        "chromemodel" => T("Chrome model"),
+        _ => e,
+    }));
+
+    string SpellingProviderNow() => !OperatingSystem.IsWindows() ? "Hunspell" : settings.SpellProvider switch { "office" => "Microsoft Office", "hunspell" => "Hunspell", _ => "Windows" };
+
+    string GrammarModelNow() =>
+        settings.LlmModel == "server" ? settings.LlmServerModel
+        : string.IsNullOrWhiteSpace(settings.LlmModel) ? T("auto")
+        : LlmGrammarChecker.DisplayName(settings.LlmModel);
+
+    bool CommandIsEverywhere() =>
+        OperatingSystem.IsWindows() && Environment.ProcessPath is { } exe && Path.GetDirectoryName(exe) is { } dir && UserPath.Contains(dir);
 
     // Tools > Spelling provider: Windows (default), Microsoft Office or Hunspell (the only one on Linux and macOS).
     void SpellingProvider()
