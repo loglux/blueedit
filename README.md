@@ -349,5 +349,5 @@ known pitfalls: [CONTRIBUTING.md](CONTRIBUTING.md). Licence: MIT ([LICENSE](LICE
 
 ## Status
 
-Preview releases (0.x): used daily for writing, mathematics and code, and still changing. Problems and wishes:
+Version 0.x: used daily for writing, mathematics and code, and still growing. Problems and wishes:
 [issues](https://github.com/loglux/blueedit/issues).
